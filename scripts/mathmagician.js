@@ -1,7 +1,6 @@
 // version 11
 
 $('#savegame').keyup(import_save);
-$('#souls').keyup(optimize);
 $('body').on('change', '#laxsolo', optimize);
 $('body').on('change', '#clicking', optimize);
 $('body').on('change', '#ignoreIris', optimize);
