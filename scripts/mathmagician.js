@@ -1,4 +1,4 @@
-// version 7
+// version 8
 
 $('#savegame').keyup(import_save);
 $('#souls').keyup(optimize);
@@ -11,11 +11,8 @@ $('body').on('change', '#primalsouls', primalSouls);
 var data;
 var hasMorgulis = false;
 var laxSolomon = false;
-var clicking = false;
-var ignoreIris = false;
 var primalsouls = false;
 var irisBonus = 0;
-var useArgaiv = false;
 
 if(!Math.log10)	{
 	Math.log10 = function(t){return(Math.log(t)/Math.LN10);};
@@ -280,9 +277,9 @@ function optimize()	{
 	var Siya = anc[5];
 	var Argaiv = anc[28];
 	var Bank = anc[0];
-	clicking = 	$('#clicking').is(':checked');
+	var clicking = 	$('#clicking').is(':checked');
+	var ignoreIris = $('#ignoreIris').is(':checked');
 	laxSolomon = $('#laxsolo').is(':checked');
-	ignoreIris = $('#ignoreIris').is(':checked');
 	irisBonus = parseInt($('#irisBonus').val());
 	if($('#noBossLanding').is(':checked'))	{
 		irisBonus++;
@@ -297,12 +294,11 @@ function optimize()	{
 		ancient.levelNew = ancient.levelOld;
 	}
 
+	var useArgaiv = false;
 	if(Siya.levelOld == 0)	{
 		useArgaiv = true;
 	}
-	else	{
-		useArgaiv = false;
-	}
+
 	hasMorgulis = anc[16].levelOld > 0;
 
 	var upgradeNext;
@@ -312,6 +308,7 @@ function optimize()	{
 		var highestIncrease = 0;
 		var nextCost = 0;
 		var nextBestIncrease = 0;
+		var referenceLevel = useArgaiv ? Argaiv.levelNew-9 : Siya.levelNew;
 
 		for(key in anc)	{
 			var ancient = anc[key];
@@ -319,8 +316,8 @@ function optimize()	{
 				// do not process clicking ancients when clicking checkbox is off
 				var upgradeCost = ancient.upgradeCost(ancient.levelNew+1);
 
-				if(upgradeCost <= Bank.levelNew)	{
-					var increase = useArgaiv ? (100*(ancient.desiredLevel(Argaiv.levelNew-8)-ancient.levelNew)) / ancient.levelNew : (100*(ancient.desiredLevel(Siya.levelNew+1)-ancient.levelNew)) / ancient.levelNew;
+				if(upgradeCost <= (Bank.levelNew-Bank.desiredLevel(referenceLevel)))	{
+					var increase = (100*(ancient.desiredLevel(referenceLevel+1)-ancient.levelNew)) / ancient.levelNew
 
 					if(increase > highestIncrease)	{
 						upgradeNext = key;
@@ -449,8 +446,6 @@ function import_save() {
 
 		if(anc[5].levelOld === 0)	{
 			// active build that doesn't have Siya
-			useArgaiv = true;
-			clicking = true;
 			$('#clicking').prop('checked', true);
 		}
 	}
