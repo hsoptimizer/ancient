@@ -322,7 +322,7 @@ function optimize()	{
 				if(upgradeCost <= Bank.levelNew)	{
 					var increase = useArgaiv ? (100*(ancient.desiredLevel(Argaiv.levelNew-9)-ancient.levelNew)) / ancient.levelNew : (100*(ancient.desiredLevel(Siya.levelNew)-ancient.levelNew)) / ancient.levelNew;
 
-					if(increase >= highestIncrease)	{
+					if(increase > highestIncrease)	{
 						upgradeNext = key;
 						nextBestIncrease = highestIncrease;
 						highestIncrease = increase;
@@ -445,7 +445,7 @@ function import_save() {
 		$('#hze').prop('textContent', data.highestFinishedZonePersist.numberFormat());		
 		$('#worldresets').prop('textContent', data.numWorldResets.numberFormat());		
 
-		optimize();
+		// optimize();
 
 		if(anc[5].levelOld === 0)	{
 			// active build that doesn't have Siya
