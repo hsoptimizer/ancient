@@ -60,7 +60,7 @@ anc[4] = {
 	'clicking':false,
 	'maxLevel':0,
 	'upgradeCost':function(lvl){return(lvl);},
-	'desiredLevel':function(s){return(Math.ceil(0.917*s));}
+	'desiredLevel':function(s){return(Math.ceil(0.93*s));}
 };
 anc[5] = {
 	'Name':'Siyalatas',
@@ -80,7 +80,7 @@ anc[8] = {
 	'clicking':false,
 	'maxLevel':0,
 	'upgradeCost':function(lvl){return(lvl);},
-	'desiredLevel':function(s){return(Math.ceil(0.921*s));}
+	'desiredLevel':function(s){return(Math.ceil(0.93*s));}
 };
 anc[9] = {
 	'Name':'Mimzee',
@@ -90,7 +90,7 @@ anc[9] = {
 	'clicking':false,
 	'maxLevel':0,
 	'upgradeCost':function(lvl){return(lvl);},
-	'desiredLevel':function(s){return(Math.ceil(0.925*s));}
+	'desiredLevel':function(s){return(Math.ceil(0.93*s));}
 };
 anc[10] = {
 	'Name':'Pluto',
