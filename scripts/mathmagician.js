@@ -1,4 +1,4 @@
-// version 8
+// version 9
 
 $('#savegame').keyup(import_save);
 $('#souls').keyup(optimize);
@@ -313,11 +313,15 @@ function optimize()	{
 		for(key in anc)	{
 			var ancient = anc[key];
 			if(ancient.levelOld > 0 && (clicking == true || ancient.clicking == false) && (ignoreIris == false || key != 30))	{
-				// do not process clicking ancients when clicking checkbox is off
+				// Do not process ancients the user doesn't have.
+				// Do not process clicking ancients when clicking checkbox is off.
+				// Do not process Iris if disabled.
 				var upgradeCost = ancient.upgradeCost(ancient.levelNew+1);
 
-				if(upgradeCost <= (Bank.levelNew-Bank.desiredLevel(referenceLevel)))	{
-					var increase = (100*(ancient.desiredLevel(referenceLevel+1)-ancient.levelNew)) / ancient.levelNew
+				if(upgradeCost <= (Bank.levelNew-Bank.desiredLevel(referenceLevel)))	{	// always keep the desired soulbank, do not spend below this
+				
+					// determine the ancient that is lagging behind the most (biggest increase from current to optimal)
+					var increase = (ancient.desiredLevel(referenceLevel+1)-ancient.levelNew) / ancient.levelNew
 
 					if(increase > highestIncrease)	{
 						upgradeNext = key;
@@ -333,7 +337,7 @@ function optimize()	{
 			var ancient = anc[upgradeNext];
 			if(upgradeNext == 16)	{
 				// Morg batch upgrade!
-				var morgPlus = Math.ceil(((highestIncrease - nextBestIncrease)*ancient.levelNew)/100);
+				var morgPlus = Math.ceil((highestIncrease - nextBestIncrease)*ancient.levelNew);
 				if(morgPlus >= Bank.levelNew)	{
 					morgPlus = Bank.levelNew;
 					upgradeNext = 0;
