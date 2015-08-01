@@ -1,4 +1,4 @@
-// version 9
+// version 10
 
 $('#savegame').keyup(import_save);
 $('#souls').keyup(optimize);
@@ -320,7 +320,7 @@ function optimize()	{
 
 				if(upgradeCost <= (Bank.levelNew-Bank.desiredLevel(referenceLevel)))	{	// always keep the desired soulbank, do not spend below this
 				
-					// determine the ancient that is lagging behind the most (biggest increase from current to optimal)
+					// determine the ancient that is lagging behind the most (biggest relative increase from current to optimal)
 					var increase = (ancient.desiredLevel(referenceLevel+1)-ancient.levelNew) / ancient.levelNew
 
 					if(increase > highestIncrease)	{
@@ -375,18 +375,28 @@ function optimize()	{
 
 const ANTI_CHEAT_CODE = "Fe12NAfA3R6z4k0z";
 const SALT = "af0ik392jrmt0nsfdghy0";
-function import_save() {
+function import_save(evt) {
+
+	if(evt && evt.keyCode == 17)	{
+		// releasing Ctrl after Ctrl-V would trigger the import_save function twice, and also run optimize twice.
+		// Ignore the Ctrl key release.
+		return;
+	}
+
 	var txt = $('#savegame').val();
 
-	if (txt.search(ANTI_CHEAT_CODE) != -1) {
+	if(txt.search(ANTI_CHEAT_CODE) != -1) {
 		var result = txt.split(ANTI_CHEAT_CODE);
 		txt = "";
 		for (var i = 0; i < result[0].length; i += 2) {
 			txt += result[0][i];
 		}
 		if (CryptoJS.MD5(txt + SALT) != result[1]) {
-			// alert("This is not a valid Clicker Heroes savegame!");
+			$('#savegame').prop('class', 'error');
 			return;
+		}
+		else	{
+			$('#savegame').prop('class', '');
 		}
 
 		data = $.parseJSON(atob(txt));
@@ -409,12 +419,7 @@ function import_save() {
 					ancient.levelOld = data.ancients.ancients[key].level;
 					if(ancient.maxLevel !== 0)	{
 						// hide capped ancients that are already maxed
-						if(ancient.levelOld === ancient.maxLevel)	{
-							$('#max'+key).prop('hidden',true);
-						}
-						else	{
-							$('#max'+key).prop('hidden',false);
-						}
+						$('#max'+key).prop('hidden', ancient.levelOld == ancient.maxLevel);
 					}
 				}
 			}
@@ -429,7 +434,7 @@ function import_save() {
 		for(relic in data.items.items)	{
 			for(var bonus=1; bonus <= 4; bonus++)	{
 				var bonusType = data.items.items[relic]['bonusType'+bonus.toString()];
-				if(bonusType === 6)	{
+				if(bonusType == 6)	{
 					var bonusLevel = data.items.items[relic]['bonus'+bonus.toString()+'Level'];
 					console.log(data.items.items[relic].name + ' gives irisBonus ' + bonusLevel);
 					irisBonus += bonusLevel;
@@ -446,11 +451,17 @@ function import_save() {
 		$('#hze').prop('textContent', data.highestFinishedZonePersist.numberFormat());
 		$('#worldresets').prop('textContent', data.numWorldResets.numberFormat());
 
-		optimize();
-
 		if(anc[5].levelOld === 0)	{
 			// active build that doesn't have Siya
 			$('#clicking').prop('checked', true);
 		}
+
+		optimize();
+	}
+	else if(txt == "")	{
+		$('#savegame').prop('class', '');
+	}
+	else	{
+		$('#savegame').prop('class', 'error');
 	}
 }
