@@ -1,4 +1,4 @@
-// version 10
+// version 11
 
 $('#savegame').keyup(import_save);
 $('#souls').keyup(optimize);
@@ -37,7 +37,7 @@ anc[0] = {
 	'clicking':false,
 	'maxLevel':0,
 	'upgradeCost':function(lvl){return(0);},
-	'desiredLevel':function(s){return(hasMorgulis ? 0 : s < 100 ? Math.ceil(1.1*Math.pow(s+1,2)) : Math.ceil(1.1*Math.pow(s,2) + 43.67*s + 33.58));}
+	'desiredLevel':function(s){return(hasMorgulis ? 0 : s < 100 ? Math.ceil(1.1*Math.pow(s,2)) : Math.ceil(1.1*Math.pow(s,2) + 43.67*s + 33.58));}
 }
 anc[3] = {
 	'Name':'Solomon',
