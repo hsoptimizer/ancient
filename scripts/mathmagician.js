@@ -445,7 +445,7 @@ function import_save() {
 		$('#hze').prop('textContent', data.highestFinishedZonePersist.numberFormat());		
 		$('#worldresets').prop('textContent', data.numWorldResets.numberFormat());		
 
-		// optimize();
+		optimize();
 
 		if(anc[5].levelOld === 0)	{
 			// active build that doesn't have Siya
