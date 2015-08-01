@@ -70,7 +70,7 @@ anc[5] = {
 	'clicking':false,
 	'maxLevel':0,
 	'upgradeCost':function(lvl){return(lvl);},
-	'desiredLevel':function(s){return(useArgaiv ? 0 : Math.ceil(s+1));}
+	'desiredLevel':function(s){return(Math.ceil(s));}
 };
 anc[8] = {
 	'Name':'Mammon',
@@ -297,7 +297,7 @@ function optimize()	{
 		ancient.levelNew = ancient.levelOld;
 	}
 
-	if(Siya.levelOld === 0)	{
+	if(Siya.levelOld == 0)	{
 		useArgaiv = true;
 	}
 	else	{
@@ -320,7 +320,7 @@ function optimize()	{
 				var upgradeCost = ancient.upgradeCost(ancient.levelNew+1);
 
 				if(upgradeCost <= Bank.levelNew)	{
-					var increase = useArgaiv ? (100*(ancient.desiredLevel(Argaiv.levelNew-9)-ancient.levelNew)) / ancient.levelNew : (100*(ancient.desiredLevel(Siya.levelNew)-ancient.levelNew)) / ancient.levelNew;
+					var increase = useArgaiv ? (100*(ancient.desiredLevel(Argaiv.levelNew-8)-ancient.levelNew)) / ancient.levelNew : (100*(ancient.desiredLevel(Siya.levelNew+1)-ancient.levelNew)) / ancient.levelNew;
 
 					if(increase > highestIncrease)	{
 						upgradeNext = key;
@@ -358,7 +358,7 @@ function optimize()	{
 		var ancient = anc[key];
 
 		$('#new'+key).prop('value', ancient.levelNew);
-		$('#optimal'+key).prop('value', getOptimal(ancient, useArgaiv ? Argaiv.levelNew-10 : Siya.levelNew-1)); // subtract one, correcting because optimal siya is always Siya+1
+		$('#optimal'+key).prop('value', getOptimal(ancient, useArgaiv ? Argaiv.levelNew-9 : Siya.levelNew));
 
 		if(ancient.levelNew != ancient.levelOld)	{
 			$('#delta'+key).prop('value', ancient.levelNew - ancient.levelOld);
@@ -367,7 +367,7 @@ function optimize()	{
 			$('#delta'+key).prop('value', '');
 		}
 	}
-
+	
 	console.log('optimize finished');
 	saveSettings();
 }
@@ -420,9 +420,9 @@ function import_save() {
 			$('#old'+key).prop('value', ancient.levelOld);
 		}
 		$('#primalsouls').prop('disabled', false);
-		
+
 		$('#relicfound').prop('textContent', data.items.gotAscensionItem ? "Yes" : "No");
-		
+
 		// find the Iris bonus from relics!
 		irisBonus = 0;
 		for(relic in data.items.items)	{
@@ -441,9 +441,9 @@ function import_save() {
 		for(key in data.ancients.ancients)	{
 			soulsSpent += data.ancients.ancients[key].spentHeroSouls;
 		}
-		$('#soulsspent').prop('textContent', soulsSpent.numberFormat());		
-		$('#hze').prop('textContent', data.highestFinishedZonePersist.numberFormat());		
-		$('#worldresets').prop('textContent', data.numWorldResets.numberFormat());		
+		$('#soulsspent').prop('textContent', soulsSpent.numberFormat());
+		$('#hze').prop('textContent', data.highestFinishedZonePersist.numberFormat());
+		$('#worldresets').prop('textContent', data.numWorldResets.numberFormat());
 
 		optimize();
 
