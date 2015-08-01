@@ -1,0 +1,96 @@
+*	{
+	font-family: Arial, sans-serif;
+}
+
+body	{
+	background-color: ivory;
+}
+
+header{
+	font: 28px Arial, sans-serif;
+}
+
+textarea {
+	width: 99%;
+}
+
+input {
+	font-family: Arial, sans-serif;
+	text-align: right;
+}
+
+textarea	{
+	border-width: 1px;
+	background-color:khaki;
+	font-size:x-small;
+}
+
+input.uservalue	{
+	border-width: 1px;
+	background-color:khaki;
+}
+
+input.noborder	{
+	border-width: 0px;
+	border: none;
+	background-color:transparent;
+	color: black;
+}
+
+table	{
+	border-collapse: collapse;
+}
+
+td	{
+	border: 1px solid darkkhaki;
+	text-align: right;
+	padding-left: 4px;
+	padding-right: 4px;
+}
+
+th	{
+	border: 1px solid darkkhaki;
+	text-align: right;
+	padding-left: 16px;
+	padding-right: 16px;
+}
+
+.filler	{
+	background-color: transparent;
+	border: none;
+}
+
+p.comments	{
+	font-family: times;
+	font-style: italic;
+}
+
+h1	{
+	display: inline-block;
+	vertical-align:middle;
+}
+
+img	{
+	vertical-align:middle;
+}
+
+th > a	{
+	font-family:Arial, sans-serif;
+}
+
+a	{
+	font-family: times;
+}
+/* tooltips */
+#pup {
+  position:absolute;
+  z-index:200; /* aaaalways on top*/
+  padding: 3px;
+  margin: 8px;
+  border: 3px outset;
+  border-color: gold;
+  background-color: gold;
+  text-align: center;
+  color: saddlebrown;
+  font-family: Arial, sans-serif;
+}
