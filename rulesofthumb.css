@@ -25,6 +25,10 @@ textarea	{
 	font-size:x-small;
 }
 
+textarea.error	{
+	background-color:tomato;
+}
+
 input	{
 	width:130px;
 }
