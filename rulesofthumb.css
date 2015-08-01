@@ -25,6 +25,10 @@ textarea	{
 	font-size:x-small;
 }
 
+input	{
+	width:130px;
+}
+
 input.uservalue	{
 	border-width: 1px;
 	background-color:khaki;
