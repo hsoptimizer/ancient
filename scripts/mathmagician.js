@@ -1,4 +1,4 @@
-// version 0.5
+// version 7
 
 $('#savegame').keyup(import_save);
 $('#souls').keyup(optimize);
@@ -220,7 +220,7 @@ anc[30] = {
 	'clicking':false,
 	'maxLevel':0,
 	'upgradeCost':function(lvl){return(Math.round(Math.pow(lvl, 1.5)));},
-	'desiredLevel':function(s){var t=Math.ceil((371*Math.log(s)-2080)/5)*5-1-irisBonus;return(t<(104-irisBonus)?0:t);}
+	'desiredLevel':function(s){var t=Math.floor((371*Math.log(s)-2080)/5)*5-1-irisBonus;return(t<(104-irisBonus)?0:t);}
 };
 
 function primalSouls()	{
