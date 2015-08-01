@@ -74,8 +74,10 @@ p.comments	{
 }
 
 h1	{
+	font-size:xx-large;
 	display: inline-block;
 	vertical-align:middle;
+	margin:0;
 }
 
 img	{
