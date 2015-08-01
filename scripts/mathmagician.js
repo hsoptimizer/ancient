@@ -223,7 +223,7 @@ anc[30] = {
 	'desiredLevel':function(s){var t=Math.ceil((371*Math.log(s)-2080)/5)*5-1-irisBonus;return(t<(104-irisBonus)?0:t);}
 };
 
-function primalSouls(optimize)	{
+function primalSouls()	{
 	if(data.primalSouls)	{
 		var bank = parseInt($('#old0').val());
 		bank = $('#primalsouls').is(':checked') ? bank + data.primalSouls : bank - data.primalSouls;
