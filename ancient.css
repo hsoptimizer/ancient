@@ -1,0 +1,115 @@
+*	{
+	font-family: Calibri,Arial,sans-serif;
+}
+
+body	{
+	background-color: ivory;
+}
+
+header{
+	font: 28px Arial, sans-serif;
+}
+
+textarea {
+	width: 99%;
+}
+
+input {
+	text-align: right;
+}
+
+textarea	{
+	border-width: 1px;
+	background-color:khaki;
+	font-size:x-small;
+}
+
+.error	{
+	background-color:tomato;
+}
+.errorresult	{
+	width:120px;
+	font-size: small;
+	font-family:Arial,sans-serif;
+	background-color:tomato;
+}
+
+input	{
+	width:120px;
+}
+
+input.uservalue	{
+	border-width: 1px;
+	background-color:khaki;
+	font-family:Arial,sans-serif;
+}
+
+input.noborder	{
+	border-width: 0px;
+	border: none;
+	background-color:transparent;
+	color: black;
+}
+
+td.result	{
+	width:120px;
+	font-size: small;
+	font-family:Arial,sans-serif;
+}
+
+table	{
+	border-collapse: collapse;
+}
+
+td	{
+	border: 1px solid darkkhaki;
+	text-align: right;
+	padding-left: 4px;
+	padding-right: 4px;
+}
+
+td.pref	{
+	text-align:left;
+	vertical-align:middle;
+}
+
+th	{
+	border: 1px solid darkkhaki;
+	text-align: right;
+	padding-left: 16px;
+	padding-right: 16px;
+}
+
+.filler	{
+	background-color: transparent;
+	border: none;
+}
+
+p.comments	{
+	font-style: italic;
+	font-size: small;
+}
+
+h1	{
+	font-size:x-large;
+	display: inline-block;
+	vertical-align:middle;
+	margin:0;
+}
+
+img	{
+	vertical-align:middle;
+}
+
+/* tooltips */
+#pup {
+  position:absolute;
+  z-index:200; /* aaaalways on top*/
+  padding: 3px;
+  margin: 8px;
+  border: 3px outset;
+  border-color: gold;
+  background-color: gold;
+  text-align: center;
+  color: saddlebrown;
+}
