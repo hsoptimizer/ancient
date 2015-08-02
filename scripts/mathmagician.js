@@ -331,7 +331,6 @@ function optimize()	{
 		}
 	}
 	
-	console.log('optimize finished');
 	saveSettings();
 }
 
@@ -403,7 +402,6 @@ function import_save(evt) {
 				var bonusType = data.items.items[relic]['bonusType'+bonus.toString()];
 				if(bonusType == 6)	{
 					var bonusLevel = data.items.items[relic]['bonus'+bonus.toString()+'Level'];
-					console.log(data.items.items[relic].name + ' gives irisBonus ' + bonusLevel);
 					irisBonus += bonusLevel;
 				}
 			}
