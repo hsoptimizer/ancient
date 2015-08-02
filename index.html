@@ -11,8 +11,8 @@
 		<script type="text/javascript" src="scripts/md5.js"></script>
 	</head>
 
-	<body onload="loadSettings()">
-		<img src='http://i.imgur.com/rxZ8ypH.png' height="64px"><div style="font-size:xx-small;display:inline-block;">Rules of Thumb<br><h1>Clicker Heroes Ancient Calculator</h1></div>
+	<body onload="init()">
+		<img src='http://i.imgur.com/rxZ8ypH.png' height="64px"><div style="font-size:xx-small;display:inline-block;">Rules of Thumb<br><h1>Clicker Heroes Ancients Calculator</h1></div>
 		<table>
 			<tr>
 				<td>Save game:</td>
@@ -25,25 +25,24 @@
 			<tr>
 				<th rowspan="5">Options</td>
 				<td><input type="checkbox" id="primalsouls" disabled></td>
-				<td colspan="3" style="text-align:left;">Include souls gained after ascension</td>
+				<td colspan="3" class="pref">Include souls gained after ascension</td>
 			</tr>
 			<tr>
 				<td><input type="checkbox" id="ignoreIris"></td>
-				<td style="text-align:left;">Ignore Iris <a onclick="void(0)" onmouseover="nhpup.popup('Enabling this will ignore Iris during the optimization.');">(<u>?</u>)</a></td>
-				<td><input type="number" class="uservalue" style="width:60px;" value="0" id="irisBonus"></td>
-				<td style="text-align:left;">Iris bonus from relics</td>
+				<td class="pref">Ignore Iris <a onclick="void(0)" onmouseover="nhpup.popup('Enabling this will ignore Iris during the optimization.');">(<u>?</u>)</a></td>
+				<td colspan="2" class="pref" style="text-align:right;"><input type="number" class="uservalue" style="margin-right:8px;width:60px;" value="0" id="irisBonus">Iris bonus from relics</td>
 			</tr>
 			<tr>
 				<td><input type="checkbox" id="noBossLanding"></td>
-				<td colspan="3" style="text-align:left;">Do not ascend directly to a boss zone <a onclick="void(0)" onmouseover="nhpup.popup('Enabling this will cause the highest zone unlocked by Iris to be one zone before a Boss. Disable this to ascend directly to a Boss zone.');">(<u>?</u>)</a></td>
+				<td colspan="3" class="pref">Do not ascend directly to a boss zone <a onclick="void(0)" onmouseover="nhpup.popup('Enabling this will cause the highest zone unlocked by Iris to be one zone before a Boss. Disable this to ascend directly to a Boss zone.');">(<u>?</u>)</a></td>
 			</tr>
 			<tr>
 				<td><input type="checkbox" id="laxsolo"></td>
-				<td colspan="3" style="text-align:left;">Easier Solomon <a onclick="void(0)" onmouseover="nhpup.popup('Enabling this will use log10 for Solomon instead of ln (log base e). This will value Solomon significantly lower.');">(<u>?</u>)</a></td>
+				<td colspan="3" class="pref">Easier Solomon <a onclick="void(0)" onmouseover="nhpup.popup('Enabling this will use log10 for Solomon instead of ln (log base e). This will value Solomon significantly lower.');">(<u>?</u>)</a></td>
 			</tr>
 			<tr>
 				<td><input type="checkbox" id="clicking"></td>
-				<td colspan="3" style="text-align:left;">Include clicking ancients <a onclick="void(0)" onmouseover="nhpup.popup('Clicking ancients are ignored by default, unless you don&rsquo;t have Siyalatas. Enabling this will include Bhaal, Fragsworth, Juggernaut and Pluto in the optimization, if you have them.');">(<u>?</u>)</a></td>
+				<td colspan="3" class="pref">Include clicking ancients <a onclick="void(0)" onmouseover="nhpup.popup('Clicking ancients are ignored by default, unless you don&rsquo;t have Siyalatas. Enabling this will include Bhaal, Fragsworth, Juggernaut and Pluto in the optimization, if you have them.');">(<u>?</u>)</a></td>
 			</tr>
 			<tr>
 				<td class="filler"></td>
@@ -54,158 +53,158 @@
 				<th><a onclick="void(0)" onmouseover="nhpup.popup('The current ancient levels and banked Hero Souls found in your save game. You can manually adjust these values.');">Current</a></th>
 				<th><a onclick="void(0)" onmouseover="nhpup.popup('Optimal ancient levels according to the Rules of Thumb, based on your <i>recommended</i> level of Siyalatas (or Argaiv, if you don&rsquo;t have Siya). You may or may not be able to afford these levels yet.');">Optimal</a></th>
 				<th><a onclick="void(0)" onmouseover="nhpup.popup('Level your ancients to the value shown here. These are the levels you can afford with the amount of Hero Souls in your bank.');">New level</a></th>
-				<th><a onclick="void(0)" onmouseover="nhpup.popup('Affordable number of upgrades for each ancient.<br>(New level-Current)');">Delta</a></th>
+				<th><a onclick="void(0)" onmouseover="nhpup.popup('Affordable number of upgrades for each ancient.<br>(New level &ndash; Current)');">Delta</a></th>
 			</tr>
-			<tr>
+			<tr id="anc0">
 				<td>Souls in bank:</td>
 				<td><input type="number" class="uservalue" value="0" min="0" id="old0"></td>
-				<td><input type="number" class="noborder" disabled readonly id="optimal0"></td>
-				<td><input type="number" class="noborder" disabled readonly id="new0"></td>
-				<td><input type="number" class="noborder" disabled readonly id="delta0"></td>
+				<td class="result" id="optimal0"></td>
+				<td class="result" id="new0"></td>
+				<td class="result" id="delta0"></td>
 			</tr>
-			<tr>
+			<tr id="anc28">
 				<td>Argaiv:</td>
 				<td><input type="number" class="uservalue" value="0" min="0" id="old28"></td>
-				<td><input type="number" class="noborder" disabled readonly id="optimal28"></td>
-				<td><input type="number" class="noborder" disabled readonly id="new28"></td>
-				<td><input type="number" class="noborder" disabled readonly id="delta28"></td>
+				<td class="result" id="optimal28"></td>
+				<td class="result" id="new28"></td>
+				<td class="result" id="delta28"></td>
 			</tr>
-			<tr>
+			<tr id="anc30">
 				<td>Iris:</td>
 				<td><input type="number" class="uservalue" value="0" min="0" id="old30"></td>
-				<td><input type="number" class="noborder" disabled readonly id="optimal30"></td>
-				<td><input type="number" class="noborder" disabled readonly id="new30"></td>
-				<td><input type="number" class="noborder" disabled readonly id="delta30"></td>
+				<td class="result" id="optimal30"></td>
+				<td class="result" id="new30"></td>
+				<td class="result" id="delta30"></td>
 			</tr>
-			<tr>
+			<tr id="anc4">
 				<td>Libertas:</td>
 				<td><input type="number" class="uservalue" value="0" min="0" id="old4"></td>
-				<td><input type="number" class="noborder" disabled readonly id="optimal4"></td>
-				<td><input type="number" class="noborder" disabled readonly id="new4"></td>
-				<td><input type="number" class="noborder" disabled readonly id="delta4"></td>
+				<td class="result" id="optimal4"></td>
+				<td class="result" id="new4"></td>
+				<td class="result" id="delta4"></td>
 			</tr>
-			<tr>
+			<tr id="anc8">
 				<td>Mammon:</td>
 				<td><input type="number" class="uservalue" value="0" min="0" id="old8"></td>
-				<td><input type="number" class="noborder" disabled readonly id="optimal8"></td>
-				<td><input type="number" class="noborder" disabled readonly id="new8"></td>
-				<td><input type="number" class="noborder" disabled readonly id="delta8"></td>
+				<td class="result" id="optimal8"></td>
+				<td class="result" id="new8"></td>
+				<td class="result" id="delta8"></td>
 			</tr>
-			<tr>
+			<tr id="anc9">
 				<td>Mimzee:</td>
 				<td><input type="number" class="uservalue" value="0" min="0" id="old9"></td>
-				<td><input type="number" class="noborder" disabled readonly id="optimal9"></td>
-				<td><input type="number" class="noborder" disabled readonly id="new9"></td>
-				<td><input type="number" class="noborder" disabled readonly id="delta9"></td>
+				<td class="result" id="optimal9"></td>
+				<td class="result" id="new9"></td>
+				<td class="result" id="delta9"></td>
 			</tr>
-			<tr>
+			<tr id="anc16">
 				<td>Morgulis:</td>
 				<td><input type="number" class="uservalue" value="0" min="0" id="old16"></td>
-				<td><input type="number" class="noborder" disabled readonly id="optimal16"></td>
-				<td><input type="number" class="noborder" disabled readonly id="new16"></td>
-				<td><input type="number" class="noborder" disabled readonly id="delta16"></td>
+				<td class="result" id="optimal16"></td>
+				<td class="result" id="new16"></td>
+				<td class="result" id="delta16"></td>
 			</tr>
-			<tr>
+			<tr id="anc5">
 				<td>Siyalatas:</td>
 				<td><input type="number" class="uservalue" value="0" min="0" id="old5"></td>
-				<td><input type="number" class="noborder" disabled readonly id="optimal5"></td>
-				<td><input type="number" class="noborder" disabled readonly id="new5"></td>
-				<td><input type="number" class="noborder" disabled readonly id="delta5"></td>
+				<td class="result" id="optimal5"></td>
+				<td class="result" id="new5"></td>
+				<td class="result" id="delta5"></td>
 			</tr>
-			<tr>
+			<tr id="anc3">
 				<td>Solomon:</td>
 				<td><input type="number" class="uservalue" value="0" min="0" id="old3"></td>
-				<td><input type="number" class="noborder" disabled readonly id="optimal3"></td>
-				<td><input type="number" class="noborder" disabled readonly id="new3"></td>
-				<td><input type="number" class="noborder" disabled readonly id="delta3"></td>
+				<td class="result" id="optimal3"></td>
+				<td class="result" id="new3"></td>
+				<td class="result" id="delta3"></td>
 			</tr>
-			<tr>
+			<tr id="anc15">
 				<td>Bhaal:</td>
 				<td><input type="number" class="uservalue" value="0" min="0" id="old15"></td>
-				<td><input type="number" class="noborder" disabled readonly id="optimal15"></td>
-				<td><input type="number" class="noborder" disabled readonly id="new15"></td>
-				<td><input type="number" class="noborder" disabled readonly id="delta15"></td>
+				<td class="result" id="optimal15"></td>
+				<td class="result" id="new15"></td>
+				<td class="result" id="delta15"></td>
 			</tr>
-			<tr>
+			<tr id="anc19">
 				<td>Fragsworth:</td>
 				<td><input type="number" class="uservalue" value="0" min="0" id="old19"></td>
-				<td><input type="number" class="noborder" disabled readonly id="optimal19"></td>
-				<td><input type="number" class="noborder" disabled readonly id="new19"></td>
-				<td><input type="number" class="noborder" disabled readonly id="delta19"></td>
+				<td class="result" id="optimal19"></td>
+				<td class="result" id="new19"></td>
+				<td class="result" id="delta19"></td>
 			</tr>
-			<tr>
+			<tr id="anc29">
 				<td>Juggernaut:</td>
 				<td><input type="number" class="uservalue" value="0" min="0" id="old29"></td>
-				<td><input type="number" class="noborder" disabled readonly id="optimal29"></td>
-				<td><input type="number" class="noborder" disabled readonly id="new29"></td>
-				<td><input type="number" class="noborder" disabled readonly id="delta29"></td>
+				<td class="result" id="optimal29"></td>
+				<td class="result" id="new29"></td>
+				<td class="result" id="delta29"></td>
 			</tr>
-			<tr>
+			<tr id="anc10">
 				<td>Pluto:</td>
 				<td><input type="number" class="uservalue" value="0" min="0" id="old10"></td>
-				<td><input type="number" class="noborder" disabled readonly id="optimal10"></td>
-				<td><input type="number" class="noborder" disabled readonly id="new10"></td>
-				<td><input type="number" class="noborder" disabled readonly id="delta10"></td>
+				<td class="result" id="optimal10"></td>
+				<td class="result" id="new10"></td>
+				<td class="result" id="delta10"></td>
 			</tr>
-			<tr id="max13" hidden>
+			<tr id="anc13">
 				<td>Atman:</td>
 				<td><input type="number" class="uservalue" value="0" min="0" id="old13"></td>
-				<td><input type="number" class="noborder" disabled readonly id="optimal13"></td>
-				<td><input type="number" class="noborder" disabled readonly id="new13"></td>
-				<td><input type="number" class="noborder" disabled readonly id="delta13"></td>
+				<td class="result" id="optimal13"></td>
+				<td class="result" id="new13"></td>
+				<td class="result" id="delta13"></td>
 			</tr>
-			<tr id="max18" hidden>
+			<tr id="anc18">
 				<td>Bubos:</td>
 				<td><input type="number" class="uservalue" value="0" min="0" id="old18"></td>
-				<td><input type="number" class="noborder" disabled readonly id="optimal18"></td>
-				<td><input type="number" class="noborder" disabled readonly id="new18"></td>
-				<td><input type="number" class="noborder" disabled readonly id="delta18"></td>
+				<td class="result" id="optimal18"></td>
+				<td class="result" id="new18"></td>
+				<td class="result" id="delta18"></td>
 			</tr>
-			<tr id="max11" hidden>
+			<tr id="anc11">
 				<td>Dogcog:</td>
 				<td><input type="number" class="uservalue" value="0" min="0" id="old11"></td>
-				<td><input type="number" class="noborder" disabled readonly id="optimal11"></td>
-				<td><input type="number" class="noborder" disabled readonly id="new11"></td>
-				<td><input type="number" class="noborder" disabled readonly id="delta11"></td>
+				<td class="result" id="optimal11"></td>
+				<td class="result" id="new11"></td>
+				<td class="result" id="delta11"></td>
 			</tr>
-			<tr id="max14" hidden>
+			<tr id="anc14">
 				<td>Dora:</td>
 				<td><input type="number" class="uservalue" value="0" min="0" id="old14"></td>
-				<td><input type="number" class="noborder" disabled readonly id="optimal14"></td>
-				<td><input type="number" class="noborder" disabled readonly id="new14"></td>
-				<td><input type="number" class="noborder" disabled readonly id="delta14"></td>
+				<td class="result" id="optimal14"></td>
+				<td class="result" id="new14"></td>
+				<td class="result" id="delta14"></td>
 			</tr>
-			<tr id="max12" hidden>
+			<tr id="anc12">
 				<td>Fortuna:</td>
 				<td><input type="number" class="uservalue" value="0" min="0" id="old12"></td>
-				<td><input type="number" class="noborder" disabled readonly id="optimal12"></td>
-				<td><input type="number" class="noborder" disabled readonly id="new12"></td>
-				<td><input type="number" class="noborder" disabled readonly id="delta12"></td>
+				<td class="result" id="optimal12"></td>
+				<td class="result" id="new12"></td>
+				<td class="result" id="delta12"></td>
 			</tr>
-			<tr id="max21" hidden>
+			<tr id="anc21">
 				<td>Kumawakamaru:</td>
 				<td><input type="number" class="uservalue" value="0" min="0" id="old21"></td>
-				<td><input type="number" class="noborder" disabled readonly id="optimal21"></td>
-				<td><input type="number" class="noborder" disabled readonly id="new21"></td>
-				<td><input type="number" class="noborder" disabled readonly id="delta21"></td>
+				<td class="result" id="optimal21"></td>
+				<td class="result" id="new21"></td>
+				<td class="result" id="delta21"></td>
 			</tr>
 			<tr><td colspan="5" class="filler">&nbsp;</td></tr>
 			<tr>
 				<th rowspan="4">Statistics</th>
-				<td colspan="3">Relic found this ascension:</td>
-				<td id="relicfound"></td>
+				<td class="result" colspan="3">Relic found this ascension:</td>
+				<td class="result" id="relicfound"></td>
 			</tr>
 			<tr>
-				<td colspan="3">Souls spent on ancients:</td>
-				<td id="soulsspent"></td>
+				<td class="result" colspan="3">Souls spent on ancients:</td>
+				<td class="result" id="soulsspent"></td>
 			</tr>
 			<tr>
-				<td colspan="3">Total ascensions:</td>
-				<td id="worldresets"></td>
+				<td class="result" colspan="3">Total ascensions:</td>
+				<td class="result" id="worldresets"></td>
 			</tr>
 			<tr>
-				<td colspan="3">Highest zone ever:</td>
-				<td id="hze"></td>
+				<td class="result" colspan="3">Highest zone ever:</td>
+				<td class="result" id="hze"></td>
 			</tr>
 		</table>
 
