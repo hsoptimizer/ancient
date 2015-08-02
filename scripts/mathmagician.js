@@ -10,7 +10,6 @@ $('body').on('change', '#primalsouls', primalSouls);
 var data;
 var hasMorgulis = false;
 var laxSolomon = false;
-var primalsouls = false;
 var irisBonus = 0;
 
 if(!Math.log10)	{
@@ -38,49 +37,49 @@ anc[0] = {
 	'clicking':false,
 	'maxLevel':0,
 	'upgradeCost':function(lvl){return(0);},
-	'desiredLevel':function(s){return(hasMorgulis ? 0 : s < 100 ? Math.ceil(1.1*Math.pow(s,2)) : Math.ceil(1.1*Math.pow(s,2) + 43.67*s + 33.58));}
+	'desiredLevel':function(s){return(hasMorgulis ? 0 : s < 100 ? Math.round(1.1*Math.pow(s,2)) : Math.round(1.1*Math.pow(s,2) + 43.67*s + 33.58));}
 }
 anc[3] = {
 	'Name':'Solomon',
 	'clicking':false,
 	'maxLevel':0,
 	'upgradeCost':function(lvl){return(Math.round(Math.pow(lvl, 1.5)));},
-	'desiredLevel':function(s){return(Math.ceil(1.15*Math.pow(laxSolomon ? Math.log10(3.25*Math.pow(s,2)) : Math.log(3.25*Math.pow(s,2)),0.4)*Math.pow(s,0.8)));}
+	'desiredLevel':function(s){return(Math.round(1.15*Math.pow(laxSolomon ? Math.log10(3.25*Math.pow(s,2)) : Math.log(3.25*Math.pow(s,2)),0.4)*Math.pow(s,0.8)));}
 };
 anc[4] = {
 	'Name':'Libertas',
 	'clicking':false,
 	'maxLevel':0,
 	'upgradeCost':function(lvl){return(lvl);},
-	'desiredLevel':function(s){return(Math.ceil(0.93*s));}
+	'desiredLevel':function(s){return(Math.round(0.93*s));}
 };
 anc[5] = {
 	'Name':'Siyalatas',
 	'clicking':false,
 	'maxLevel':0,
 	'upgradeCost':function(lvl){return(lvl);},
-	'desiredLevel':function(s){return(Math.ceil(s));}
+	'desiredLevel':function(s){return(Math.round(s+1));}
 };
 anc[8] = {
 	'Name':'Mammon',
 	'clicking':false,
 	'maxLevel':0,
 	'upgradeCost':function(lvl){return(lvl);},
-	'desiredLevel':function(s){return(Math.ceil(0.93*s));}
+	'desiredLevel':function(s){return(Math.round(0.93*s));}
 };
 anc[9] = {
 	'Name':'Mimzee',
 	'clicking':false,
 	'maxLevel':0,
 	'upgradeCost':function(lvl){return(lvl);},
-	'desiredLevel':function(s){return(Math.ceil(0.93*s));}
+	'desiredLevel':function(s){return(Math.round(0.93*s));}
 };
 anc[10] = {
 	'Name':'Pluto',
 	'clicking':true,
 	'maxLevel':0,
 	'upgradeCost':function(lvl){return(lvl);},
-	'desiredLevel':function(s){return(Math.ceil(0.5*s));}
+	'desiredLevel':function(s){return(Math.round(0.5*s));}
 };
 anc[11] = {
 	'Name':'Dogcog',
@@ -115,14 +114,14 @@ anc[15] = {
 	'clicking':true,
 	'maxLevel':0,
 	'upgradeCost':function(lvl){return(lvl);},
-	'desiredLevel':function(s){return(Math.ceil(0.5*s));}
+	'desiredLevel':function(s){return(Math.round(0.5*s));}
 };
 anc[16] = {
 	'Name':'Morgulis',
 	'clicking':false,
 	'maxLevel':0,
 	'upgradeCost':function(lvl){return(1);},
-	'desiredLevel':function(s){return(hasMorgulis ? Math.ceil(Math.pow(s,2) + 43.67*s + 33.58) : 0);}
+	'desiredLevel':function(s){return(hasMorgulis ? Math.round(Math.pow(s,2) + 43.67*s + 33.58) : 0);}
 };
 anc[18] = {
 	'Name':'Bubos',
@@ -136,7 +135,7 @@ anc[19] = {
 	'clicking':true,
 	'maxLevel':0,
 	'upgradeCost':function(lvl){return(lvl);},
-	'desiredLevel':function(s){return(Math.ceil(0.5*s));}
+	'desiredLevel':function(s){return(Math.round(0.5*s));}
 };
 anc[21] = {
 	'Name':'Kumawakamaru',
@@ -150,14 +149,14 @@ anc[28] = {
 	'clicking':false,
 	'maxLevel':0,
 	'upgradeCost':function(lvl){return(lvl);},
-	'desiredLevel':function(s){return(Math.ceil(s+9));}
+	'desiredLevel':function(s){return(Math.round(s+10));}
 };
 anc[29] = {
 	'Name':'Juggernaut',
 	'clicking':true,
 	'maxLevel':0,
 	'upgradeCost':function(lvl){return(Math.round(Math.pow(lvl, 1.5)));},
-	'desiredLevel':function(s){return(Math.ceil(0.1*s));}
+	'desiredLevel':function(s){return(Math.round(0.1*s));}
 };
 anc[30] = {
 	'Name':'Iris',
@@ -249,27 +248,29 @@ function optimize()	{
 
 	hasMorgulis = anc[16].levelOld > 0;
 
-	var upgradeNext;
+	var upgradeNext, referenceLevel;
 	while(upgradeNext != 0)	{
 		// optimize loop ends when the best investment is the HS bank
 		upgradeNext = 0;
 		var highestIncrease = 0;
 		var nextCost = 0;
 		var nextBestIncrease = 0;
-		var referenceLevel = useArgaiv ? Argaiv.levelNew-9 : Siya.levelNew;
+		referenceLevel = useArgaiv ? Argaiv.levelNew-9 : Siya.levelNew;
+		var desiredBank = Bank.desiredLevel(referenceLevel);
 
 		for(key in anc)	{
 			var ancient = anc[key];
-			if(ancient.levelOld > 0 && (clicking == true || ancient.clicking == false) && (ignoreIris == false || key != 30))	{
+			var optimal = ancient.desiredLevel(referenceLevel);
+			if(ancient.levelNew > 0 && (clicking == true || ancient.clicking == false) && (ignoreIris == false || key != 30))	{
 				// Do not process ancients the user doesn't have.
 				// Do not process clicking ancients when clicking checkbox is off.
 				// Do not process Iris if disabled.
 				var upgradeCost = ancient.upgradeCost(ancient.levelNew+1);
 
-				if(upgradeCost <= (Bank.levelNew-Bank.desiredLevel(referenceLevel)))	{	// always keep the desired soulbank, do not spend below this
+				if(upgradeCost <= (Bank.levelNew-desiredBank))	{	// always keep the desired soulbank, do not spend below this
 				
 					// determine the ancient that is lagging behind the most (biggest relative increase from current to optimal)
-					var increase = (ancient.desiredLevel(referenceLevel+1)-ancient.levelNew) / ancient.levelNew
+					var increase = (optimal-ancient.levelNew) / ancient.levelNew
 
 					if(increase > highestIncrease)	{
 						upgradeNext = key;
@@ -303,12 +304,12 @@ function optimize()	{
 	
 	// correct for Iris not landing on the desired zone
 	if(Iris.levelNew > Iris.levelOld && Iris.levelNew != Iris.desiredLevel(referenceLevel))	{
-		$('#new30').attr('class', 'error');
+		$('#new30').attr('class', 'errorresult');
 		$('#new30').attr("onmouseover", "nhpup.popup('Iris not at desired level.<br>Select \"Ignore Iris\" or<br>level Iris manually.');");
 	}
 	else	{
-		$('#new30').attr("onmouseover", "");
-		$('#new30').attr('class', '');
+		$('#new30').removeAttr("onmouseover", "");
+		$('#new30').attr('class', 'result');
 	}
 
 	// update HTML
@@ -316,7 +317,7 @@ function optimize()	{
 		var ancient = anc[key];
 
 		$('#new'+key).text(ancient.levelNew);
-		$('#optimal'+key).text(getOptimal(ancient, useArgaiv ? Argaiv.levelNew-9 : Siya.levelNew));
+		$('#optimal'+key).text(getOptimal(ancient, (key == 5 || key == 28) ? referenceLevel-1 : referenceLevel));
 
 		if(ancient.levelNew != ancient.levelOld)	{
 			$('#delta'+key).text(ancient.levelNew - ancient.levelOld);
