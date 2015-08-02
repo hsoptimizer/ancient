@@ -1,5 +1,5 @@
 *	{
-	font-family: Arial, sans-serif;
+	font-family: Calibri,Arial,sans-serif;
 }
 
 body	{
@@ -15,7 +15,6 @@ textarea {
 }
 
 input {
-	font-family: Arial, sans-serif;
 	text-align: right;
 }
 
@@ -25,17 +24,18 @@ textarea	{
 	font-size:x-small;
 }
 
-textarea.error	{
+.error	{
 	background-color:tomato;
 }
 
 input	{
-	width:130px;
+	width:120px;
 }
 
 input.uservalue	{
 	border-width: 1px;
 	background-color:khaki;
+	font-family:Arial,sans-serif;
 }
 
 input.noborder	{
@@ -43,6 +43,12 @@ input.noborder	{
 	border: none;
 	background-color:transparent;
 	color: black;
+}
+
+td.result	{
+	width:120px;
+	font-size: small;
+	font-family:Arial,sans-serif;
 }
 
 table	{
@@ -54,6 +60,11 @@ td	{
 	text-align: right;
 	padding-left: 4px;
 	padding-right: 4px;
+}
+
+td.pref	{
+	text-align:left;
+	vertical-align:middle;
 }
 
 th	{
@@ -69,12 +80,12 @@ th	{
 }
 
 p.comments	{
-	font-family: times;
 	font-style: italic;
+	font-size: small;
 }
 
 h1	{
-	font-size:xx-large;
+	font-size:x-large;
 	display: inline-block;
 	vertical-align:middle;
 	margin:0;
@@ -84,13 +95,6 @@ img	{
 	vertical-align:middle;
 }
 
-th > a	{
-	font-family:Arial, sans-serif;
-}
-
-a	{
-	font-family: times;
-}
 /* tooltips */
 #pup {
   position:absolute;
@@ -102,5 +106,4 @@ a	{
   background-color: gold;
   text-align: center;
   color: saddlebrown;
-  font-family: Arial, sans-serif;
 }
