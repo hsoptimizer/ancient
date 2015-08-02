@@ -11,6 +11,7 @@ var data;
 var hasMorgulis = false;
 var laxSolomon = false;
 var irisBonus = 0;
+var irisMax = 0;
 
 if(!Math.log10)	{
 	Math.log10 = function(t){return(Math.log(t)/Math.LN10);};
@@ -163,7 +164,7 @@ anc[30] = {
 	'clicking':false,
 	'maxLevel':0,
 	'upgradeCost':function(lvl){return(Math.round(Math.pow(lvl, 1.5)));},
-	'desiredLevel':function(s){var t=Math.floor((371*Math.log(s)-2080)/5)*5-1-irisBonus;return(t<(104-irisBonus)?0:t);}
+	'desiredLevel':function(s){var t=(irisMax == 0 ? Math.floor((371*Math.log(s)-2080)/5)*5-1-irisBonus : irisMax);return(t<(104-irisBonus)?0:t);}
 };
 
 function primalSouls()	{
@@ -261,6 +262,7 @@ function optimize()	{
 		for(key in anc)	{
 			var ancient = anc[key];
 			var optimal = ancient.desiredLevel(referenceLevel);
+			// if(ancient.levelNew > 0 && ancient.levelNew < optimal && (clicking == true || ancient.clicking == false) && (ignoreIris == false || key != 30))	{
 			if(ancient.levelNew > 0 && (clicking == true || ancient.clicking == false) && (ignoreIris == false || key != 30))	{
 				// Do not process ancients the user doesn't have.
 				// Do not process clicking ancients when clicking checkbox is off.
@@ -304,12 +306,9 @@ function optimize()	{
 	
 	// correct for Iris not landing on the desired zone
 	if(Iris.levelNew > Iris.levelOld && Iris.levelNew != Iris.desiredLevel(referenceLevel))	{
-		$('#new30').attr('class', 'errorresult');
-		$('#new30').attr("onmouseover", "nhpup.popup('Iris not at desired level.<br>Select \"Ignore Iris\" or<br>level Iris manually.');");
-	}
-	else	{
-		$('#new30').removeAttr("onmouseover", "");
-		$('#new30').attr('class', 'result');
+		irisMax = Math.floor((Iris.levelNew)/5)*5-1-irisBonus;
+		optimize();
+		irisMax = 0;
 	}
 
 	// update HTML
