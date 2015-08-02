@@ -27,12 +27,6 @@ textarea	{
 .error	{
 	background-color:tomato;
 }
-.errorresult	{
-	width:120px;
-	font-size: small;
-	font-family:Arial,sans-serif;
-	background-color:tomato;
-}
 
 input	{
 	width:120px;
