@@ -1,4 +1,4 @@
-// version 11
+// version 12
 
 $('#savegame').keyup(import_save);
 $('body').on('change', '#laxsolo', optimize);
@@ -38,7 +38,7 @@ anc[0] = {
 	'clicking':false,
 	'maxLevel':0,
 	'upgradeCost':function(lvl){return(0);},
-	'desiredLevel':function(s){return(hasMorgulis ? 0 : s < 100 ? Math.round(1.1*Math.pow(s,2)) : Math.round(1.1*Math.pow(s,2) + 43.67*s + 33.58));}
+	'desiredLevel':function(s){return(hasMorgulis ? 0 : s < 100 ? Math.round(1.1*Math.pow(s,2)) : Math.round(1.1*Math.pow(s,2) + 43.67*s + 33.576));}
 }
 anc[3] = {
 	'Name':'Solomon',
@@ -384,9 +384,14 @@ function import_save(evt) {
 					soulsSpent = data.ancients.ancients[key].spentHeroSouls;
 					totalSoulsSpent += soulsSpent;
 
-					if(ancient.maxLevel !== 0)	{
+					if(ancient.maxLevel != 0)	{
 						// hide capped ancients that are already maxed but show them if they're not
-						$('#anc'+key).prop('hidden', ancient.levelOld == ancient.maxLevel);
+						if(ancient.levelOld == ancient.maxLevel)	{
+							$('#anc'+key).css('display', 'none');
+						}
+						else	{
+							$('#anc'+key).css('display', 'table-row');
+						}
 					}
 				}
 			}
@@ -413,7 +418,7 @@ function import_save(evt) {
 		$('#hze').text(data.highestFinishedZonePersist.numberFormat());
 		$('#worldresets').text(data.numWorldResets.numberFormat());
 
-		if(anc[5].levelOld === 0)	{
+		if(anc[5].levelOld == 0)	{
 			// active build that doesn't have Siya
 			$('#clicking').prop('checked', true);
 		}
@@ -431,6 +436,8 @@ function init()	{
 		var ancient = anc[key];
 		ancient['levelOld'] = 0;
 		ancient['levelNew'] = 0;
-		$('#anc'+key).prop('hidden', ancient.maxLevel != 0);
+		if(ancient.maxLevel != 0)	{
+			$('#anc'+key).css('display', 'none');
+		}
 	}
 }
