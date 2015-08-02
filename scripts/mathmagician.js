@@ -17,6 +17,11 @@ if(!Math.log10)	{
 	Math.log10 = function(t){return(Math.log(t)/Math.LN10);};
 }
 
+function plural(n, s)	{
+	var suffix = (s === undefined ? "s" : s);
+	return(n == 1 ? "" : suffix)
+}
+
 Number.prototype.numberFormat = function(decimals, dec_point, thousands_sep) {
     dec_point = typeof dec_point !== 'undefined' ? dec_point : '.';
     thousands_sep = typeof thousands_sep !== 'undefined' ? thousands_sep : ',';
@@ -30,9 +35,6 @@ Number.prototype.numberFormat = function(decimals, dec_point, thousands_sep) {
 var anc = {};
 anc[0] = {
 	'Name':'Soul bank',
-	'levelOld':0,
-	'levelNew':0,
-	'totalCost':0,
 	'clicking':false,
 	'maxLevel':0,
 	'upgradeCost':function(lvl){return(0);},
@@ -40,9 +42,6 @@ anc[0] = {
 }
 anc[3] = {
 	'Name':'Solomon',
-	'levelOld':0,
-	'levelNew':0,
-	'totalCost':0,
 	'clicking':false,
 	'maxLevel':0,
 	'upgradeCost':function(lvl){return(Math.round(Math.pow(lvl, 1.5)));},
@@ -50,9 +49,6 @@ anc[3] = {
 };
 anc[4] = {
 	'Name':'Libertas',
-	'levelOld':0,
-	'levelNew':0,
-	'totalCost':0,
 	'clicking':false,
 	'maxLevel':0,
 	'upgradeCost':function(lvl){return(lvl);},
@@ -60,9 +56,6 @@ anc[4] = {
 };
 anc[5] = {
 	'Name':'Siyalatas',
-	'levelOld':0,
-	'levelNew':0,
-	'totalCost':0,
 	'clicking':false,
 	'maxLevel':0,
 	'upgradeCost':function(lvl){return(lvl);},
@@ -70,9 +63,6 @@ anc[5] = {
 };
 anc[8] = {
 	'Name':'Mammon',
-	'levelOld':0,
-	'levelNew':0,
-	'totalCost':0,
 	'clicking':false,
 	'maxLevel':0,
 	'upgradeCost':function(lvl){return(lvl);},
@@ -80,9 +70,6 @@ anc[8] = {
 };
 anc[9] = {
 	'Name':'Mimzee',
-	'levelOld':0,
-	'levelNew':0,
-	'totalCost':0,
 	'clicking':false,
 	'maxLevel':0,
 	'upgradeCost':function(lvl){return(lvl);},
@@ -90,9 +77,6 @@ anc[9] = {
 };
 anc[10] = {
 	'Name':'Pluto',
-	'levelOld':0,
-	'levelNew':0,
-	'totalCost':0,
 	'clicking':true,
 	'maxLevel':0,
 	'upgradeCost':function(lvl){return(lvl);},
@@ -100,9 +84,6 @@ anc[10] = {
 };
 anc[11] = {
 	'Name':'Dogcog',
-	'levelOld':0,
-	'levelNew':0,
-	'totalCost':0,
 	'clicking':false,
 	'maxLevel':25,
 	'upgradeCost':function(lvl){return(lvl);},
@@ -110,9 +91,6 @@ anc[11] = {
 };
 anc[12] = {
 	'Name':'Fortuna',
-	'levelOld':0,
-	'levelNew':0,
-	'totalCost':0,
 	'clicking':false,
 	'maxLevel':40,
 	'upgradeCost':function(lvl){return(lvl);},
@@ -120,9 +98,6 @@ anc[12] = {
 };
 anc[13] = {
 	'Name':'Atman',
-	'levelOld':0,
-	'levelNew':0,
-	'totalCost':0,
 	'clicking':false,
 	'maxLevel':25,
 	'upgradeCost':function(lvl){return(Math.round(Math.pow(lvl, 1.5)));},
@@ -130,9 +105,6 @@ anc[13] = {
 };
 anc[14] = {
 	'Name':'Dora',
-	'levelOld':0,
-	'levelNew':0,
-	'totalCost':0,
 	'clicking':false,
 	'maxLevel':50,
 	'upgradeCost':function(lvl){return(lvl);},
@@ -140,9 +112,6 @@ anc[14] = {
 };
 anc[15] = {
 	'Name':'Bhaal',
-	'levelOld':0,
-	'levelNew':0,
-	'totalCost':0,
 	'clicking':true,
 	'maxLevel':0,
 	'upgradeCost':function(lvl){return(lvl);},
@@ -150,9 +119,6 @@ anc[15] = {
 };
 anc[16] = {
 	'Name':'Morgulis',
-	'levelOld':0,
-	'levelNew':0,
-	'totalCost':0,
 	'clicking':false,
 	'maxLevel':0,
 	'upgradeCost':function(lvl){return(1);},
@@ -160,9 +126,6 @@ anc[16] = {
 };
 anc[18] = {
 	'Name':'Bubos',
-	'levelOld':0,
-	'levelNew':0,
-	'totalCost':0,
 	'clicking':false,
 	'maxLevel':25,
 	'upgradeCost':function(lvl){return(lvl);},
@@ -170,9 +133,6 @@ anc[18] = {
 };
 anc[19] = {
 	'Name':'Fragsworth',
-	'levelOld':0,
-	'levelNew':0,
-	'totalCost':0,
 	'clicking':true,
 	'maxLevel':0,
 	'upgradeCost':function(lvl){return(lvl);},
@@ -180,9 +140,6 @@ anc[19] = {
 };
 anc[21] = {
 	'Name':'Kumawakamaru',
-	'levelOld':0,
-	'levelNew':0,
-	'totalCost':0,
 	'clicking':false,
 	'maxLevel':5,
 	'upgradeCost':function(lvl){return(10*lvl);},
@@ -190,9 +147,6 @@ anc[21] = {
 };
 anc[28] = {
 	'Name':'Argaiv',
-	'levelOld':0,
-	'levelNew':0,
-	'totalCost':0,
 	'clicking':false,
 	'maxLevel':0,
 	'upgradeCost':function(lvl){return(lvl);},
@@ -200,9 +154,6 @@ anc[28] = {
 };
 anc[29] = {
 	'Name':'Juggernaut',
-	'levelOld':0,
-	'levelNew':0,
-	'totalCost':0,
 	'clicking':true,
 	'maxLevel':0,
 	'upgradeCost':function(lvl){return(Math.round(Math.pow(lvl, 1.5)));},
@@ -210,9 +161,6 @@ anc[29] = {
 };
 anc[30] = {
 	'Name':'Iris',
-	'levelOld':0,
-	'levelNew':0,
-	'totalCost':0,
 	'clicking':false,
 	'maxLevel':0,
 	'upgradeCost':function(lvl){return(Math.round(Math.pow(lvl, 1.5)));},
@@ -272,10 +220,11 @@ function loadSettings()	{
 }
 
 function optimize()	{
-
+	var Bank = anc[0];
 	var Siya = anc[5];
 	var Argaiv = anc[28];
-	var Bank = anc[0];
+	var Iris = anc[30];
+	
 	var clicking = 	$('#clicking').is(':checked');
 	var ignoreIris = $('#ignoreIris').is(':checked');
 	laxSolomon = $('#laxsolo').is(':checked');
@@ -331,7 +280,6 @@ function optimize()	{
 				}
 			}
 		}
-
 		if(upgradeNext != 0)	{
 			var ancient = anc[upgradeNext];
 			if(upgradeNext == 16)	{
@@ -352,19 +300,33 @@ function optimize()	{
 			}
 		}
 	}
+	
+	// correct for Iris not landing on the desired zone
+	if(Iris.levelNew > Iris.levelOld && Iris.levelNew != Iris.desiredLevel(referenceLevel))	{
+		$('#new30').attr('class', 'error');
+		$('#new30').attr("onmouseover", "nhpup.popup('Iris not at desired level.<br>Select \"Ignore Iris\" or<br>level Iris manually.');");
+	}
+	else	{
+		$('#new30').attr("onmouseover", "");
+		$('#new30').attr('class', '');
+	}
 
 	// update HTML
 	for(key in anc)	{
 		var ancient = anc[key];
 
-		$('#new'+key).prop('value', ancient.levelNew);
-		$('#optimal'+key).prop('value', getOptimal(ancient, useArgaiv ? Argaiv.levelNew-9 : Siya.levelNew));
+		$('#new'+key).text(ancient.levelNew);
+		$('#optimal'+key).text(getOptimal(ancient, useArgaiv ? Argaiv.levelNew-9 : Siya.levelNew));
 
 		if(ancient.levelNew != ancient.levelOld)	{
-			$('#delta'+key).prop('value', ancient.levelNew - ancient.levelOld);
+			$('#delta'+key).text(ancient.levelNew - ancient.levelOld);
+			if(key != 0)	{
+				$('#delta'+key).attr("onmouseover", "nhpup.popup('"+ancient.Name+" upgrade cost:<br>"+ancient.totalCost.numberFormat()+" soul"+plural(ancient.totalCost)+"');");
+			}
 		}
 		else	{
-			$('#delta'+key).prop('value', '');
+			$('#delta'+key).text('');
+			$('#delta'+key).attr("onmouseover", "");
 		}
 	}
 	
@@ -400,6 +362,7 @@ function import_save(evt) {
 
 		data = $.parseJSON(atob(txt));
 
+		var totalSoulsSpent = 0
 		for(key in anc)	{
 			var ancient = anc[key];
 
@@ -416,9 +379,13 @@ function import_save(evt) {
 			else	{
 				if(data.ancients.ancients.hasOwnProperty(key))	{
 					ancient.levelOld = data.ancients.ancients[key].level;
+
+					soulsSpent = data.ancients.ancients[key].spentHeroSouls;
+					totalSoulsSpent += soulsSpent;
+
 					if(ancient.maxLevel !== 0)	{
-						// hide capped ancients that are already maxed
-						$('#max'+key).prop('hidden', ancient.levelOld == ancient.maxLevel);
+						// hide capped ancients that are already maxed but show them if they're not
+						$('#anc'+key).prop('hidden', ancient.levelOld == ancient.maxLevel);
 					}
 				}
 			}
@@ -440,15 +407,11 @@ function import_save(evt) {
 				}
 			}
 		}
-		$('#irisBonus').prop('value', irisBonus);
 
-		var soulsSpent = 0
-		for(key in data.ancients.ancients)	{
-			soulsSpent += data.ancients.ancients[key].spentHeroSouls;
-		}
-		$('#soulsspent').prop('textContent', soulsSpent.numberFormat());
-		$('#hze').prop('textContent', data.highestFinishedZonePersist.numberFormat());
-		$('#worldresets').prop('textContent', data.numWorldResets.numberFormat());
+		$('#irisBonus').prop('value', irisBonus);
+		$('#soulsspent').text(totalSoulsSpent.numberFormat());
+		$('#hze').text(data.highestFinishedZonePersist.numberFormat());
+		$('#worldresets').text(data.numWorldResets.numberFormat());
 
 		if(anc[5].levelOld === 0)	{
 			// active build that doesn't have Siya
@@ -457,10 +420,17 @@ function import_save(evt) {
 
 		optimize();
 	}
-	else if(txt == "")	{
-		$('#savegame').prop('class', '');
-	}
 	else	{
-		$('#savegame').prop('class', 'error');
+		$('#savegame').prop('class', txt=='' ? '' : 'error');
+	}
+}
+
+function init()	{
+	loadSettings();
+	for(key in anc)	{
+		var ancient = anc[key];
+		ancient['levelOld'] = 0;
+		ancient['levelNew'] = 0;
+		$('#anc'+key).prop('hidden', ancient.maxLevel != 0);
 	}
 }
