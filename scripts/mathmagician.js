@@ -1,4 +1,4 @@
-// version 11
+// version 12
 
 $('#savegame').keyup(import_save);
 $('body').on('change', '#laxsolo', optimize);
@@ -262,8 +262,8 @@ function optimize()	{
 		for(key in anc)	{
 			var ancient = anc[key];
 			var optimal = ancient.desiredLevel(referenceLevel);
-			// if(ancient.levelNew > 0 && ancient.levelNew < optimal && (clicking == true || ancient.clicking == false) && (ignoreIris == false || key != 30))	{
-			if(ancient.levelNew > 0 && (clicking == true || ancient.clicking == false) && (ignoreIris == false || key != 30))	{
+			if(ancient.levelNew > 0 && ancient.levelNew < optimal && (clicking == true || ancient.clicking == false) && (ignoreIris == false || key != 30))	{
+			// if(ancient.levelNew > 0 && (clicking == true || ancient.clicking == false) && (ignoreIris == false || key != 30))	{
 				// Do not process ancients the user doesn't have.
 				// Do not process clicking ancients when clicking checkbox is off.
 				// Do not process Iris if disabled.
@@ -308,6 +308,9 @@ function optimize()	{
 	if(Iris.levelNew > Iris.levelOld && Iris.levelNew != Iris.desiredLevel(referenceLevel))	{
 		irisMax = Math.floor((Iris.levelNew)/5)*5-1-irisBonus;
 		optimize();
+		return;
+	}
+	else	{
 		irisMax = 0;
 	}
 
