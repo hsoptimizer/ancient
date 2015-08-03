@@ -1,4 +1,4 @@
-// version 13
+// version 14
 
 $('#savegame').keyup(import_save);
 $('body').on('change', '#laxsolo', optimize);
@@ -50,126 +50,126 @@ anc[0] = {
 	'clicking':false,
 	'maxLevel':0,
 	'upgradeCost':function(lvl){return(0);},
-	'desiredLevel':function(s){return(hasMorgulis ? 0 : Math.round(1.1*calcMorgulis(s)));}
+	'desiredLevel':function(s){return(hasMorgulis ? 0 : 1.1*calcMorgulis(s));}
 }
 anc[3] = {
 	'Name':'Solomon',
 	'clicking':false,
 	'maxLevel':0,
 	'upgradeCost':function(lvl){return(Math.round(Math.pow(lvl, 1.5)));},
-	'desiredLevel':function(s){return(Math.round(1.15*Math.pow(laxSolomon ? Math.log10(3.25*Math.pow(s,2)) : Math.log(3.25*Math.pow(s,2)),0.4)*Math.pow(s,0.8)));}
+	'desiredLevel':function(s){return(1.15*Math.pow(laxSolomon ? Math.log10(3.25*Math.pow(s,2)) : Math.log(3.25*Math.pow(s,2)),0.4)*Math.pow(s,0.8));}
 };
 anc[4] = {
 	'Name':'Libertas',
 	'clicking':false,
 	'maxLevel':0,
 	'upgradeCost':function(lvl){return(lvl);},
-	'desiredLevel':function(s){return(Math.round(0.93*s));}
+	'desiredLevel':function(s){return(0.93*s);}
 };
 anc[5] = {
 	'Name':'Siyalatas',
 	'clicking':false,
 	'maxLevel':0,
 	'upgradeCost':function(lvl){return(lvl);},
-	'desiredLevel':function(s){return(Math.round(s+1));}
+	'desiredLevel':function(s){return(s+1);}
 };
 anc[8] = {
 	'Name':'Mammon',
 	'clicking':false,
 	'maxLevel':0,
 	'upgradeCost':function(lvl){return(lvl);},
-	'desiredLevel':function(s){return(Math.round(0.93*s));}
+	'desiredLevel':function(s){return(0.93*s);}
 };
 anc[9] = {
 	'Name':'Mimzee',
 	'clicking':false,
 	'maxLevel':0,
 	'upgradeCost':function(lvl){return(lvl);},
-	'desiredLevel':function(s){return(Math.round(0.93*s));}
+	'desiredLevel':function(s){return(0.93*s);}
 };
 anc[10] = {
 	'Name':'Pluto',
 	'clicking':true,
 	'maxLevel':0,
 	'upgradeCost':function(lvl){return(lvl);},
-	'desiredLevel':function(s){return(Math.round(0.5*s));}
+	'desiredLevel':function(s){return(0.5*s);}
 };
 anc[11] = {
 	'Name':'Dogcog',
 	'clicking':false,
 	'maxLevel':25,
 	'upgradeCost':function(lvl){return(lvl);},
-	'desiredLevel':function(s){return(this.maxLevel);}
+	'desiredLevel':function(s){return(Math.min(this.maxLevel, s));}
 };
 anc[12] = {
 	'Name':'Fortuna',
 	'clicking':false,
 	'maxLevel':40,
 	'upgradeCost':function(lvl){return(lvl);},
-	'desiredLevel':function(s){return(this.maxLevel);}
+	'desiredLevel':function(s){return(Math.min(this.maxLevel, (s*this.maxLevel)/58));}
 };
 anc[13] = {
 	'Name':'Atman',
 	'clicking':false,
 	'maxLevel':25,
 	'upgradeCost':function(lvl){return(Math.round(Math.pow(lvl, 1.5)));},
-	'desiredLevel':function(s){return(this.maxLevel);}
+	'desiredLevel':function(s){return(Math.min(this.maxLevel, s));}
 };
 anc[14] = {
 	'Name':'Dora',
 	'clicking':false,
 	'maxLevel':50,
 	'upgradeCost':function(lvl){return(lvl);},
-	'desiredLevel':function(s){return(this.maxLevel);}
+	'desiredLevel':function(s){return(Math.min(this.maxLevel, (s*this.maxLevel)/72));}
 };
 anc[15] = {
 	'Name':'Bhaal',
 	'clicking':true,
 	'maxLevel':0,
 	'upgradeCost':function(lvl){return(lvl);},
-	'desiredLevel':function(s){return(Math.round(0.5*s));}
+	'desiredLevel':function(s){return(0.5*s);}
 };
 anc[16] = {
 	'Name':'Morgulis',
 	'clicking':false,
 	'maxLevel':0,
 	'upgradeCost':function(lvl){return(1);},
-	'desiredLevel':function(s){return(hasMorgulis ? Math.round(calcMorgulis(s)) : 0);}
+	'desiredLevel':function(s){return(hasMorgulis ? calcMorgulis(s) : 0);}
 };
 anc[18] = {
 	'Name':'Bubos',
 	'clicking':false,
 	'maxLevel':25,
 	'upgradeCost':function(lvl){return(lvl);},
-	'desiredLevel':function(s){return(this.maxLevel);}
+	'desiredLevel':function(s){return(Math.min(this.maxLevel, (s*this.maxLevel)/60));}
 };
 anc[19] = {
 	'Name':'Fragsworth',
 	'clicking':true,
 	'maxLevel':0,
 	'upgradeCost':function(lvl){return(lvl);},
-	'desiredLevel':function(s){return(Math.round(0.5*s));}
+	'desiredLevel':function(s){return(0.5*s);}
 };
 anc[21] = {
 	'Name':'Kumawakamaru',
 	'clicking':false,
 	'maxLevel':5,
 	'upgradeCost':function(lvl){return(10*lvl);},
-	'desiredLevel':function(s){return(this.maxLevel);}
+	'desiredLevel':function(s){return(Math.min(this.maxLevel, s/3));}
 };
 anc[28] = {
 	'Name':'Argaiv',
 	'clicking':false,
 	'maxLevel':0,
 	'upgradeCost':function(lvl){return(lvl);},
-	'desiredLevel':function(s){return(Math.round(s+10));}
+	'desiredLevel':function(s){return(s+10);}
 };
 anc[29] = {
 	'Name':'Juggernaut',
 	'clicking':true,
 	'maxLevel':0,
 	'upgradeCost':function(lvl){return(Math.round(Math.pow(lvl, 1.5)));},
-	'desiredLevel':function(s){return(Math.round(0.1*s));}
+	'desiredLevel':function(s){return(0.1*s);}
 };
 anc[30] = {
 	'Name':'Iris',
@@ -190,7 +190,7 @@ function primalSouls()	{
 
 function getOptimal(ancient, level)	{
 	var optimalLevel = ancient.desiredLevel(level);
-	return(optimalLevel > 0 ? optimalLevel : 0);
+	return(optimalLevel > 0 ? Math.round(optimalLevel) : 0);
 }
 
 function setCookie(cname, cvalue) {
