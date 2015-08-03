@@ -1,4 +1,4 @@
-// version 14
+// version 15
 
 $('#savegame').keyup(import_save);
 $('body').on('change', '#laxsolo', optimize);
@@ -361,16 +361,24 @@ function import_save(evt) {
 			txt += result[0][i];
 		}
 		if (CryptoJS.MD5(txt + SALT) != result[1]) {
-			$('#savegame').prop('class', 'error');
+			$('#savegame').attr('class', 'error');
 			return;
 		}
 		else	{
-			$('#savegame').prop('class', '');
+			$('#savegame').attr('class', '');
 		}
 
 		data = $.parseJSON(atob(txt));
 
-		var totalSoulsSpent = 0
+		var totalSoulsSpent = 0;
+
+		// count hero levels for Souls gained on ascension
+		var totalHeroLevels = 0;
+		for(hero in data.heroCollection.heroes)	{
+			totalHeroLevels += data.heroCollection.heroes[hero].level;
+		}
+		data.primalSouls += (Math.floor(totalHeroLevels/2000));
+		
 		for(key in anc)	{
 			var ancient = anc[key];
 
