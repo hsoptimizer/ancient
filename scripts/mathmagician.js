@@ -264,7 +264,7 @@ function optimize()	{
 		var nextCost = 0;
 		var nextBestIncrease = 0;
 		referenceLevel = Math.max(Argaiv.levelNew-9, Siya.levelNew, 1);
-		var desiredBank = Bank.desiredLevel(referenceLevel);
+		var desiredBank = Bank.desiredLevel(referenceLevel+1);
 
 		for(key in anc)	{
 			var ancient = anc[key];
