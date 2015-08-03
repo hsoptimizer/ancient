@@ -32,7 +32,7 @@ Number.prototype.numberFormat = function(decimals, dec_point, thousands_sep) {
     return parts.join(dec_point);
 };
 
-function calcSoulBank(s)	{
+function calcMorgulis(s)	{
 	var offs = [0,0.09,0.28,0.57,0.96,1.45,2.04,2.73,3.52,4.41,5.40];
 	var tier = Math.min(Math.floor(s/10), 10);
 	var percent = (25-tier)/100;
@@ -50,7 +50,7 @@ anc[0] = {
 	'clicking':false,
 	'maxLevel':0,
 	'upgradeCost':function(lvl){return(0);},
-	'desiredLevel':function(s){return(hasMorgulis ? 0 : Math.round(1.1*calcSoulBank(s)));}
+	'desiredLevel':function(s){return(hasMorgulis ? 0 : Math.round(1.1*calcMorgulis(s)));}
 }
 anc[3] = {
 	'Name':'Solomon',
@@ -134,7 +134,7 @@ anc[16] = {
 	'clicking':false,
 	'maxLevel':0,
 	'upgradeCost':function(lvl){return(1);},
-	'desiredLevel':function(s){return(hasMorgulis ? Math.round(calcSoulBank(s)) : 0);}
+	'desiredLevel':function(s){return(hasMorgulis ? Math.round(calcMorgulis(s)) : 0);}
 };
 anc[18] = {
 	'Name':'Bubos',
@@ -254,11 +254,6 @@ function optimize()	{
 		ancient.levelNew = ancient.levelOld;
 	}
 
-	var useArgaiv = false;
-	if(Siya.levelOld == 0)	{
-		useArgaiv = true;
-	}
-
 	hasMorgulis = anc[16].levelOld > 0;
 
 	var upgradeNext, referenceLevel;
@@ -268,7 +263,7 @@ function optimize()	{
 		var highestIncrease = 0;
 		var nextCost = 0;
 		var nextBestIncrease = 0;
-		referenceLevel = useArgaiv ? Argaiv.levelNew-9 : Siya.levelNew;
+		referenceLevel = Math.max(Argaiv.levelNew, Siya.levelNew, 1);
 		var desiredBank = Bank.desiredLevel(referenceLevel);
 
 		for(key in anc)	{
