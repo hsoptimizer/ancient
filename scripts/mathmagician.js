@@ -32,13 +32,25 @@ Number.prototype.numberFormat = function(decimals, dec_point, thousands_sep) {
     return parts.join(dec_point);
 };
 
+function calcSoulBank(s)	{
+	var offs = [0,0.09,0.28,0.57,0.96,1.45,2.04,2.73,3.52,4.41,5.40];
+	var tier = Math.min(Math.floor(s/10), 10);
+	var percent = (25-tier)/100;
+	var correction = offs[tier];
+
+	var b = (1+percent+correction)/percent;
+	var c = (0.11*(correction+1)-percent)/(0.11*percent);
+	
+	return(Math.pow(s,2) + b*s + c);
+}
+
 var anc = {};
 anc[0] = {
 	'Name':'Soul bank',
 	'clicking':false,
 	'maxLevel':0,
 	'upgradeCost':function(lvl){return(0);},
-	'desiredLevel':function(s){return(hasMorgulis ? 0 : s < 100 ? Math.round(1.1*Math.pow(s,2)) : Math.round(1.1*Math.pow(s,2) + 43.67*s + 33.576));}
+	'desiredLevel':function(s){return(hasMorgulis ? 0 : Math.round(1.1*calcSoulBank(s)));}
 }
 anc[3] = {
 	'Name':'Solomon',
@@ -122,7 +134,7 @@ anc[16] = {
 	'clicking':false,
 	'maxLevel':0,
 	'upgradeCost':function(lvl){return(1);},
-	'desiredLevel':function(s){return(hasMorgulis ? Math.round(Math.pow(s,2) + 43.67*s + 33.58) : 0);}
+	'desiredLevel':function(s){return(hasMorgulis ? Math.round(calcSoulBank(s)) : 0);}
 };
 anc[18] = {
 	'Name':'Bubos',
@@ -368,36 +380,23 @@ function import_save(evt) {
 			var ancient = anc[key];
 
 			if(key == 0)	{
-				if(data.heroSouls > 0)	{
-					$('#primalsouls').prop('checked', false);
-					ancient.levelOld = data.heroSouls;
-				}
-				else	{
-					$('#primalsouls').prop('checked', true);
-					ancient.levelOld = data.primalSouls;
-				}
+				$('#primalsouls').prop('checked', data.heroSouls == 0);
+				ancient.levelOld = (data.heroSouls == 0 ? data.primalSouls : data.heroSouls);
 			}
 			else	{
 				if(data.ancients.ancients.hasOwnProperty(key))	{
 					ancient.levelOld = data.ancients.ancients[key].level;
-
-					soulsSpent = data.ancients.ancients[key].spentHeroSouls;
-					totalSoulsSpent += soulsSpent;
-
-					if(ancient.maxLevel != 0)	{
-						// hide capped ancients that are already maxed but show them if they're not
-						if(ancient.levelOld == ancient.maxLevel)	{
-							$('#anc'+key).css('display', 'none');
-						}
-						else	{
-							$('#anc'+key).css('display', 'table-row');
-						}
-					}
+					totalSoulsSpent += data.ancients.ancients[key].spentHeroSouls;
 				}
+				else	{
+					ancient.levelOld = 0;
+				}
+				// hide capped ancients that are already maxed but show them if they're not
+				$('#anc'+key).css('display', (ancient.maxLevel != 0 && ancient.levelOld == ancient.maxLevel) ? 'none' : 'table-row');
 			}
 			$('#old'+key).prop('value', ancient.levelOld);
 		}
-		$('#primalsouls').prop('disabled', false);
+		$('#primalsouls').attr('disabled', false);
 
 		$('#relicfound').prop('textContent', data.items.gotAscensionItem ? "Yes" : "No");
 
