@@ -42,7 +42,7 @@
 			</tr>
 			<tr>
 				<td><input type="checkbox" id="clicking"></td>
-				<td colspan="3" class="pref">Include clicking ancients <a onclick="void(0)" onmouseover="nhpup.popup('Clicking ancients are ignored by default, unless you don&rsquo;t have Siyalatas. Enabling this will include Bhaal, Fragsworth, Juggernaut and Pluto in the optimization, if you have them.');">(<u>?</u>)</a></td>
+				<td colspan="3" class="pref">Include clicking ancients <a onclick="void(0)" onmouseover="nhpup.popup('Clicking ancients are ignored by default, unless you don&rsquo;t have Siyalatas. Enabling this will include Bhaal, Fragsworth, Juggernaut and Pluto in the optimization, if you have them.<br><br>Note: the formulas used for clicking ancients are best suited for HYBRID play style!');">(<u>?</u>)</a></td>
 			</tr>
 			<tr>
 				<td class="filler"></td>
@@ -54,7 +54,7 @@
 				<th onmouseover="nhpup.popup('The current ancient levels and banked Hero Souls found in your save game. You can manually adjust these values.');">Current</th>
 				<th onmouseover="nhpup.popup('Optimal ancient levels according to the Rules of Thumb, based on your <i>new</i> level of Siyalatas (or Argaiv, if you don&rsquo;t have Siya). You may or may not be able to afford these levels yet.');">Optimal</th>
 				<th onmouseover="nhpup.popup('Level your ancients to the value shown here. These are the levels you can afford with the amount of Hero Souls in your bank.');">New target</th>
-				<th onmouseover="nhpup.popup('Affordable number of upgrades for each ancient.<br>(New level &ndash; Current)');">Delta</th>
+				<th onmouseover="nhpup.popup('Affordable number of upgrades for each ancient.<br>(New target &ndash; Current)');">Delta</th>
 			</tr>
 			<tr id="anc0">
 				<td>Souls in bank:</td>
@@ -215,9 +215,8 @@
 		</p>
 		<p class="comments">
 			Latest changes:<br>
+			- Slight layout update, changed "New level" to "New target". Hope that's less confusing.<br>
 			- Much improved formulas for HS bank and Morgulis for early game.<br>
-			- Fixed issue with capped ancients not showing but being upgraded<br>
-			- Implemented capped ancient ratios based on this <a href='https://marakesh.pythonanywhere.com/clicker_heroes/default/calculator_v2'>progress calculator</a>
 		</p>
 		<p class="comments">
 			Iris recommendation is experimental, following <a href='https://www.reddit.com/r/ClickerHeroes/comments/3f3djb/late_game_iris_and_other_large_numbers/'>this analysis of Iris</a>.
