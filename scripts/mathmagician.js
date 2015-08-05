@@ -1,4 +1,4 @@
-// version 15
+// version 16
 
 $('#savegame').keyup(import_save);
 $('body').on('change', '#laxsolo', optimize);
