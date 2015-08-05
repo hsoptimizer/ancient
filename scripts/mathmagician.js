@@ -264,7 +264,8 @@ function optimize()	{
 		var nextCost = 0;
 		var nextBestIncrease = 0;
 		referenceLevel = Math.max(Argaiv.levelNew-9, Siya.levelNew, 1);
-		var desiredBank = Bank.desiredLevel(referenceLevel+1);
+		var desiredBank = Bank.levelNew-Bank.desiredLevel(referenceLevel);
+		var nextBank = Bank.levelNew-Bank.desiredLevel(referenceLevel+1);
 
 		for(key in anc)	{
 			var ancient = anc[key];
@@ -275,7 +276,7 @@ function optimize()	{
 				// Do not process Iris if disabled.
 				var upgradeCost = ancient.upgradeCost(ancient.levelNew+1);
 
-				if(upgradeCost <= (Bank.levelNew-desiredBank))	{	// always keep the desired soulbank, do not spend below this
+				if(upgradeCost <= (key==5 || key==28 ? nextBank : desiredBank))	{	// always keep the desired soulbank, do not spend below this
 				
 					// determine the ancient that is lagging behind the most (biggest relative increase from current to optimal)
 					var increase = (optimal-ancient.levelNew) / ancient.levelNew
@@ -399,9 +400,7 @@ function import_save(evt) {
 			}
 			$('#old'+key).prop('value', ancient.levelOld);
 		}
-		$('#primalsouls').attr('disabled', false);
 
-		$('#relicfound').prop('textContent', data.items.gotAscensionItem ? "Yes" : "No");
 
 		// find the Iris bonus from relics!
 		irisBonus = 0;
@@ -415,10 +414,12 @@ function import_save(evt) {
 			}
 		}
 
+		$('#primalsouls').attr('disabled', false);
 		$('#irisBonus').prop('value', irisBonus);
+		$('#relicfound').prop('textContent', data.items.gotAscensionItem ? "Yes" : "No");
 		$('#soulsspent').text(totalSoulsSpent.numberFormat());
-		$('#hze').text(data.highestFinishedZonePersist.numberFormat());
 		$('#worldresets').text(data.numWorldResets.numberFormat());
+		$('#hze').text(data.highestFinishedZonePersist.numberFormat());
 
 		if(anc[5].levelOld == 0)	{
 			// active build that doesn't have Siya
