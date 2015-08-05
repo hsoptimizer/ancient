@@ -27,12 +27,6 @@ textarea	{
 .error	{
 	background-color:tomato;
 }
-.errorresult	{
-	width:120px;
-	font-size: small;
-	font-family:Arial,sans-serif;
-	background-color:tomato;
-}
 
 input	{
 	width:120px;
@@ -57,6 +51,25 @@ td.result	{
 	font-family:Arial,sans-serif;
 }
 
+td.oresult	{
+	width:120px;
+	font-size: small;
+	font-family:Arial,sans-serif;
+}
+
+td.nresult	{
+	width:120px;
+	font-size: small;
+	font-family:Arial,sans-serif;
+}
+
+td.dresult	{
+	font-weight: bold;
+	width:120px;
+	font-size: small;
+	font-family:Arial,sans-serif;
+}
+
 table	{
 	border-collapse: collapse;
 }
@@ -74,6 +87,7 @@ td.pref	{
 }
 
 th	{
+	background-color: lemonchiffon;
 	border: 1px solid darkkhaki;
 	text-align: right;
 	padding-left: 16px;
