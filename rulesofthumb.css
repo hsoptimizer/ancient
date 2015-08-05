@@ -28,11 +28,15 @@ textarea	{
 	background-color:tomato;
 }
 
-input	{
-	width:120px;
+input.pref	{
+	margin-left:8px;
+	margin-right:8px;
+	width:auto;
+	text-align:right;
 }
 
 input.uservalue	{
+	width:120px;
 	border-width: 1px;
 	background-color:khaki;
 	font-family:Arial,sans-serif;
@@ -46,6 +50,25 @@ input.noborder	{
 }
 
 td.result	{
+	width:120px;
+	font-size: small;
+	font-family:Arial,sans-serif;
+}
+
+td.oresult	{
+	width:120px;
+	font-size: small;
+	font-family:Arial,sans-serif;
+}
+
+td.nresult	{
+	width:120px;
+	font-size: small;
+	font-family:Arial,sans-serif;
+}
+
+td.dresult	{
+	font-weight: bold;
 	width:120px;
 	font-size: small;
 	font-family:Arial,sans-serif;
@@ -68,6 +91,7 @@ td.pref	{
 }
 
 th	{
+	background-color: lemonchiffon;
 	border: 1px solid darkkhaki;
 	text-align: right;
 	padding-left: 16px;
