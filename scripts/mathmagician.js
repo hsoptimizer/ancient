@@ -1,4 +1,4 @@
-// version 17
+// version 18
 
 $('#savegame').keyup(import_save);
 $('body').on('change', '#laxsolo', optimize);
@@ -207,7 +207,7 @@ anc[29] = {
 	'getBonus':function(lvl){return(10*lvl);},
 	'desc':'',
 	'upgradeCost':function(lvl){return(Math.round(Math.pow(lvl, 1.5)));},
-	'desiredLevel':function(s){return(playstyle=='active' ? Math.pow(s,0.8) * Math.pow(2, 0.4) : 0.1*s);}
+	'desiredLevel':function(s){return(playstyle=='active' ? Math.pow(s,0.8) : 0.1*s);}
 };
 anc[30] = {
 	'Name':'Iris',
