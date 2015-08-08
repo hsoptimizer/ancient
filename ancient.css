@@ -28,11 +28,15 @@ textarea	{
 	background-color:tomato;
 }
 
-input	{
-	width:120px;
+input.pref	{
+	margin-left:8px;
+	margin-right:8px;
+	width:auto;
+	text-align:right;
 }
 
 input.uservalue	{
+	width:120px;
 	border-width: 1px;
 	background-color:khaki;
 	font-family:Arial,sans-serif;
