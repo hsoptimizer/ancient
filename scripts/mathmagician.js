@@ -1,4 +1,4 @@
-// version 18
+// version 19
 
 $('#savegame').keyup(import_save);
 $('body').on('change', '#laxsolo', optimize);
@@ -108,7 +108,7 @@ anc[10] = {
 	'maxLevel':0,
 	'getBonus':function(lvl){return("+" + (30*lvl).numberFormat() + "% Golden Clicks Gold");},
 	'upgradeCost':function(lvl){return(lvl);},
-	'desiredLevel':function(s){return(0.5*s);}
+	'desiredLevel':function(s){return(playstyle=='idle' ? 0 : 0.5*s);}
 };
 anc[11] = {
 	'Name':'Dogcog',
@@ -148,7 +148,7 @@ anc[15] = {
 	'maxLevel':0,
 	'getBonus':function(lvl){return("+" + (15*lvl).numberFormat() + "% Critical Damage");},
 	'upgradeCost':function(lvl){return(lvl);},
-	'desiredLevel':function(s){return(playstyle=='active' ? s-90 : 0.5*s);}
+	'desiredLevel':function(s){return(playstyle=='idle' ? 0 : playstyle=='active' ? s-90 : 0.5*s);}
 };
 anc[16] = {
 	'Name':'Morgulis',
@@ -172,7 +172,7 @@ anc[19] = {
 	'maxLevel':0,
 	'getBonus':function(lvl){return("+" + (20*lvl).numberFormat() + "% Click Damage");},
 	'upgradeCost':function(lvl){return(lvl);},
-	'desiredLevel':function(s){return(playstyle=='active' ? s : 0.5*s);}
+	'desiredLevel':function(s){return(playstyle=='idle' ? 0 : playstyle=='active' ? s : 0.5*s);}
 };
 anc[21] = {
 	'Name':'Kumawakamaru',
@@ -196,8 +196,7 @@ anc[29] = {
 	'maxLevel':0,
 	'getBonus':function(lvl){return("+" + (0.01*lvl).numberFormat(2) + "% Click Damage/DPS");},
 	'upgradeCost':function(lvl){return(Math.round(Math.pow(lvl, 1.5)));},
-	// 'desiredLevel':function(s){return(playstyle=='active' ? Math.pow(s,0.8) * Math.pow(2, 0.4) : 0.1*s);}
-	'desiredLevel':function(s){return(playstyle=='active' ? Math.pow(s,0.8) : 0.1*s);}
+	'desiredLevel':function(s){return(playstyle=='idle' ? 0 : playstyle=='active' ? Math.pow(s,0.8) : 0.1*s);}
 };
 anc[30] = {
 	'Name':'Iris',
