@@ -35,15 +35,22 @@ Number.prototype.numberFormat = function(decimals, dec_point, thousands_sep) {
 };
 
 function calcMorgulis(s)	{
-	var offs = [0,0.09,0.28,0.57,0.96,1.45,2.04,2.73,3.52,4.41,5.40];
 	var tier = Math.min(Math.floor(s/10), 10);
-	var percent = (25-tier)/100;
-	var correction = offs[tier];
+	var percent = 25-tier;
+	var correction = tier*(5*tier+4);
+	var b = (100+percent+correction)/percent;
+	var c = (correction+100)/percent - 100/11;
+	return(s*(s+b)+c);
+}
 
-	var b = (1+percent+correction)/percent;
-	var c = (0.11*(correction+1)-percent)/(0.11*percent);
-	
-	return(Math.pow(s,2) + b*s + c);
+function idleBonus(s)	{
+	var tier = Math.min(Math.floor(s/10), 10);
+	return((25 - tier)*s + tier*(5*tier+4));
+}
+
+function solomonBonus(s)	{
+	var tier = Math.min(Math.floor((s-1)/20), 4);
+	return((5 - tier)*s + (10*tier*(tier+1)));
 }
 
 var anc = {};
@@ -51,8 +58,7 @@ anc[0] = {
 	'Name':'Soul bank',
 	'clicking':false,
 	'maxLevel':0,
-	'getBonus':function(lvl){return(10*lvl);},
-	'desc':'% Damage Per Second',
+	'getBonus':function(lvl){return("+" + (10*lvl).numberFormat() + "% DPS (additive)");},
 	'upgradeCost':function(lvl){return(0);},
 	'desiredLevel':function(s){return(hasMorgulis ? 0 : 1.1*calcMorgulis(s));}
 }
@@ -60,8 +66,7 @@ anc[3] = {
 	'Name':'Solomon',
 	'clicking':false,
 	'maxLevel':0,
-	'getBonus':function(lvl){return('+'+1*lvl);},
-	'desc':'% Primal Hero Souls',
+	'getBonus':function(lvl){return("+" + solomonBonus(lvl).numberFormat() + "% Primal Hero Souls");},
 	'upgradeCost':function(lvl){return(Math.round(Math.pow(lvl, 1.5)));},
 	'desiredLevel':function(s){return(1.15*Math.pow(laxSolomon ? Math.log10(3.25*Math.pow(s,2)) : Math.log(3.25*Math.pow(s,2)),0.4)*Math.pow(s,0.8));}
 };
@@ -69,8 +74,7 @@ anc[4] = {
 	'Name':'Libertas',
 	'clicking':false,
 	'maxLevel':0,
-	'getBonus':function(lvl){return(10*lvl);},
-	'desc':'',
+	'getBonus':function(lvl){return("+"+ idleBonus(lvl).numberFormat() + "% Gold when Idle");},
 	'upgradeCost':function(lvl){return(lvl);},
 	'desiredLevel':function(s){return(playstyle=='active' ? 0 : 0.93*s);}
 };
@@ -78,8 +82,7 @@ anc[5] = {
 	'Name':'Siyalatas',
 	'clicking':false,
 	'maxLevel':0,
-	'getBonus':function(lvl){return(10*lvl);},
-	'desc':'',
+	'getBonus':function(lvl){return("+" + idleBonus(lvl).numberFormat() + "% DPS when Idle");},
 	'upgradeCost':function(lvl){return(lvl);},
 	'desiredLevel':function(s){return(playstyle=='active' ? 0 : s+1);}
 };
@@ -87,8 +90,7 @@ anc[8] = {
 	'Name':'Mammon',
 	'clicking':false,
 	'maxLevel':0,
-	'getBonus':function(lvl){return(10*lvl);},
-	'desc':'',
+	'getBonus':function(lvl){return("+"+ (5*lvl).numberFormat() + "% Gold Dropped");},
 	'upgradeCost':function(lvl){return(lvl);},
 	'desiredLevel':function(s){return(0.93*s);}
 };
@@ -96,8 +98,7 @@ anc[9] = {
 	'Name':'Mimzee',
 	'clicking':false,
 	'maxLevel':0,
-	'getBonus':function(lvl){return(10*lvl);},
-	'desc':'',
+	'getBonus':function(lvl){return("+"+ (50*lvl).numberFormat() + "% Treasure Chest Gold");},
 	'upgradeCost':function(lvl){return(lvl);},
 	'desiredLevel':function(s){return(0.93*s);}
 };
@@ -105,8 +106,7 @@ anc[10] = {
 	'Name':'Pluto',
 	'clicking':true,
 	'maxLevel':0,
-	'getBonus':function(lvl){return(30*lvl);},
-	'desc':'% Golden Clicks gold',
+	'getBonus':function(lvl){return("+" + (30*lvl).numberFormat() + "% Golden Clicks Gold");},
 	'upgradeCost':function(lvl){return(lvl);},
 	'desiredLevel':function(s){return(0.5*s);}
 };
@@ -114,8 +114,7 @@ anc[11] = {
 	'Name':'Dogcog',
 	'clicking':false,
 	'maxLevel':25,
-	'getBonus':function(lvl){return(10*lvl);},
-	'desc':'',
+	'getBonus':function(lvl){return(-2*lvl + " Hero Cost");},
 	'upgradeCost':function(lvl){return(lvl);},
 	'desiredLevel':function(s){return(Math.min(this.maxLevel, s));}
 };
@@ -123,8 +122,7 @@ anc[12] = {
 	'Name':'Fortuna',
 	'clicking':false,
 	'maxLevel':40,
-	'getBonus':function(lvl){return(10*lvl);},
-	'desc':'',
+	'getBonus':function(lvl){return("+" + (0.25*lvl).numberFormat(2) + "% 10x Gold Chance");},
 	'upgradeCost':function(lvl){return(lvl);},
 	'desiredLevel':function(s){return(Math.min(this.maxLevel, (s*this.maxLevel)/58));}
 };
@@ -132,8 +130,7 @@ anc[13] = {
 	'Name':'Atman',
 	'clicking':false,
 	'maxLevel':25,
-	'getBonus':function(lvl){return(10*lvl);},
-	'desc':'',
+	'getBonus':function(lvl){return("+" + lvl + "% Primal Bosses");},
 	'upgradeCost':function(lvl){return(Math.round(Math.pow(lvl, 1.5)));},
 	'desiredLevel':function(s){return(Math.min(this.maxLevel, s));}
 };
@@ -141,8 +138,7 @@ anc[14] = {
 	'Name':'Dora',
 	'clicking':false,
 	'maxLevel':50,
-	'getBonus':function(lvl){return(10*lvl);},
-	'desc':'',
+	'getBonus':function(lvl){return("+" + 20*lvl + "% Treasure Chests");},
 	'upgradeCost':function(lvl){return(lvl);},
 	'desiredLevel':function(s){return(Math.min(this.maxLevel, (s*this.maxLevel)/72));}
 };
@@ -150,8 +146,7 @@ anc[15] = {
 	'Name':'Bhaal',
 	'clicking':true,
 	'maxLevel':0,
-	'getBonus':function(lvl){return(10*lvl);},
-	'desc':'',
+	'getBonus':function(lvl){return("+" + (15*lvl).numberFormat() + "% Critical Damage");},
 	'upgradeCost':function(lvl){return(lvl);},
 	'desiredLevel':function(s){return(playstyle=='active' ? s-90 : 0.5*s);}
 };
@@ -159,8 +154,7 @@ anc[16] = {
 	'Name':'Morgulis',
 	'clicking':false,
 	'maxLevel':0,
-	'getBonus':function(lvl){return(11*lvl);},
-	'desc':'',
+	'getBonus':function(lvl){return("+" + (11*lvl).numberFormat() + "% DPS (additive)");},
 	'upgradeCost':function(lvl){return(1);},
 	'desiredLevel':function(s){return(hasMorgulis ? calcMorgulis(s) : 0);}
 };
@@ -168,8 +162,7 @@ anc[18] = {
 	'Name':'Bubos',
 	'clicking':false,
 	'maxLevel':25,
-	'getBonus':function(lvl){return(10*lvl);},
-	'desc':'',
+	'getBonus':function(lvl){return(-2*lvl + "% Boss Life");},
 	'upgradeCost':function(lvl){return(lvl);},
 	'desiredLevel':function(s){return(Math.min(this.maxLevel, (s*this.maxLevel)/60));}
 };
@@ -177,8 +170,7 @@ anc[19] = {
 	'Name':'Fragsworth',
 	'clicking':true,
 	'maxLevel':0,
-	'getBonus':function(lvl){return(10*lvl);},
-	'desc':'% click damage',
+	'getBonus':function(lvl){return("+" + (20*lvl).numberFormat() + "% Click Damage");},
 	'upgradeCost':function(lvl){return(lvl);},
 	'desiredLevel':function(s){return(playstyle=='active' ? s : 0.5*s);}
 };
@@ -186,8 +178,7 @@ anc[21] = {
 	'Name':'Kumawakamaru',
 	'clicking':false,
 	'maxLevel':5,
-	'getBonus':function(lvl){return(10*lvl);},
-	'desc':'',
+	'getBonus':function(lvl){return(-1*lvl + " Monsters per Zone");},
 	'upgradeCost':function(lvl){return(10*lvl);},
 	'desiredLevel':function(s){return(Math.min(this.maxLevel, s/3));}
 };
@@ -195,8 +186,7 @@ anc[28] = {
 	'Name':'Argaiv',
 	'clicking':false,
 	'maxLevel':0,
-	'getBonus':function(lvl){return(2*lvl);},
-	'desc':'% DPS per Gild',
+	'getBonus':function(lvl){return("+" + (2*lvl).numberFormat() + "% DPS per Gild");},
 	'upgradeCost':function(lvl){return(lvl);},
 	'desiredLevel':function(s){return(playstyle=='active' ? s+1 : s+10);}
 };
@@ -204,17 +194,16 @@ anc[29] = {
 	'Name':'Juggernaut',
 	'clicking':true,
 	'maxLevel':0,
-	'getBonus':function(lvl){return(10*lvl);},
-	'desc':'',
+	'getBonus':function(lvl){return("+" + (0.01*lvl).numberFormat(2) + "% Click Damage/DPS");},
 	'upgradeCost':function(lvl){return(Math.round(Math.pow(lvl, 1.5)));},
+	// 'desiredLevel':function(s){return(playstyle=='active' ? Math.pow(s,0.8) * Math.pow(2, 0.4) : 0.1*s);}
 	'desiredLevel':function(s){return(playstyle=='active' ? Math.pow(s,0.8) : 0.1*s);}
 };
 anc[30] = {
 	'Name':'Iris',
 	'clicking':false,
 	'maxLevel':0,
-	'getBonus':function(lvl){return(10*lvl);},
-	'desc':'',
+	'getBonus':function(lvl){return("+" + lvl.numberFormat() + " Starting Zone after Ascension");},
 	'upgradeCost':function(lvl){return(Math.round(Math.pow(lvl, 1.5)));},
 	'desiredLevel':function(s){var t=(irisMax == 0 ? Math.floor((371*Math.log(s)-2080)/5)*5-1-irisBonus : irisMax);return(t<(104-irisBonus)?0:t);}
 };
@@ -317,13 +306,13 @@ function optimize()	{
 				// Do not process ancients the user doesn't have.
 				// Do not process clicking ancients when clicking checkbox is off.
 				// Do not process Iris if disabled.
+
 				var upgradeCost = ancient.upgradeCost(ancient.levelNew+1);
 
 				if(upgradeCost <= (key==5 || key==28 ? nextBank : desiredBank))	{	// always keep the desired soulbank, do not spend below this
-				
 					// determine the ancient that is lagging behind the most (biggest relative increase from current to optimal)
 					var increase = (optimal-ancient.levelNew) / ancient.levelNew
-
+				
 					if(increase > highestIncrease)	{
 						upgradeNext = key;
 						nextBestIncrease = highestIncrease;
@@ -337,11 +326,7 @@ function optimize()	{
 			var ancient = anc[upgradeNext];
 			if(upgradeNext == 16)	{
 				// Morg batch upgrade!
-				var morgPlus = Math.ceil((highestIncrease - nextBestIncrease)*ancient.levelNew);
-				if(morgPlus >= Bank.levelNew)	{
-					morgPlus = Bank.levelNew;
-					upgradeNext = 0;
-				}
+				var morgPlus = Math.min(Math.ceil((highestIncrease - nextBestIncrease)*ancient.levelNew), Bank.levelNew);
 				ancient.totalCost += morgPlus;
 				ancient.levelNew += morgPlus;
 				Bank.levelNew -= morgPlus;
@@ -376,10 +361,18 @@ function optimize()	{
 			if(key != 0)	{
 				$('#delta'+key).attr("onmouseover", "nhpup.popup('"+ancient.Name+" upgrade cost:<br>"+ancient.totalCost.numberFormat()+" soul"+plural(ancient.totalCost)+"');");
 			}
+			$('#name'+key).attr("onmouseover", "nhpup.popup('<u>Current level:</u><br>"+ancient.getBonus(ancient.levelOld)+"<br><br><u>Target level:</u><br>"+ancient.getBonus(ancient.levelNew)+"');");
 		}
 		else	{
 			$('#delta'+key).text('');
 			$('#delta'+key).removeAttr("onmouseover");
+			
+			if(ancient.levelOld > 0)	{
+				$('#name'+key).attr("onmouseover", "nhpup.popup('<u>Current level:</u><br>"+ancient.getBonus(ancient.levelOld)+"');");
+			}
+			else	{
+				$('#name'+key).attr("onmouseover", "nhpup.popup('<u>"+ancient.Name+"</u><br>First level: "+ancient.getBonus(1)+"');");
+			}
 		}
 	}
 	
