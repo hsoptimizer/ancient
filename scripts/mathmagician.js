@@ -1,4 +1,4 @@
-// version 19
+// version 20
 
 $('#savegame').keyup(import_save);
 $('body').on('change', '#laxsolo', optimize);
@@ -68,7 +68,7 @@ anc[3] = {
 	'maxLevel':0,
 	'getBonus':function(lvl){return("+" + solomonBonus(lvl).numberFormat() + "% Primal Hero Souls");},
 	'upgradeCost':function(lvl){return(Math.round(Math.pow(lvl, 1.5)));},
-	'desiredLevel':function(s){return(1.15*Math.pow(laxSolomon ? Math.log10(3.25*Math.pow(s,2)) : Math.log(3.25*Math.pow(s,2)),0.4)*Math.pow(s,0.8));}
+	'desiredLevel':function(s){return(laxSolomon ? 1.15*Math.pow(Math.log10(3.25*Math.pow(s,2)),0.4)*Math.pow(s,0.8) : s <= 2370 ? 0.75*s : 1.15*Math.pow(Math.log(3.25*Math.pow(s,2)),0.4)*Math.pow(s,0.8));}
 };
 anc[4] = {
 	'Name':'Libertas',
