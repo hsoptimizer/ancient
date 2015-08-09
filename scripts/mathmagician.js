@@ -407,6 +407,9 @@ function import_save(evt) {
 		data = $.parseJSON(atob(txt));
 
 		var totalSoulsSpent = 0;
+		for(ancient in data.ancients.ancients)	{
+			totalSoulsSpent += data.ancients.ancients[ancient].spentHeroSouls;
+		}
 
 		// count hero levels for Souls gained on ascension
 		var totalHeroLevels = 0;
@@ -425,7 +428,6 @@ function import_save(evt) {
 			else	{
 				if(data.ancients.ancients.hasOwnProperty(key))	{
 					ancient.levelOld = data.ancients.ancients[key].level;
-					totalSoulsSpent += data.ancients.ancients[key].spentHeroSouls;
 				}
 				else	{
 					ancient.levelOld = 0;
