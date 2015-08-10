@@ -1,4 +1,4 @@
-// version 20
+// version 21
 
 $('#savegame').keyup(import_save);
 $('body').on('change', '#laxsolo', optimize);
@@ -57,152 +57,229 @@ var anc = {};
 anc[0] = {
 	'Name':'Soul bank',
 	'clicking':false,
+	'levelOld':0,
+	'levelNew':0,
 	'maxLevel':0,
-	'getBonus':function(lvl){return("+" + (10*lvl).numberFormat() + "% DPS (additive)");},
+	'getBonus':function(lvl){return("+" + this.bonusLevel(lvl).numberFormat() + this.bonusDesc);},
+	'bonusLevel':function(lvl){return(10*lvl);},
+	'bonusDesc':'% DPS (additive)',
 	'upgradeCost':function(lvl){return(0);},
 	'desiredLevel':function(s){return(hasMorgulis ? 0 : 1.1*calcMorgulis(s));}
 }
 anc[3] = {
 	'Name':'Solomon',
 	'clicking':false,
+	'levelOld':0,
+	'levelNew':0,
 	'maxLevel':0,
-	'getBonus':function(lvl){return("+" + solomonBonus(lvl).numberFormat() + "% Primal Hero Souls");},
+	'getBonus':function(lvl){return("+" + this.bonusLevel(lvl).numberFormat() + this.bonusDesc);},
+	'bonusLevel':function(lvl){return(solomonBonus(lvl));},
+	'bonusDesc':'% Primal Hero Souls',
 	'upgradeCost':function(lvl){return(Math.round(Math.pow(lvl, 1.5)));},
+
 	'desiredLevel':function(s){return(laxSolomon ? s < 234 ? 0.75*s : 1.15*Math.pow(Math.log10(3.25*Math.pow(s,2)),0.4)*Math.pow(s,0.8) : s < 328 ? s : 1.15*Math.pow(Math.log(3.25*Math.pow(s,2)),0.4)*Math.pow(s,0.8));}
 };
 anc[4] = {
 	'Name':'Libertas',
 	'clicking':false,
+	'levelOld':0,
+	'levelNew':0,
 	'maxLevel':0,
-	'getBonus':function(lvl){return("+"+ idleBonus(lvl).numberFormat() + "% Gold when Idle");},
+	'getBonus':function(lvl){return("+" + this.bonusLevel(lvl).numberFormat() + this.bonusDesc);},
+	'bonusLevel':function(lvl){return(idleBonus(lvl));},
+	'bonusDesc':'% Gold when Idle',
 	'upgradeCost':function(lvl){return(lvl);},
 	'desiredLevel':function(s){return(playstyle=='active' ? 0 : 0.93*s);}
 };
 anc[5] = {
 	'Name':'Siyalatas',
 	'clicking':false,
+	'levelOld':0,
+	'levelNew':0,
 	'maxLevel':0,
-	'getBonus':function(lvl){return("+" + idleBonus(lvl).numberFormat() + "% DPS when Idle");},
+	'getBonus':function(lvl){return("+" + this.bonusLevel(lvl).numberFormat() + this.bonusDesc);},
+	'bonusLevel':function(lvl){return(idleBonus(lvl));},
+	'bonusDesc':'% DPS when Idle',
 	'upgradeCost':function(lvl){return(lvl);},
 	'desiredLevel':function(s){return(playstyle=='active' ? 0 : s+1);}
 };
 anc[8] = {
 	'Name':'Mammon',
 	'clicking':false,
+	'levelOld':0,
+	'levelNew':0,
 	'maxLevel':0,
-	'getBonus':function(lvl){return("+"+ (5*lvl).numberFormat() + "% Gold Dropped");},
+	'getBonus':function(lvl){return("+" + this.bonusLevel(lvl).numberFormat() + this.bonusDesc);},
+	'bonusLevel':function(lvl){return(5*lvl);},
+	'bonusDesc':'% Gold Dropped',
 	'upgradeCost':function(lvl){return(lvl);},
 	'desiredLevel':function(s){return(0.93*s);}
 };
 anc[9] = {
 	'Name':'Mimzee',
 	'clicking':false,
+	'levelOld':0,
+	'levelNew':0,
 	'maxLevel':0,
-	'getBonus':function(lvl){return("+"+ (50*lvl).numberFormat() + "% Treasure Chest Gold");},
+	'getBonus':function(lvl){return("+" + this.bonusLevel(lvl).numberFormat() + this.bonusDesc);},
+	'bonusLevel':function(lvl){return(50*lvl);},
+	'bonusDesc':'% Treasure Chest Gold',
 	'upgradeCost':function(lvl){return(lvl);},
 	'desiredLevel':function(s){return(0.93*s);}
 };
 anc[10] = {
 	'Name':'Pluto',
 	'clicking':true,
+	'levelOld':0,
+	'levelNew':0,
 	'maxLevel':0,
-	'getBonus':function(lvl){return("+" + (30*lvl).numberFormat() + "% Golden Clicks Gold");},
+	'getBonus':function(lvl){return("+" + this.bonusLevel(lvl).numberFormat() + this.bonusDesc);},
+	'bonusLevel':function(lvl){return(30*lvl);},
+	'bonusDesc':'% Golden Clicks Gold',
 	'upgradeCost':function(lvl){return(lvl);},
 	'desiredLevel':function(s){return(playstyle=='idle' ? 0 : 0.5*s);}
 };
 anc[11] = {
 	'Name':'Dogcog',
 	'clicking':false,
+	'levelOld':0,
+	'levelNew':0,
 	'maxLevel':25,
-	'getBonus':function(lvl){return(-2*lvl + " Hero Cost");},
+	'getBonus':function(lvl){return(this.bonusLevel(lvl).numberFormat() + this.bonusDesc);},
+	'bonusLevel':function(lvl){return(-2*lvl);},
+	'bonusDesc':'% Hero Upgrade Cost',
 	'upgradeCost':function(lvl){return(lvl);},
 	'desiredLevel':function(s){return(Math.min(this.maxLevel, s));}
 };
 anc[12] = {
 	'Name':'Fortuna',
 	'clicking':false,
+	'levelOld':0,
+	'levelNew':0,
 	'maxLevel':40,
-	'getBonus':function(lvl){return("+" + (0.25*lvl).numberFormat(2) + "% 10x Gold Chance");},
+	'getBonus':function(lvl){return("+" + this.bonusLevel(lvl).numberFormat(2) + this.bonusDesc);},
+	'bonusLevel':function(lvl){return(0.25*lvl);},
+	'bonusDesc':'% 10x Gold Chance',
 	'upgradeCost':function(lvl){return(lvl);},
 	'desiredLevel':function(s){return(Math.min(this.maxLevel, (s*this.maxLevel)/58));}
 };
 anc[13] = {
 	'Name':'Atman',
 	'clicking':false,
+	'levelOld':0,
+	'levelNew':0,
 	'maxLevel':25,
-	'getBonus':function(lvl){return("+" + lvl + "% Primal Bosses");},
+	'getBonus':function(lvl){return("+" + this.bonusLevel(lvl).numberFormat() + this.bonusDesc);},
+	'bonusLevel':function(lvl){return(lvl);},
+	'bonusDesc':'% Primal Bosses',
 	'upgradeCost':function(lvl){return(Math.round(Math.pow(lvl, 1.5)));},
 	'desiredLevel':function(s){return(Math.min(this.maxLevel, s));}
 };
 anc[14] = {
 	'Name':'Dora',
 	'clicking':false,
+	'levelOld':0,
+	'levelNew':0,
 	'maxLevel':50,
-	'getBonus':function(lvl){return("+" + 20*lvl + "% Treasure Chests");},
+	'getBonus':function(lvl){return("+" + this.bonusLevel(lvl).numberFormat() + this.bonusDesc);},
+	'bonusLevel':function(lvl){return(20*lvl);},
+	'bonusDesc':'% Treasure Chests',
 	'upgradeCost':function(lvl){return(lvl);},
 	'desiredLevel':function(s){return(Math.min(this.maxLevel, (s*this.maxLevel)/72));}
 };
 anc[15] = {
 	'Name':'Bhaal',
 	'clicking':true,
+	'levelOld':0,
+	'levelNew':0,
 	'maxLevel':0,
-	'getBonus':function(lvl){return("+" + (15*lvl).numberFormat() + "% Critical Damage");},
+	'getBonus':function(lvl){return("+" + this.bonusLevel(lvl).numberFormat() + this.bonusDesc);},
+	'bonusLevel':function(lvl){return(15*lvl);},
+	'bonusDesc':'% Critical Damage',
 	'upgradeCost':function(lvl){return(lvl);},
 	'desiredLevel':function(s){return(playstyle=='idle' ? 0 : playstyle=='active' ? s-90 : 0.5*s);}
 };
 anc[16] = {
 	'Name':'Morgulis',
 	'clicking':false,
+	'levelOld':0,
+	'levelNew':0,
 	'maxLevel':0,
-	'getBonus':function(lvl){return("+" + (11*lvl).numberFormat() + "% DPS (additive)");},
+	'getBonus':function(lvl){return("+" + this.bonusLevel(lvl).numberFormat() + this.bonusDesc);},
+	'bonusLevel':function(lvl){return(11*lvl);},
+	'bonusDesc':'% DPS (additive)',
 	'upgradeCost':function(lvl){return(1);},
 	'desiredLevel':function(s){return(hasMorgulis ? calcMorgulis(s) : 0);}
 };
 anc[18] = {
 	'Name':'Bubos',
 	'clicking':false,
+	'levelOld':0,
+	'levelNew':0,
 	'maxLevel':25,
-	'getBonus':function(lvl){return(-2*lvl + "% Boss Life");},
+	'getBonus':function(lvl){return(this.bonusLevel(lvl).numberFormat() + this.bonusDesc);},
+	'bonusLevel':function(lvl){return(-2*lvl);},
+	'bonusDesc':'% Boss Life',
 	'upgradeCost':function(lvl){return(lvl);},
 	'desiredLevel':function(s){return(Math.min(this.maxLevel, (s*this.maxLevel)/60));}
 };
 anc[19] = {
 	'Name':'Fragsworth',
 	'clicking':true,
+	'levelOld':0,
+	'levelNew':0,
 	'maxLevel':0,
-	'getBonus':function(lvl){return("+" + (20*lvl).numberFormat() + "% Click Damage");},
+	'getBonus':function(lvl){return("+" + this.bonusLevel(lvl).numberFormat() + this.bonusDesc);},
+	'bonusLevel':function(lvl){return(20*lvl);},
+	'bonusDesc':'% Click Damage',
 	'upgradeCost':function(lvl){return(lvl);},
 	'desiredLevel':function(s){return(playstyle=='idle' ? 0 : playstyle=='active' ? s : 0.5*s);}
 };
 anc[21] = {
 	'Name':'Kumawakamaru',
 	'clicking':false,
+	'levelOld':0,
+	'levelNew':0,
 	'maxLevel':5,
-	'getBonus':function(lvl){return(-1*lvl + " Monsters per Zone");},
+	'getBonus':function(lvl){return(this.bonusLevel(lvl).numberFormat() + this.bonusDesc);},
+	'bonusLevel':function(lvl){return(-1*lvl);},
+	'bonusDesc':' Monsters per Zone',
 	'upgradeCost':function(lvl){return(10*lvl);},
 	'desiredLevel':function(s){return(Math.min(this.maxLevel, s/3));}
 };
 anc[28] = {
 	'Name':'Argaiv',
 	'clicking':false,
+	'levelOld':0,
+	'levelNew':0,
 	'maxLevel':0,
-	'getBonus':function(lvl){return("+" + (2*lvl).numberFormat() + "% DPS per Gild");},
+	'getBonus':function(lvl){return("+" + this.bonusLevel(lvl).numberFormat() + this.bonusDesc);},
+	'bonusLevel':function(lvl){return(2*lvl);},
+	'bonusDesc':'% DPS per Gild',
 	'upgradeCost':function(lvl){return(lvl);},
 	'desiredLevel':function(s){return(playstyle=='active' ? s+1 : s+10);}
 };
 anc[29] = {
 	'Name':'Juggernaut',
 	'clicking':true,
+	'levelOld':0,
+	'levelNew':0,
 	'maxLevel':0,
-	'getBonus':function(lvl){return("+" + (0.01*lvl).numberFormat(2) + "% Click Damage/DPS");},
+	'getBonus':function(lvl){return("+" + this.bonusLevel(lvl).numberFormat(2) + this.bonusDesc);},
+	'bonusLevel':function(lvl){return(0.01*lvl);},
+	'bonusDesc':'% Click Damage/DPS<br>(each Combo)',
 	'upgradeCost':function(lvl){return(Math.round(Math.pow(lvl, 1.5)));},
 	'desiredLevel':function(s){return(playstyle=='idle' ? 0 : playstyle=='active' ? Math.pow(s,0.8) : 0.1*s);}
 };
 anc[30] = {
 	'Name':'Iris',
 	'clicking':false,
+	'levelOld':0,
+	'levelNew':0,
 	'maxLevel':0,
-	'getBonus':function(lvl){return("+" + lvl.numberFormat() + " Starting Zone after Ascension");},
+	'getBonus':function(lvl){return("+" + this.bonusLevel(lvl).numberFormat() + this.bonusDesc);},
+	'bonusLevel':function(lvl){return(lvl);},
+	'bonusDesc':' Starting Zone after Ascension',
 	'upgradeCost':function(lvl){return(Math.round(Math.pow(lvl, 1.5)));},
 	'desiredLevel':function(s){var t=(irisMax == 0 ? Math.floor((371*Math.log(s)-2080)/5)*5-1-irisBonus : irisMax);return(t<(104-irisBonus)?0:t);}
 };
@@ -221,31 +298,28 @@ function getOptimal(ancient, level)	{
 	return(optimalLevel > 0 ? Math.round(optimalLevel) : 0);
 }
 
-function setCookie(cname, cvalue) {
-	document.cookie = cname + "=" + cvalue.toString();
-}
-
-function savePreference(pname)	{
-	setCookie(pname, $('#'+pname).is(':checked'));
-}
-
-function saveSettings()	{
-	savePreference("noBossLanding");
-	savePreference("laxsolo");
-	savePreference("ignoreIris");
-	setCookie("playstyle", $('input[type=radio][name=playstyle]:checked').val());
-}
-
 function getCookie(cname)	{
 	var name = cname + "=";
 	var ca = document.cookie.split(';');
 	for(var i=0; i<ca.length; i++) {
 		var c = ca[i].trim();
 		if (c.indexOf(name) == 0)	{
-			return c.substring(name.length,c.length);
+			var cvalue = c.substring(name.length,c.length);
+			return(cvalue);
 		}
 	}
 	return "";
+}
+
+function setCookie(cname, cvalue, expDays) {
+	if(expDays === undefined)	{
+		document.cookie = cname.toString() + "=" + cvalue.toString();
+	}
+	else	{
+		var expirationDate = new Date();
+		expirationDate.setTime(expirationDate.getTime() + (expDays*24*60*60*1000));
+		document.cookie = cname.toString() + "=" + cvalue.toString() + "; expires="+expirationDate.toUTCString();
+	}
 }
 
 function getPreference(pname)	{
@@ -261,12 +335,98 @@ function loadSettings()	{
 	$('input[type=radio][name=playstyle]').val([playstyle]);
 }
 
+function saveSettings()	{
+	savePreference("noBossLanding");
+	savePreference("laxsolo");
+	savePreference("ignoreIris");
+	setCookie("playstyle", $('input[type=radio][name=playstyle]:checked').val());
+}
+
+function savePreference(pname)	{
+	setCookie(pname, $('#'+pname).is(':checked'));
+}
+
+function loadStats(totalSouls)	{
+	var currentDate = new Date();
+	var today = currentDate.getTime();
+	var yesterday = today - 1*24*60*60*1000;
+	var dbyesterday = today - 2*24*60*60*1000;
+	var lastWeek = today - 7*24*60*60*1000;
+	var lastMonth = today - 30*24*60*60*1000;
+
+	var history = {};
+
+	var cookies = document.cookie.split(';');
+	for(var i=0; i<cookies.length; i++) {
+		var cookie = cookies[i].trim().split('=');
+		var cname = cookie[0];
+		if(cname.substring(0,4) == "hist")	{
+			var cvalue = parseInt(cookie[1]);
+			history[cname.substring(4)] = cvalue;
+		}
+	}
+
+	var dayLast = today;
+	var ydayLast = today;
+	var weekLast = today;
+	var monthLast = today;
+
+	var historystring = "<u>Hero Souls (end of day)</u>";
+	for(var entry in history)	{
+		var entryDate = new Date();
+		entryDate.setTime(entry-24*60*60*1000);
+		historystring += "<br>" + entryDate.getFullYear()+"-"+entryDate.getMonth()+"-"+entryDate.getDate() + " &mdash; " + history[entry].numberFormat();
+		
+		if((entry <= dayLast || dayLast == today) && entry > yesterday)	{
+			dayLast = entry;
+		}
+		if((entry <= ydayLast || ydayLast == today) && entry > dbyesterday)	{
+			ydayLast = entry;
+		}
+		if((entry <= weekLast || weekLast == today) && entry > lastWeek)	{
+			weekLast = entry;
+		}
+		if((entry <= monthLast || monthLast == today) && entry > lastMonth)	{
+			monthLast = entry;
+		}
+	}
+
+	$('#hshistory').attr("onmouseover", "nhpup.popup('"+historystring+"');");
+
+	$('#hstoday').text((totalSouls-history[dayLast]).numberFormat());
+	$('#hsyday').text((history[dayLast]-history[ydayLast]).numberFormat());
+	$('#hsweek').text((totalSouls-history[weekLast]).numberFormat());
+	$('#hsmonth').text((totalSouls-history[monthLast]).numberFormat());
+
+	$('#hstphour').text(((totalSouls-history[dayLast]) / ((today-dayLast)/(60*60*1000))).numberFormat() + " / hour");
+	$('#hsyphour').text(((history[dayLast]-history[ydayLast]) / 24).numberFormat() + " / hour");
+	$('#hswpday').text(((totalSouls-history[weekLast]) / ((today-weekLast)/(24*60*60*1000))).numberFormat() + " / day");
+	$('#hsmpday').text(((totalSouls-history[monthLast]) / ((today-monthLast)/(24*60*60*1000))).numberFormat() + " / day");
+}
+
+function saveStats(totalSouls)	{
+	var tomorrow = new Date();
+
+	tomorrow.setHours(0,0,0,0);
+	if(getCookie("hist"+tomorrow.getTime()) == "")	{
+		setCookie("hist"+tomorrow.getTime(), totalSouls, 32);
+	}
+
+	tomorrow.setHours(24,0,0,0);
+	setCookie("hist"+tomorrow.getTime(), totalSouls, 32);
+}
+
+function processStats(totalSouls)	{
+	saveStats(totalSouls);
+	// loadStats(totalSouls);
+}
+
 function optimize()	{
 	var Bank = anc[0];
 	var Siya = anc[5];
 	var Argaiv = anc[28];
 	var Iris = anc[30];
-	
+
 	playstyle = $('input[type=radio][name=playstyle]:checked').val();
 	var clicking = playstyle != 'idle';
 	var ignoreIris = $('#ignoreIris').is(':checked');
@@ -311,7 +471,7 @@ function optimize()	{
 				if(upgradeCost <= (key==5 || key==28 ? nextBank : desiredBank))	{	// always keep the desired soulbank, do not spend below this
 					// determine the ancient that is lagging behind the most (biggest relative increase from current to optimal)
 					var increase = (optimal-ancient.levelNew) / ancient.levelNew
-				
+
 					if(increase > highestIncrease)	{
 						upgradeNext = key;
 						nextBestIncrease = highestIncrease;
@@ -337,7 +497,7 @@ function optimize()	{
 			}
 		}
 	}
-	
+
 	// correct for Iris not landing on the desired zone
 	if(Iris.levelNew > Iris.levelOld && Iris.levelNew != Iris.desiredLevel(referenceLevel))	{
 		irisMax = Math.floor((Iris.levelNew)/5)*5-1-irisBonus;
@@ -365,7 +525,7 @@ function optimize()	{
 		else	{
 			$('#delta'+key).text('');
 			$('#delta'+key).removeAttr("onmouseover");
-			
+
 			if(ancient.levelOld > 0)	{
 				$('#name'+key).attr("onmouseover", "nhpup.popup('<u>Current level:</u><br>"+ancient.getBonus(ancient.levelOld)+"');");
 			}
@@ -374,7 +534,7 @@ function optimize()	{
 			}
 		}
 	}
-	
+
 	saveSettings();
 }
 
@@ -417,7 +577,7 @@ function import_save(evt) {
 			totalHeroLevels += data.heroCollection.heroes[hero].level;
 		}
 		data.primalSouls += (Math.floor(totalHeroLevels/2000));
-		
+
 		for(key in anc)	{
 			var ancient = anc[key];
 
@@ -457,6 +617,7 @@ function import_save(evt) {
 		$('#worldresets').text(data.numWorldResets.numberFormat());
 		$('#hze').text(data.highestFinishedZonePersist.numberFormat());
 
+		processStats(totalSoulsSpent + data.heroSouls + data.primalSouls);
 		optimize();
 	}
 	else	{
@@ -468,8 +629,6 @@ function init()	{
 	loadSettings();
 	for(key in anc)	{
 		var ancient = anc[key];
-		ancient['levelOld'] = 0;
-		ancient['levelNew'] = 0;
 		if(ancient.maxLevel != 0)	{
 			$('#anc'+key).css('display', 'none');
 		}
