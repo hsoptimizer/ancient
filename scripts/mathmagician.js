@@ -398,20 +398,17 @@ function loadStats(totalSouls)	{
 	var hsLastWeek = totalSouls-history[weekLast];
 	var hsLastMonth = totalSouls-history[monthLast];
 
-	// totals
 	$('#hstoday').text(hsToday.numberFormat());
 	$('#hsyday').text(hsYesterday.numberFormat());
 	$('#hsweek').text(hsLastWeek.numberFormat());
 	$('#hsmonth').text(hsLastMonth.numberFormat());
 
-	// per day
 	var msPerDay = 24*60*60*1000;
 	$('#hstpday').text((hsToday / ((today-dayLast)/msPerDay)).numberFormat());
 	$('#hsypday').text(hsYesterday.numberFormat());
 	$('#hswpday').text((hsLastWeek / ((today-weekLast)/msPerDay)).numberFormat());
 	$('#hsmpday').text((hsLastMonth / ((today-monthLast)/msPerDay)).numberFormat());
 
-	// per hour
 	var msPerHour = 60*60*1000;
 	$('#hstphour').text((hsToday / ((today-dayLast)/msPerHour)).numberFormat());
 	$('#hsyphour').text((hsYesterday / 24).numberFormat());
