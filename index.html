@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html;charset=utf-8" >
-		<link rel="stylesheet" type="text/css" href="rulesofthumb.css" media="all">
+		<link rel="stylesheet" type="text/css" href="ancient.css" media="all">
 		<title>Clicker Heroes Ancient Calculator</title>
 		<script src="scripts/jquery-2.1.4.min.js"></script>
 		<!-- tooltips -->
@@ -195,7 +195,10 @@
 			</tr>
 			<tr><td colspan="5" class="filler">&nbsp;</td></tr>
 			<tr>
-				<td rowspan="4">Statistics</th>
+				<td rowspan="11">Statistics</th>
+				<th colspan="4">Summary</th>
+			</tr>
+			<tr>
 				<td class="result" colspan="3">Relic found this ascension:</td>
 				<td class="result" id="relicfound"></td>
 			</tr>
@@ -211,18 +214,50 @@
 				<td class="result" colspan="3">Highest zone ever:</td>
 				<td class="result" id="hze"></td>
 			</tr>
+			<tr>
+				<th colspan="4" id="hshistory">Hero Souls history</th>
+			</tr>
+			<tr>
+				<td class="result" colspan="2" style="font-weight:bold;">Total</td>
+				<td class="result" style="font-weight:bold;">Rate (HS / day)</td>
+				<td class="result" style="font-weight:bold;">Rate (HS / hour)</td>
+			</tr>
+			<tr>
+				<td class="result">Today:</td>
+				<td class="result" id="hstoday"></td>
+				<td class="result" id="hstpday"></td>
+				<td class="result" id="hstphour"></td>
+			</tr>
+			<tr>
+				<td class="result">Yesterday:</td>
+				<td class="result" id="hsyday"></td>
+				<td class="result" id="hsypday"></td>
+				<td class="result" id="hsyphour"></td>
+			</tr>
+			<tr>
+				<td class="result">Past 7 days:</td>
+				<td class="result" id="hsweek"></td>
+				<td class="result" id="hswpday"></td>
+				<td class="result" id="hswphour"></td>
+			</tr>
+			<tr>
+				<td class="result">Past 30 days:</td>
+				<td class="result" id="hsmonth"></td>
+				<td class="result" id="hsmpday"></td>
+				<td class="result" id="hsmphour"></td>
+			</tr>
 		</table>
 
 		<p class="comments">
-			Last updated August 8, 2015<br>
+			Last updated August 11, 2015<br>
 			Clicker Heroes version 0.19
 		</p>
 		<p class="comments">
 			Latest changes:<br>
+			- Added history of hero souls (hover over 'Hero Souls history')<br>
 			- Hover over the Ancient name to see its effective bonuses<br>
 			- (Active only) Reverted to Juggernaut = Argaiv^0.8<br>
 			- Incorporated Rules of Thumb for active play from <a target="_blank" href='http://redd.it/3foo71'>this thread</a><br>
-			- Slight layout update, changed "New level" to "New target". Hope that's less confusing.<br>
 			- Much improved formulas for HS bank and Morgulis for early game.<br>
 		</p>
 		<p class="comments">
