@@ -1,4 +1,4 @@
-// version 21
+// version 22
 
 $('#savegame').keyup(import_save);
 $('body').on('change', '#laxsolo', optimize);
@@ -376,7 +376,7 @@ function loadStats(totalSouls)	{
 		var entryDate = new Date();
 		entryDate.setTime(entry-24*60*60*1000);
 		historystring += "<br>" + entryDate.getFullYear()+"-"+entryDate.getMonth()+"-"+entryDate.getDate() + " &mdash; " + history[entry].numberFormat();
-		
+
 		if((entry <= dayLast || dayLast == today) && entry > yesterday)	{
 			dayLast = entry;
 		}
@@ -393,15 +393,30 @@ function loadStats(totalSouls)	{
 
 	$('#hshistory').attr("onmouseover", "nhpup.popup('"+historystring+"');");
 
-	$('#hstoday').text((totalSouls-history[dayLast]).numberFormat());
-	$('#hsyday').text((history[dayLast]-history[ydayLast]).numberFormat());
-	$('#hsweek').text((totalSouls-history[weekLast]).numberFormat());
-	$('#hsmonth').text((totalSouls-history[monthLast]).numberFormat());
+	var hsToday = totalSouls-history[dayLast];
+	var hsYesterday = history[dayLast]-history[ydayLast];
+	var hsLastWeek = totalSouls-history[weekLast];
+	var hsLastMonth = totalSouls-history[monthLast];
 
-	$('#hstphour').text(((totalSouls-history[dayLast]) / ((today-dayLast)/(60*60*1000))).numberFormat() + " / hour");
-	$('#hsyphour').text(((history[dayLast]-history[ydayLast]) / 24).numberFormat() + " / hour");
-	$('#hswpday').text(((totalSouls-history[weekLast]) / ((today-weekLast)/(24*60*60*1000))).numberFormat() + " / day");
-	$('#hsmpday').text(((totalSouls-history[monthLast]) / ((today-monthLast)/(24*60*60*1000))).numberFormat() + " / day");
+	// totals
+	$('#hstoday').text(hsToday.numberFormat());
+	$('#hsyday').text(hsYesterday.numberFormat());
+	$('#hsweek').text(hsLastWeek.numberFormat());
+	$('#hsmonth').text(hsLastMonth.numberFormat());
+
+	// per day
+	var msPerDay = 24*60*60*1000;
+	$('#hstpday').text((hsToday / ((today-dayLast)/msPerDay)).numberFormat());
+	$('#hsypday').text(hsYesterday.numberFormat());
+	$('#hswpday').text((hsLastWeek / ((today-weekLast)/msPerDay)).numberFormat());
+	$('#hsmpday').text((hsLastMonth / ((today-monthLast)/msPerDay)).numberFormat());
+
+	// per hour
+	var msPerHour = 60*60*1000;
+	$('#hstphour').text((hsToday / ((today-dayLast)/msPerHour)).numberFormat());
+	$('#hsyphour').text((hsYesterday / 24).numberFormat());
+	$('#hswphour').text((hsLastWeek / ((today-weekLast)/msPerHour)).numberFormat());
+	$('#hsmphour').text((hsLastMonth / ((today-weekLast)/msPerHour)).numberFormat());
 }
 
 function saveStats(totalSouls)	{
@@ -418,7 +433,7 @@ function saveStats(totalSouls)	{
 
 function processStats(totalSouls)	{
 	saveStats(totalSouls);
-	// loadStats(totalSouls);
+	loadStats(totalSouls);
 }
 
 function optimize()	{
