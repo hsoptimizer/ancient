@@ -26,7 +26,7 @@ function plural(n, s)	{
 
 function getBonusZone()	{
 	if (data.numWorldResets == 0) {
-		return("");
+		return(" (ascension required)");
 	}
 	else {
 		var itemBonusZone;
