@@ -15,7 +15,7 @@
 		<img src='http://i.imgur.com/rxZ8ypH.png' height="64px"><div style="font-size:xx-small;display:inline-block;">Rules of Thumb<br><h1>Clicker Heroes Ancients Calculator</h1></div>
 		<table>
 			<tr>
-				<td>Save game:</td>
+				<td>Save game</td>
 				<td colspan="4"><textarea id="savegame" onfocus="this.select()" onmouseup="return false;" autofocus placeholder="Paste your save game here"></textarea></td>
 			</tr>
 			<tr>
@@ -195,19 +195,30 @@
 			</tr>
 			<tr><td colspan="5" class="filler">&nbsp;</td></tr>
 			<tr>
-				<td rowspan="11">Statistics</th>
-				<th colspan="4">Summary</th>
+				<td rowspan="14">Statistics</th>
+				<th colspan="4">Relic Information</th>
 			</tr>
 			<tr>
-				<td class="result" colspan="3">Relic found this ascension / Relic Ooze zone:</td>
+				<td class="result" colspan="3">Relic found this ascension:</td>
 				<td class="result" id="relicfound"></td>
+			</tr>
+			<tr>
+				<td class="result" colspan="3">Relic Ooze spawn zone:</td>
+				<td class="result" id="reliczone"></td>
+			</tr>
+			<tr>
+				<td class="result" colspan="3">Relic level:</td>
+				<td class="result" id="reliclevel"></td>
+			</tr>
+			<tr>
+				<th colspan="4">Summary and Totals</th>
 			</tr>
 			<tr>
 				<td class="result" colspan="3">Souls spent on ancients:</td>
 				<td class="result" id="soulsspent"></td>
 			</tr>
 			<tr>
-				<td class="result" colspan="3">Total ascensions:</td>
+				<td class="result" colspan="3">World ascensions:</td>
 				<td class="result" id="worldresets"></td>
 			</tr>
 			<tr>
