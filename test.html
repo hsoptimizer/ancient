@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html;charset=utf-8" >
+		<link rel="stylesheet" type="text/css" href="ancient.css" media="all">
+		<title>Clicker Heroes Ancient Calculator</title>
+		<script src="scripts/jquery-2.1.4.min.js"></script>
+		<!-- tooltips -->
+		<script type="text/javascript" src="scripts/nhpup_1.1.js"></script>
+		<!-- savegame checksum -->
+		<script type="text/javascript" src="scripts/md5.js"></script>
+	</head>
+
+	<body onload="init()">
+		<img src='http://i.imgur.com/rxZ8ypH.png' height="64px"><div style="font-size:xx-small;display:inline-block;">Rules of Thumb<br><h1>Clicker Heroes Ancients Calculator</h1></div>
+		<table>
+			<tr>
+				<td>Save game</td>
+				<td colspan="4"><textarea id="savegame" onfocus="this.select()" onmouseup="return false;" autofocus placeholder="Paste your save game here"></textarea></td>
+			</tr>
+			<tr>
+				<td class="filler"></td>
+				<td colspan="4"><input type="button" onclick="import_save()" style="text-align: center; width:100%;" value="Import/reload save game"></td>
+			</tr>
+			<tr>
+				<td rowspan="5">Options</td>
+				<td><input type="checkbox" id="primalsouls" class="pref" disabled></td>
+				<td colspan="3" class="pref">Include souls gained after ascension</td>
+			</tr>
+			<tr>
+				<td><input type="checkbox" class="pref" id="ignoreIris"></td>
+				<td class="pref">Ignore Iris <a onclick="void(0)" onmouseover="nhpup.popup('Enabling this will ignore Iris during the optimization.');">(<u>?</u>)</a></td>
+				<td colspan="2" class="pref" style="text-align:right;">+<input type="number" class="uservalue" style="margin-left:4px;margin-right:4px;width:60px;" value="0" id="irisBonus">starting zone</td>
+			</tr>
+			<tr>
+				<td><input type="checkbox" class="pref" id="noBossLanding"></td>
+				<td colspan="3" class="pref">Do not ascend directly to a boss zone <a onclick="void(0)" onmouseover="nhpup.popup('Enabling this will cause the highest zone unlocked by Iris to be one zone before a Boss. Disable this to ascend directly to a Boss zone.');">(<u>?</u>)</a></td>
+			</tr>
+			<tr>
+				<td><input type="checkbox" class="pref" id="laxsolo"></td>
+				<td colspan="3" class="pref">Easier Solomon <a onclick="void(0)" onmouseover="nhpup.popup('Enabling this will use log10 for Solomon instead of ln (log base e). This will value Solomon significantly lower. Not recommended!');">(<u>?</u>)</a></td>
+			</tr>
+			<tr>
+				<td class="pref" style="text-align:right;">Play style <a onclick="void(0)" onmouseover="nhpup.popup('<u>Idle:</u><br>Do not use clicking ancients in optimization.<br><br><u>Hybrid:</u><br>Include Bhaal, Fragsworth, Juggernaut and Pluto (if you have them) and apply hybrid Rules of Thumb.<br><br><u>Active:</u><br>Do not use Siyalatas and Libertas. Formulas used for clicking ancients assume 40 CPS.');">(<u>?</u>)</a></td>
+				<td colspan="3" class="pref" style="text-align:left;">
+					<input type="radio" class="pref" name="playstyle" value="idle" checked>Idle
+					<input type="radio" class="pref" name="playstyle" value="hybrid">Hybrid
+					<input type="radio" class="pref" name="playstyle" value="active">Active
+				</td>
+			</tr>
+			<tr>
+				<td class="filler"></td>
+				<td colspan="4"><input type="button" onclick="optimize()" style="text-align: center; width:100%;" value="Do the math"></td>
+			</tr>
+			<tr><td colspan="5" class="filler">&nbsp;</td></tr>
+			<tr>
+				<th>Ancient</th>
+				<th onmouseover="nhpup.popup('The current ancient levels and banked Hero Souls found in your save game. You can manually adjust these values.');">Current</th>
+				<th onmouseover="nhpup.popup('Optimal ancient levels according to the Rules of Thumb, based on your <i>new</i> level of Siyalatas (or Argaiv, if you don&rsquo;t have Siya). You may or may not be able to afford these levels yet.');">Optimal</th>
+				<th onmouseover="nhpup.popup('Level your ancients to the value shown here. These are the levels you can afford with the amount of Hero Souls in your bank.');">New target</th>
+				<th onmouseover="nhpup.popup('Affordable number of upgrades for each ancient.<br>(New target &ndash; Current)');">Delta</th>
+			</tr>
+			<tr id="anc0">
+				<td id="name0">Souls in bank:</td>
+				<td><input type="number" class="uservalue" value="0" min="0" id="old0"></td>
+				<td class="oresult" id="optimal0"></td>
+				<td class="nresult" id="new0"></td>
+				<td class="result" id="delta0"></td>
+			</tr>
+			<tr id="anc28">
+				<td id="name28">Argaiv:</td>
+				<td><input type="number" class="uservalue" value="0" min="0" id="old28"></td>
+				<td class="oresult" id="optimal28"></td>
+				<td class="nresult" id="new28"></td>
+				<td class="dresult" id="delta28"></td>
+			</tr>
+			<tr id="anc30">
+				<td id="name30">Iris:</td>
+				<td><input type="number" class="uservalue" value="0" min="0" id="old30"></td>
+				<td class="oresult" id="optimal30"></td>
+				<td class="nresult" id="new30"></td>
+				<td class="dresult" id="delta30"></td>
+			</tr>
+			<tr id="anc4">
+				<td id="name4">Libertas:</td>
+				<td><input type="number" class="uservalue" value="0" min="0" id="old4"></td>
+				<td class="oresult" id="optimal4"></td>
+				<td class="nresult" id="new4"></td>
+				<td class="dresult" id="delta4"></td>
+			</tr>
+			<tr id="anc8">
+				<td id="name8">Mammon:</td>
+				<td><input type="number" class="uservalue" value="0" min="0" id="old8"></td>
+				<td class="oresult" id="optimal8"></td>
+				<td class="nresult" id="new8"></td>
+				<td class="dresult" id="delta8"></td>
+			</tr>
+			<tr id="anc9">
+				<td id="name9">Mimzee:</td>
+				<td><input type="number" class="uservalue" value="0" min="0" id="old9"></td>
+				<td class="oresult" id="optimal9"></td>
+				<td class="nresult" id="new9"></td>
+				<td class="dresult" id="delta9"></td>
+			</tr>
+			<tr id="anc16">
+				<td id="name16">Morgulis:</td>
+				<td><input type="number" class="uservalue" value="0" min="0" id="old16"></td>
+				<td class="oresult" id="optimal16"></td>
+				<td class="nresult" id="new16"></td>
+				<td class="dresult" id="delta16"></td>
+			</tr>
+			<tr id="anc5">
+				<td id="name5">Siyalatas:</td>
+				<td><input type="number" class="uservalue" value="0" min="0" id="old5"></td>
+				<td class="oresult" id="optimal5"></td>
+				<td class="nresult" id="new5"></td>
+				<td class="dresult" id="delta5"></td>
+			</tr>
+			<tr id="anc3">
+				<td id="name3">Solomon:</td>
+				<td><input type="number" class="uservalue" value="0" min="0" id="old3"></td>
+				<td class="oresult" id="optimal3"></td>
+				<td class="nresult" id="new3"></td>
+				<td class="dresult" id="delta3"></td>
+			</tr>
+			<tr id="anc15">
+				<td id="name15">Bhaal:</td>
+				<td><input type="number" class="uservalue" value="0" min="0" id="old15"></td>
+				<td class="oresult" id="optimal15"></td>
+				<td class="nresult" id="new15"></td>
+				<td class="dresult" id="delta15"></td>
+			</tr>
+			<tr id="anc19">
+				<td id="name19">Fragsworth:</td>
+				<td><input type="number" class="uservalue" value="0" min="0" id="old19"></td>
+				<td class="oresult" id="optimal19"></td>
+				<td class="nresult" id="new19"></td>
+				<td class="dresult" id="delta19"></td>
+			</tr>
+			<tr id="anc29">
+				<td id="name29">Juggernaut:</td>
+				<td><input type="number" class="uservalue" value="0" min="0" id="old29"></td>
+				<td class="oresult" id="optimal29"></td>
+				<td class="nresult" id="new29"></td>
+				<td class="dresult" id="delta29"></td>
+			</tr>
+			<tr id="anc10">
+				<td id="name10">Pluto:</td>
+				<td><input type="number" class="uservalue" value="0" min="0" id="old10"></td>
+				<td class="oresult" id="optimal10"></td>
+				<td class="nresult" id="new10"></td>
+				<td class="dresult" id="delta10"></td>
+			</tr>
+			<tr id="anc13">
+				<td id="name13">Atman:</td>
+				<td><input type="number" class="uservalue" value="0" min="0" id="old13"></td>
+				<td class="oresult" id="optimal13"></td>
+				<td class="nresult" id="new13"></td>
+				<td class="dresult" id="delta13"></td>
+			</tr>
+			<tr id="anc18">
+				<td id="name18">Bubos:</td>
+				<td><input type="number" class="uservalue" value="0" min="0" id="old18"></td>
+				<td class="oresult" id="optimal18"></td>
+				<td class="nresult" id="new18"></td>
+				<td class="dresult" id="delta18"></td>
+			</tr>
+			<tr id="anc11">
+				<td id="name11">Dogcog:</td>
+				<td><input type="number" class="uservalue" value="0" min="0" id="old11"></td>
+				<td class="oresult" id="optimal11"></td>
+				<td class="nresult" id="new11"></td>
+				<td class="dresult" id="delta11"></td>
+			</tr>
+			<tr id="anc14">
+				<td id="name14">Dora:</td>
+				<td><input type="number" class="uservalue" value="0" min="0" id="old14"></td>
+				<td class="oresult" id="optimal14"></td>
+				<td class="nresult" id="new14"></td>
+				<td class="dresult" id="delta14"></td>
+			</tr>
+			<tr id="anc12">
+				<td id="name12">Fortuna:</td>
+				<td><input type="number" class="uservalue" value="0" min="0" id="old12"></td>
+				<td class="oresult" id="optimal12"></td>
+				<td class="nresult" id="new12"></td>
+				<td class="dresult" id="delta12"></td>
+			</tr>
+			<tr id="anc21">
+				<td id="name21">Kumawakamaru:</td>
+				<td><input type="number" class="uservalue" value="0" min="0" id="old21"></td>
+				<td class="oresult" id="optimal21"></td>
+				<td class="nresult" id="new21"></td>
+				<td class="dresult" id="delta21"></td>
+			</tr>
+			<tr><td colspan="5" class="filler">&nbsp;</td></tr>
+			<tr>
+				<td rowspan="14">Statistics</th>
+				<th colspan="4">Relic Information</th>
+			</tr>
+			<tr>
+				<td class="result" colspan="3">Relic found this ascension:</td>
+				<td class="result" id="relicfound"></td>
+			</tr>
+			<tr>
+				<td class="result" colspan="3">Relic Ooze spawn zone:</td>
+				<td class="result" id="reliczone"></td>
+			</tr>
+			<tr>
+				<td class="result" colspan="3">Relic level:</td>
+				<td class="result" id="reliclevel"></td>
+			</tr>
+			<tr>
+				<th colspan="4">Summary and Totals</th>
+			</tr>
+			<tr>
+				<td class="result" colspan="3">Souls spent on ancients:</td>
+				<td class="result" id="soulsspent"></td>
+			</tr>
+			<tr>
+				<td class="result" colspan="3">World ascensions:</td>
+				<td class="result" id="worldresets"></td>
+			</tr>
+			<tr>
+				<td class="result" colspan="3">Highest zone ever:</td>
+				<td class="result" id="hze"></td>
+			</tr>
+			<tr>
+				<th colspan="4" id="hshistory">Hero Souls history</th>
+			</tr>
+			<tr>
+				<td class="result" colspan="2" style="font-weight:bold;">Total</td>
+				<td class="result" style="font-weight:bold;">Rate (HS / day)</td>
+				<td class="result" style="font-weight:bold;">Rate (HS / hour)</td>
+			</tr>
+			<tr>
+				<td class="result">Today:</td>
+				<td class="result" id="hstoday"></td>
+				<td class="result" id="hstpday"></td>
+				<td class="result" id="hstphour"></td>
+			</tr>
+			<tr>
+				<td class="result">Yesterday:</td>
+				<td class="result" id="hsyday"></td>
+				<td class="result" id="hsypday"></td>
+				<td class="result" id="hsyphour"></td>
+			</tr>
+			<tr>
+				<td class="result">Past 7 days:</td>
+				<td class="result" id="hsweek"></td>
+				<td class="result" id="hswpday"></td>
+				<td class="result" id="hswphour"></td>
+			</tr>
+			<tr>
+				<td class="result">Past 30 days:</td>
+				<td class="result" id="hsmonth"></td>
+				<td class="result" id="hsmpday"></td>
+				<td class="result" id="hsmphour"></td>
+			</tr>
+		</table>
+
+		<p class="comments">
+			Last updated August 13, 2015<br>
+			Clicker Heroes version 0.19
+		</p>
+		<p class="comments">
+			Latest changes:<br>
+			- Added Relic Ooze calculation. Includes fix for +Starting zone after ascension bonuses by relics.<br>
+			- Added history of hero souls (hover over 'Hero Souls history')<br>
+			- Hover over the Ancient name to see its effective bonuses
+		</p>
+		<p class="comments">
+			Iris recommendation is experimental, following <a target="_blank" href='http://redd.it/3f3djb'>this analysis of Iris</a>.
+		</p>
+		<p class="comments">
+			About capped ancients: Ancients with a maximum level are initially hidden from view. They will only show if you have not maxed the ancient.<br>
+		</p>
+		<p class="comments">
+			<a target="_blank" href='http://redd.it/3fble2'>Clicker Heroes Ancient Calculator</a> by /u/findmeanewone.<br>
+			Based on the Clicker Heroes <a target="_blank" href='http://redd.it/339m3j'>Rules of Thumb</a>, <a href='http://redd.it/2ngjbe'>Morg/Siya DPS efficiency</a> and <a href='http://redd.it/3823wt'>more of that sweet math</a>.<br>
+			Made possible thanks to all the math grinding done by /u/Awlcer, /u/glitchypenguin, /u/Kragnir, /u/TheRealDumbleDore, /u/wrigleys26 (and others).<br>
+			Inspired by the <a target="_blank" href='http://wieschie.github.io/'>Simple Rules of Thumb Calculator</a> by /u/wieschie.
+		</p>
+		<script src="scripts/mathmagician-test.js"></script>
+	</body>
+</html>
