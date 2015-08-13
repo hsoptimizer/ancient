@@ -1,4 +1,4 @@
-// version 24
+// version 25
 
 $('#savegame').keyup(import_save);
 $('body').on('change', '#laxsolo', optimize);
@@ -283,7 +283,7 @@ anc[28] = {
 	'bonusLevel':function(lvl){return(2*lvl);},
 	'bonusDesc':'% DPS per Gild',
 	'upgradeCost':function(lvl){return(lvl);},
-	'desiredLevel':function(s){return(playstyle=='active' ? s+1 : s+10);}
+	'desiredLevel':function(s){return(playstyle=='active' ? s+1 : s+9);}
 };
 anc[29] = {
 	'Name':'Juggernaut',
@@ -560,7 +560,15 @@ function optimize()	{
 
 				if(upgradeCost <= (key==5 || key==28 ? nextBank : desiredBank))	{	// always keep the desired soulbank, do not spend below this
 					// determine the ancient that is lagging behind the most (biggest relative increase from current to optimal)
-					var increase = (optimal-ancient.levelNew) / ancient.levelNew
+					var increase = (optimal-ancient.levelNew) / ancient.levelNew;
+					
+					// assign less weight to Siya/Arga to let other ancients catch up first, only upgrade when no other ancients to upgrade
+					if(playstyle == 'active' && key == 28)	{
+						increase *= 0.5;
+					}
+					else if(playstyle != 'active' && key == 5)	{
+						increase *= 0.5;
+					}
 
 					if(increase > highestIncrease)	{
 						upgradeNext = key;
@@ -603,7 +611,7 @@ function optimize()	{
 		var ancient = anc[key];
 
 		$('#new'+key).text(ancient.levelNew);
-		$('#optimal'+key).text(getOptimal(ancient, (key == 5 || key == 28) ? referenceLevel-1 : referenceLevel));
+		$('#optimal'+key).text(getOptimal(ancient, (key == 5 && playstyle!='active' || key == 28 && playstyle=='active') ? referenceLevel-1 : referenceLevel));
 
 		if(ancient.levelNew != ancient.levelOld)	{
 			$('#delta'+key).text(ancient.levelNew - ancient.levelOld);
