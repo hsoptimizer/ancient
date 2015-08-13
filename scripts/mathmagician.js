@@ -1,4 +1,4 @@
-// version 23
+// version 24
 
 $('#savegame').keyup(import_save);
 $('body').on('change', '#laxsolo', optimize);
@@ -26,7 +26,7 @@ function plural(n, s)	{
 
 function getBonusZone()	{
 	if (data.numWorldResets == 0) {
-		return(" (ascension required)");
+		return(0);
 	}
 	else {
 		var itemBonusZone;
@@ -42,8 +42,12 @@ function getBonusZone()	{
 			itemBonusZone = (seed % ((Math.max(101, maxItemZone) + 1) - minItemZone)) + minItemZone;
 		}
 		while(itemBonusZone % 5 == 0);
-		return(" / zone "+itemBonusZone);
+		return(itemBonusZone);
 	}
+}
+
+function getRelicLevel(zone)	{
+	return Math.max(Math.ceil(50 * (1 - Math.pow(1.2, (-1*zone/100 + 1)))),1);
 }
 
 Number.prototype.numberFormat = function(decimals, dec_point, thousands_sep) {
@@ -320,6 +324,15 @@ function getOptimal(ancient, level)	{
 	return(optimalLevel > 0 ? Math.round(optimalLevel) : 0);
 }
 
+function supportsHtml5Storage()	{
+	try	{
+		return 'localStorage' in window && window['localStorage'] !== null;
+	}
+	catch(e)	{
+		return false;
+	}
+}
+
 function getCookie(cname)	{
 	var name = cname + "=";
 	var ca = document.cookie.split(';');
@@ -344,28 +357,37 @@ function setCookie(cname, cvalue, expDays) {
 	}
 }
 
-function getPreference(pname)	{
-	$('#'+pname).prop('checked', getCookie(pname)=="true");
+function getSetting(pname)	{
+	var value = supportsHtml5Storage() && localStorage.getItem(pname) !== null ? localStorage.getItem(pname) : getCookie(pname);
+	$('#'+pname).prop('checked', value == "true");
+	return value;
+}
+
+function saveSetting(name, value)	{
+	var sValue = (value === undefined ? $('#'+name).is(':checked') : value);
+
+	if(supportsHtml5Storage())	{
+		localStorage.setItem(name, sValue);
+	}
+	else	{
+		setCookie(name, sValue);
+	}
 }
 
 function loadSettings()	{
-	getPreference("noBossLanding");
-	getPreference("laxsolo");
-	getPreference("ignoreIris");
-	playstyle = getCookie("playstyle");
+	getSetting("noBossLanding");
+	getSetting("laxsolo");
+	getSetting("ignoreIris");
+	playstyle = getSetting("playstyle");
 	playstyle = playstyle == "" ? 'idle' : playstyle;
 	$('input[type=radio][name=playstyle]').val([playstyle]);
 }
 
 function saveSettings()	{
-	savePreference("noBossLanding");
-	savePreference("laxsolo");
-	savePreference("ignoreIris");
-	setCookie("playstyle", $('input[type=radio][name=playstyle]:checked').val());
-}
-
-function savePreference(pname)	{
-	setCookie(pname, $('#'+pname).is(':checked'));
+	saveSetting("noBossLanding");
+	saveSetting("laxsolo");
+	saveSetting("ignoreIris");
+	saveSetting("playstyle", $('input[type=radio][name=playstyle]:checked').val());
 }
 
 function loadStats(totalSouls)	{
@@ -376,17 +398,29 @@ function loadStats(totalSouls)	{
 	var lastWeek = today - 7*24*60*60*1000;
 	var lastMonth = today - 30*24*60*60*1000;
 
-	var history = {};
+	var history = [];
 
-	var cookies = document.cookie.split(';');
-	for(var i=0; i<cookies.length; i++) {
-		var cookie = cookies[i].trim().split('=');
-		var cname = cookie[0];
-		if(cname.substring(0,4) == "hist")	{
-			var cvalue = parseInt(cookie[1]);
-			history[cname.substring(4)] = cvalue;
+	if(supportsHtml5Storage())	{
+		for(var key in localStorage)	{
+			if(key.substring(0,4) == "hist")	{
+				var hist = { date: parseInt(key.substring(4)), hs: parseInt(localStorage[key]) };
+				history.push(hist);
+			}
 		}
 	}
+	else	{
+		var cookies = document.cookie.split(';');
+		for(var i=0; i<cookies.length; i++) {
+			var cookie = cookies[i].trim().split('=');
+			var cname = cookie[0];
+			if(cname.substring(0,4) == "hist")	{
+				var hist = { date: parseInt(cname.substring(4)), hs: parseInt(parseInt(cookie[1])) };
+				history.push(hist);
+			}
+		}
+	}
+	
+	history.sort( function(a,b) { return a.date-b.date; } );
 
 	var dayLast = today;
 	var ydayLast = today;
@@ -395,30 +429,31 @@ function loadStats(totalSouls)	{
 
 	var historystring = "<u>Hero Souls (end of day)</u>";
 	for(var entry in history)	{
+		var hist = history[entry];
 		var entryDate = new Date();
-		entryDate.setTime(entry-24*60*60*1000);
-		historystring += "<br>" + entryDate.getFullYear()+"-"+entryDate.getMonth()+"-"+entryDate.getDate() + " &mdash; " + history[entry].numberFormat();
+		entryDate.setTime(hist.date-24*60*60*1000);
+		historystring += "<br>" + entryDate.getFullYear()+"-"+entryDate.getMonth()+"-"+entryDate.getDate() + " &mdash; " + hist.hs.numberFormat();
 
-		if((entry <= dayLast || dayLast == today) && entry > yesterday)	{
+		if((hist.date <= dayLast || dayLast == today) && hist.date > yesterday)	{
 			dayLast = entry;
 		}
-		if((entry <= ydayLast || ydayLast == today) && entry > dbyesterday)	{
+		if((hist.date <= ydayLast || ydayLast == today) && hist.date > dbyesterday)	{
 			ydayLast = entry;
 		}
-		if((entry <= weekLast || weekLast == today) && entry > lastWeek)	{
+		if((hist.date <= weekLast || weekLast == today) && hist.date > lastWeek)	{
 			weekLast = entry;
 		}
-		if((entry <= monthLast || monthLast == today) && entry > lastMonth)	{
+		if((hist.date <= monthLast || monthLast == today) && hist.date > lastMonth)	{
 			monthLast = entry;
 		}
 	}
 
 	$('#hshistory').attr("onmouseover", "nhpup.popup('"+historystring+"');");
 
-	var hsToday = totalSouls-history[dayLast];
-	var hsYesterday = history[dayLast]-history[ydayLast];
-	var hsLastWeek = totalSouls-history[weekLast];
-	var hsLastMonth = totalSouls-history[monthLast];
+	var hsToday = totalSouls-history[dayLast].hs;
+	var hsYesterday = history[dayLast].hs-history[ydayLast].hs;
+	var hsLastWeek = totalSouls-history[weekLast].hs;
+	var hsLastMonth = totalSouls-history[monthLast].hs;
 
 	// totals
 	$('#hstoday').text(hsToday.numberFormat());
@@ -428,32 +463,50 @@ function loadStats(totalSouls)	{
 
 	// per day
 	var msPerDay = 24*60*60*1000;
-	$('#hstpday').text((hsToday / ((today-dayLast)/msPerDay)).numberFormat());
+	$('#hstpday').text((hsToday / ((today-history[dayLast].date)/msPerDay)).numberFormat());
 	$('#hsypday').text(hsYesterday.numberFormat());
-	$('#hswpday').text((hsLastWeek / ((today-weekLast)/msPerDay)).numberFormat());
-	$('#hsmpday').text((hsLastMonth / ((today-monthLast)/msPerDay)).numberFormat());
+	$('#hswpday').text((hsLastWeek / ((today-history[weekLast].date)/msPerDay)).numberFormat());
+	$('#hsmpday').text((hsLastMonth / ((today-history[monthLast].date)/msPerDay)).numberFormat());
 
 	// per hour
 	var msPerHour = 60*60*1000;
-	$('#hstphour').text((hsToday / ((today-dayLast)/msPerHour)).numberFormat());
+	$('#hstphour').text((hsToday / ((today-history[dayLast].date)/msPerHour)).numberFormat());
 	$('#hsyphour').text((hsYesterday / 24).numberFormat());
-	$('#hswphour').text((hsLastWeek / ((today-weekLast)/msPerHour)).numberFormat());
-	$('#hsmphour').text((hsLastMonth / ((today-weekLast)/msPerHour)).numberFormat());
+	$('#hswphour').text((hsLastWeek / ((today-history[weekLast].date)/msPerHour)).numberFormat());
+	$('#hsmphour').text((hsLastMonth / ((today-history[weekLast].date)/msPerHour)).numberFormat());
 }
 
 function saveStats(totalSouls)	{
 	var tomorrow = new Date();
 
 	tomorrow.setHours(0,0,0,0);
-	if(getCookie("hist"+tomorrow.getTime()) == "")	{
-		setCookie("hist"+tomorrow.getTime(), totalSouls, 32);
+	if(getSetting("hist"+tomorrow.getTime()) == "")	{
+		saveSetting("hist"+tomorrow.getTime(), totalSouls);
 	}
 
 	tomorrow.setHours(24,0,0,0);
-	setCookie("hist"+tomorrow.getTime(), totalSouls, 32);
+	saveSetting("hist"+tomorrow.getTime(), totalSouls);
+}
+
+function migrateStats()	{
+	if(supportsHtml5Storage())	{
+		if(localStorage.getItem("migrated") != "true")	{
+			var cookies = document.cookie.split(';');
+			for(var i=0; i<cookies.length; i++) {
+				var cookie = cookies[i].trim().split('=');
+				var cname = cookie[0];
+				if(cname.substring(0,4) == "hist")	{
+					localStorage.setItem(cname, cookie[1]);
+				}
+			}
+			
+			localStorage.setItem("migrated", "true");
+		}
+	}
 }
 
 function processStats(totalSouls)	{
+	migrateStats();
 	saveStats(totalSouls);
 	loadStats(totalSouls);
 }
@@ -649,7 +702,12 @@ function import_save(evt) {
 
 		$('#primalsouls').attr('disabled', false);
 		$('#irisBonus').prop('value', irisBonus);
-		$('#relicfound').prop('textContent', (data.items.gotAscensionItem ? "Yes" : "No") + getBonusZone());
+
+		$('#relicfound').prop('textContent', (data.items.gotAscensionItem ? "Yes" : "No"));
+		var itemBonusZone = getBonusZone();
+		$('#reliczone').prop('textContent', itemBonusZone > 0 ? itemBonusZone.numberFormat() : "Ascension required");
+		$('#reliclevel').prop('textContent', itemBonusZone > 0 ? getRelicLevel(itemBonusZone) : "-");
+
 		$('#soulsspent').text(totalSoulsSpent.numberFormat());
 		$('#worldresets').text(data.numWorldResets.numberFormat());
 		$('#hze').text(data.highestFinishedZonePersist.numberFormat());
