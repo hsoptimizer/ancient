@@ -1,4 +1,4 @@
-// version 22
+// version 23
 
 $('#savegame').keyup(import_save);
 $('body').on('change', '#laxsolo', optimize);
@@ -22,6 +22,28 @@ if(!Math.log10)	{
 function plural(n, s)	{
 	var suffix = (s === undefined ? "s" : s);
 	return(n == 1 ? "" : suffix)
+}
+
+function getBonusZone()	{
+	if (data.numWorldResets == 0) {
+		return("");
+	}
+	else {
+		var itemBonusZone;
+		var minItemZone = anc[30].levelOld+irisBonus;
+		var maxItemZone = Math.ceil(data.highestFinishedZonePersist * 0.66);
+		if (maxItemZone - minItemZone <= Math.ceil(maxItemZone * 0.3))	{
+			maxItemZone = minItemZone + Math.ceil(maxItemZone * 0.3);
+		}
+		minItemZone = Math.max(99,minItemZone);
+		var seed = data.items.bonusZoneRoller.seed;
+		do	{
+			seed = (seed * 16807) % 2147483647;
+			itemBonusZone = (seed % ((Math.max(101, maxItemZone) + 1) - minItemZone)) + minItemZone;
+		}
+		while(itemBonusZone % 5 == 0);
+		return(" / zone "+itemBonusZone);
+	}
 }
 
 Number.prototype.numberFormat = function(decimals, dec_point, thousands_sep) {
@@ -398,17 +420,20 @@ function loadStats(totalSouls)	{
 	var hsLastWeek = totalSouls-history[weekLast];
 	var hsLastMonth = totalSouls-history[monthLast];
 
+	// totals
 	$('#hstoday').text(hsToday.numberFormat());
 	$('#hsyday').text(hsYesterday.numberFormat());
 	$('#hsweek').text(hsLastWeek.numberFormat());
 	$('#hsmonth').text(hsLastMonth.numberFormat());
 
+	// per day
 	var msPerDay = 24*60*60*1000;
 	$('#hstpday').text((hsToday / ((today-dayLast)/msPerDay)).numberFormat());
 	$('#hsypday').text(hsYesterday.numberFormat());
 	$('#hswpday').text((hsLastWeek / ((today-weekLast)/msPerDay)).numberFormat());
 	$('#hsmpday').text((hsLastMonth / ((today-monthLast)/msPerDay)).numberFormat());
 
+	// per hour
 	var msPerHour = 60*60*1000;
 	$('#hstphour').text((hsToday / ((today-dayLast)/msPerHour)).numberFormat());
 	$('#hsyphour').text((hsYesterday / 24).numberFormat());
@@ -624,12 +649,13 @@ function import_save(evt) {
 
 		$('#primalsouls').attr('disabled', false);
 		$('#irisBonus').prop('value', irisBonus);
-		$('#relicfound').prop('textContent', data.items.gotAscensionItem ? "Yes" : "No");
+		$('#relicfound').prop('textContent', (data.items.gotAscensionItem ? "Yes" : "No") + getBonusZone());
 		$('#soulsspent').text(totalSoulsSpent.numberFormat());
 		$('#worldresets').text(data.numWorldResets.numberFormat());
 		$('#hze').text(data.highestFinishedZonePersist.numberFormat());
 
 		processStats(totalSoulsSpent + data.heroSouls + data.primalSouls);
+		
 		optimize();
 	}
 	else	{
