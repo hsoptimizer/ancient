@@ -60,6 +60,16 @@ Number.prototype.numberFormat = function(decimals, dec_point, thousands_sep) {
     return parts.join(dec_point);
 };
 
+String.prototype.contains = function(expression)	{
+	if(typeof expression == "string")	{
+		return(this.indexOf(expression) != -1);
+	}
+	else if(typeof expression.test == "function")	{
+		return(expression.test(this));
+	}
+	return(undefined);
+};
+
 function calcMorgulis(s)	{
 	var tier = Math.min(Math.floor(s/10), 10);
 	var percent = 25-tier;
@@ -338,7 +348,7 @@ function getCookie(cname)	{
 	var ca = document.cookie.split(';');
 	for(var i=0; i<ca.length; i++) {
 		var c = ca[i].trim();
-		if (c.indexOf(name) == 0)	{
+		if (c.contains(name) == 0)	{
 			var cvalue = c.substring(name.length,c.length);
 			return(cvalue);
 		}
@@ -680,7 +690,7 @@ function import_save(evt) {
 			var ancient = anc[key];
 
 			if(key == 0)	{
-				var IncludeSoulsAfterAscension = (data.heroSouls==0 || window.location.href.indexOf('?primalsouls=1')!=-1);
+				var IncludeSoulsAfterAscension = (data.heroSouls==0 || window.location.href.contains('?primalsouls=1'));
 				$('#primalsouls').prop('checked', IncludeSoulsAfterAscension);
 				ancient.levelOld = (IncludeSoulsAfterAscension ? data.heroSouls+data.primalSouls : data.heroSouls);
 			}
