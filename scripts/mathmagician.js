@@ -1,4 +1,4 @@
-// version 26
+// version 27
 
 $('#savegame').keyup(import_save);
 $('body').on('change', '#laxsolo', optimize);
@@ -564,10 +564,10 @@ function optimize()	{
 					
 					// assign less weight to Siya/Arga to let other ancients catch up first, only upgrade when no other ancients to upgrade
 					if(playstyle == 'active' && key == 28)	{
-						increase *= 0.5;
+						increase *= 0.25;
 					}
 					else if(playstyle != 'active' && key == 5)	{
-						increase *= 0.5;
+						increase *= 0.25;
 					}
 
 					if(increase > highestIncrease)	{
@@ -680,8 +680,9 @@ function import_save(evt) {
 			var ancient = anc[key];
 
 			if(key == 0)	{
-				$('#primalsouls').prop('checked', data.heroSouls == 0);
-				ancient.levelOld = (data.heroSouls == 0 ? data.primalSouls : data.heroSouls);
+				var IncludeSoulsAfterAscension = (data.heroSouls==0 || window.location.href.indexOf('?primalsouls=1')!=-1);
+				$('#primalsouls').prop('checked', IncludeSoulsAfterAscension);
+				ancient.levelOld = (IncludeSoulsAfterAscension ? data.heroSouls+data.primalSouls : data.heroSouls);
 			}
 			else	{
 				if(data.ancients.ancients.hasOwnProperty(key))	{
