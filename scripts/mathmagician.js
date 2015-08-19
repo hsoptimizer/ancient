@@ -560,8 +560,8 @@ function optimize()	{
 
 		for(key in anc)	{
 			var ancient = anc[key];
-			var optimal = ancient.desiredLevel(referenceLevel);
-			if(ancient.levelNew > 0 && (clicking == true || ancient.clicking == false) && (ignoreIris == false || key != 30))	{
+			var optimal = getOptimal(ancient, referenceLevel);
+			if(ancient.levelNew > 0 && optimal > ancient.levelNew && (clicking == true || ancient.clicking == false) && (ignoreIris == false || key != 30))	{
 				// Do not process ancients the user doesn't have.
 				// Do not process clicking ancients when clicking checkbox is off.
 				// Do not process Iris if disabled.
