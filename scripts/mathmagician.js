@@ -574,10 +574,10 @@ function optimize()	{
 					
 					// assign less weight to Siya/Arga to let other ancients catch up first, only upgrade when no other ancients to upgrade
 					if(playstyle == 'active' && key == 28)	{
-						increase *= 0.25;
+						increase *= 0.1;
 					}
 					else if(playstyle != 'active' && key == 5)	{
-						increase *= 0.25;
+						increase *= 0.1;
 					}
 
 					if(increase > highestIncrease)	{
