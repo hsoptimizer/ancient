@@ -1,4 +1,4 @@
-// version 28
+// version 29
 
 $('#savegame').keyup(import_save);
 $('body').on('change', '#laxsolo', optimize);
@@ -483,7 +483,7 @@ function loadStats(totalSouls)	{
 	$('#hstphour').text((hsToday / ((today-history[dayLast].date)/msPerHour)).numberFormat());
 	$('#hsyphour').text((hsYesterday / 24).numberFormat());
 	$('#hswphour').text((hsLastWeek / ((today-history[weekLast].date)/msPerHour)).numberFormat());
-	$('#hsmphour').text((hsLastMonth / ((today-history[weekLast].date)/msPerHour)).numberFormat());
+	$('#hsmphour').text((hsLastMonth / ((today-history[monthLast].date)/msPerHour)).numberFormat());
 }
 
 function saveStats(totalSouls)	{
