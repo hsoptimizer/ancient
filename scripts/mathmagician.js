@@ -1,4 +1,4 @@
-// version 29
+// version 30
 
 $('#savegame').keyup(import_save);
 $('body').on('change', '#laxsolo', optimize);
