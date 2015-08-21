@@ -440,21 +440,23 @@ function loadStats(totalSouls)	{
 	var historystring = "<u>Hero Souls (end of day)</u>";
 	for(var entry in history)	{
 		var hist = history[entry];
-		var entryDate = new Date();
-		entryDate.setTime(hist.date-24*60*60*1000);
-		historystring += "<br>" + entryDate.getFullYear()+"-"+entryDate.getMonth()+"-"+entryDate.getDate() + " &mdash; " + hist.hs.numberFormat();
-
-		if((hist.date <= dayLast || dayLast == today) && hist.date > yesterday)	{
-			dayLast = entry;
-		}
-		if((hist.date <= ydayLast || ydayLast == today) && hist.date > dbyesterday)	{
-			ydayLast = entry;
-		}
-		if((hist.date <= weekLast || weekLast == today) && hist.date > lastWeek)	{
-			weekLast = entry;
-		}
-		if((hist.date <= monthLast || monthLast == today) && hist.date > lastMonth)	{
-			monthLast = entry;
+		if(hist.date > lastMonth)	{
+			var entryDate = new Date();
+			entryDate.setTime(hist.date-24*60*60*1000);
+			historystring += "<br>" + entryDate.getFullYear()+"-"+entryDate.getMonth()+"-"+entryDate.getDate() + " &mdash; " + hist.hs.numberFormat();
+	
+			if((hist.date <= dayLast || dayLast == today) && hist.date > yesterday)	{
+				dayLast = entry;
+			}
+			if((hist.date <= ydayLast || ydayLast == today) && hist.date > dbyesterday)	{
+				ydayLast = entry;
+			}
+			if((hist.date <= weekLast || weekLast == today) && hist.date > lastWeek)	{
+				weekLast = entry;
+			}
+			if((hist.date <= monthLast || monthLast == today) && hist.date > lastMonth)	{
+				monthLast = entry;
+			}
 		}
 	}
 
