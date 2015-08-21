@@ -732,9 +732,7 @@ function import_save(evt) {
 		$('#soulsspent').text(totalSoulsSpent.numberFormat());
 		$('#worldresets').text(data.numWorldResets.numberFormat());
 		$('#hze').text(data.highestFinishedZonePersist.numberFormat());
-		if(data.hasOwnProperty('titanDamage'))	{
-			$('#titandamage').text(data.titanDamage.numberFormat());
-		}
+		$('#titandamage').text(data.hasOwnProperty('titanDamage') ? data.titanDamage.numberFormat() : "CH v0.20+ only");
 
 		processStats(totalSoulsSpent + data.heroSouls + data.primalSouls);
 		
