@@ -28,6 +28,11 @@ textarea	{
 }
 
 .button	{
+	background-color:transparent;
+	border:none;
+}
+
+.button	> input {
 	text-align:center;
 	width:100%;
 }
