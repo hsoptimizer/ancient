@@ -770,7 +770,7 @@ function import_save(evt) {
 		$('#titandamage').text(data.hasOwnProperty('titanDamage') ? data.titanDamage.numberFormat() : "CH v0.20+ only");
 
 		processStats(totalSoulsSpent + data.heroSouls + data.primalSouls);
-		permaLink();
+		//permaLink();
 		optimize();
 	}
 	else	{
