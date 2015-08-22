@@ -1,10 +1,11 @@
-// version 30
+// version 31
 
 $('#savegame').keyup(import_save);
 $('body').on('change', '#laxsolo', optimize);
 $('body').on('change', '#ignoreIris', optimize);
 $('body').on('change', '#noBossLanding', optimize);
 $('body').on('change', '#primalsouls', primalSouls);
+$('body').on('change', '#theme', setTheme);
 
 var playstyle;
 var data;
@@ -17,6 +18,19 @@ $('input[type=radio][name=playstyle]').on('change', function(){ playstyle = $(th
 
 if(!Math.log10)	{
 	Math.log10 = function(t){return(Math.log(t)/Math.LN10);};
+}
+
+function setTheme()	{
+	var selectedTheme = $( "#theme option:selected" ).val();
+	saveSetting('theme', selectedTheme);
+	document.getElementById('cssId').setAttribute('href',selectedTheme+'.css');
+}
+
+function toggle_options()	{
+	var hideOptions = $('#showoptions').text() == 'Hide options';
+	$('#options').toggle();
+	$('#showoptions').text(hideOptions ? 'Show options' : 'Hide options');
+	saveSetting('hideOptions', hideOptions);
 }
 
 function plural(n, s)	{
@@ -125,7 +139,7 @@ anc[4] = {
 	'bonusLevel':function(lvl){return(idleBonus(lvl));},
 	'bonusDesc':'% Gold when Idle',
 	'upgradeCost':function(lvl){return(lvl);},
-	'desiredLevel':function(s){return(playstyle=='active' ? 0 : 0.93*s);}
+	'desiredLevel':function(s){return(playstyle=='active' ? 0 : 0.927*s);}
 };
 anc[5] = {
 	'Name':'Siyalatas',
@@ -149,7 +163,7 @@ anc[8] = {
 	'bonusLevel':function(lvl){return(5*lvl);},
 	'bonusDesc':'% Gold Dropped',
 	'upgradeCost':function(lvl){return(lvl);},
-	'desiredLevel':function(s){return(0.93*s);}
+	'desiredLevel':function(s){return(0.927*s);}
 };
 anc[9] = {
 	'Name':'Mimzee',
@@ -161,7 +175,7 @@ anc[9] = {
 	'bonusLevel':function(lvl){return(50*lvl);},
 	'bonusDesc':'% Treasure Chest Gold',
 	'upgradeCost':function(lvl){return(lvl);},
-	'desiredLevel':function(s){return(0.93*s);}
+	'desiredLevel':function(s){return(0.927*s);}
 };
 anc[10] = {
 	'Name':'Pluto',
@@ -305,7 +319,7 @@ anc[29] = {
 	'bonusLevel':function(lvl){return(0.01*lvl);},
 	'bonusDesc':'% Click Damage/DPS<br>(each Combo)',
 	'upgradeCost':function(lvl){return(Math.round(Math.pow(lvl, 1.5)));},
-	'desiredLevel':function(s){return(playstyle=='idle' ? 0 : playstyle=='active' ? Math.pow(s,0.8) : 0.1*s);}
+	'desiredLevel':function(s){return(playstyle=='idle' ? 0 : playstyle=='active' ? Math.pow(s,0.8) : Math.pow(0.5*s, 0.8));}
 };
 anc[30] = {
 	'Name':'Iris',
@@ -368,7 +382,24 @@ function setCookie(cname, cvalue, expDays) {
 }
 
 function getSetting(pname)	{
-	var value = supportsHtml5Storage() && localStorage.getItem(pname) !== null ? localStorage.getItem(pname) : getCookie(pname);
+	var value;
+	if(supportsHtml5Storage())	{
+		try	{
+		if(localStorage.getItem(pname) !== null)	{
+	// var value = supportsHtml5Storage() && localStorage.getItem(pname) !== null ? localStorage.getItem(pname) : getCookie(pname);
+			value = localStorage.getItem(pname);
+		}
+		else	{
+			value = getCookie(pname);
+		}
+		}
+		catch(e)	{
+			value = getCookie(pname);
+		}
+	}
+	else	{
+		value = getCookie(pname);
+	}
 	$('#'+pname).prop('checked', value == "true");
 	return value;
 }
@@ -391,6 +422,9 @@ function loadSettings()	{
 	playstyle = getSetting("playstyle");
 	playstyle = playstyle == "" ? 'idle' : playstyle;
 	$('input[type=radio][name=playstyle]').val([playstyle]);
+	if(getSetting('hideOptions')=='true')	{
+		toggle_options();
+	}
 }
 
 function saveSettings()	{
@@ -444,7 +478,7 @@ function loadStats(totalSouls)	{
 			var entryDate = new Date();
 			entryDate.setTime(hist.date-24*60*60*1000);
 			historystring += "<br>" + entryDate.getFullYear()+"-"+entryDate.getMonth()+"-"+entryDate.getDate() + " &mdash; " + hist.hs.numberFormat();
-	
+
 			if((hist.date <= dayLast || dayLast == today) && hist.date > yesterday)	{
 				dayLast = entry;
 			}
@@ -457,6 +491,9 @@ function loadStats(totalSouls)	{
 			if((hist.date <= monthLast || monthLast == today) && hist.date > lastMonth)	{
 				monthLast = entry;
 			}
+		}
+		else	{
+			console.log(hist.date + " is before threshold");
 		}
 	}
 
@@ -648,8 +685,6 @@ function optimize()	{
 	saveSettings();
 }
 
-const ANTI_CHEAT_CODE = "Fe12NAfA3R6z4k0z";
-const SALT = "af0ik392jrmt0nsfdghy0";
 function import_save(evt) {
 
 	if(evt && evt.keyCode == 17)	{
@@ -660,13 +695,13 @@ function import_save(evt) {
 
 	var txt = $('#savegame').val();
 
-	if(txt.search(ANTI_CHEAT_CODE) != -1) {
-		var result = txt.split(ANTI_CHEAT_CODE);
+	if(txt.contains("Fe12NAfA3R6z4k0z")) {
+		var result = txt.split("Fe12NAfA3R6z4k0z");
 		txt = "";
 		for (var i = 0; i < result[0].length; i += 2) {
 			txt += result[0][i];
 		}
-		if (CryptoJS.MD5(txt + SALT) != result[1]) {
+		if (CryptoJS.MD5(txt + "af0ik392jrmt0nsfdghy0") != result[1]) {
 			$('#savegame').attr('class', 'error');
 			return;
 		}
@@ -706,7 +741,7 @@ function import_save(evt) {
 				// hide capped ancients that are already maxed but show them if they're not
 				$('#anc'+key).css('display', (ancient.maxLevel != 0 && ancient.levelOld == ancient.maxLevel) ? 'none' : 'table-row');
 			}
-			$('#old'+key).prop('value', ancient.levelOld);
+			$('#old'+key).val(ancient.levelOld);
 		}
 
 		// find the Iris bonus from relics!
@@ -735,11 +770,52 @@ function import_save(evt) {
 		$('#titandamage').text(data.hasOwnProperty('titanDamage') ? data.titanDamage.numberFormat() : "CH v0.20+ only");
 
 		processStats(totalSoulsSpent + data.heroSouls + data.primalSouls);
-		
+		permaLink();
 		optimize();
 	}
 	else	{
 		$('#savegame').prop('class', txt=='' ? '' : 'error');
+	}
+}
+
+function permaLink()	{
+	var url=window.location.pathname;
+	for(key in anc)	{
+		var ancient=anc[key];
+		url += "?a" + key + "=" + ancient.levelOld;
+	}
+	url+="?st="+irisBonus;
+	$('#permalink').html("<a href='"+url+"'>Permalink</a>");
+}
+
+function parseUrl()	{
+	var options = window.location.search.split("?");
+	if(options.length > 1)	{
+		var doOptimize=false;
+		for(option in options)	{
+			var arg=options[option].split("=");
+			if(arg.length==2)	{
+				var argname=arg[0];
+				var argval=parseInt(arg[1]);
+				if(!isNaN(argval))	{
+					if(/a\d+/.test(argname))	{
+						var key=parseInt(argname.substring(1));
+						if(key in anc)	{
+							var ancient=anc[key];
+							$('#old'+key).val(argval);
+							$('#anc'+key).css('display', (ancient.maxLevel != 0 && argval == ancient.maxLevel) ? 'none' : 'table-row');
+							doOptimize=true;
+						}
+					}
+					else if(/st/.test(argname))	{
+						$('#irisBonus').prop('value', argval);
+					}
+				}
+			}
+		}
+		if(doOptimize)	{
+			optimize();
+		}
 	}
 }
 
@@ -751,4 +827,6 @@ function init()	{
 			$('#anc'+key).css('display', 'none');
 		}
 	}
+	document.getElementById('theme').value=getSetting('theme');
+	parseUrl();
 }
