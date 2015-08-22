@@ -1,5 +1,5 @@
 *	{
-	font-family:Calibri,Arial,sans-serif;
+	font-family:Candara,Calibri,Arial,sans-serif;
 }
 
 body	{
@@ -20,6 +20,7 @@ textarea	{
 	background-color:khaki;
 	color:black;
 	font-size:x-small;
+	font-family:monospace;
 }
 
 .error	{
@@ -49,7 +50,6 @@ textarea	{
 td.hsheader	{
 	font-weight:bold;
 	font-size:small;
-	font-family:Arial,sans-serif;
 }
 
 #title	{
@@ -63,7 +63,7 @@ td.hsheader	{
 }
 
 #showoptions	{
-	font-size:x-small;
+	font-size:small;
 	vertical-align:middle;
 	text-decoration:none;
 	color:dimgrey;
@@ -81,6 +81,7 @@ td.hsheader	{
 	margin-left:4px;
 	margin-right:4px;
 	width:60px;
+	font-family:Tahoma,Verdana,Segoe,sans-serif;
 }
 
 input.pref	{
@@ -94,7 +95,6 @@ td.uservalue	{
 	width:120px;
 	color:black;
 	font-size:small;
-	font-family:Arial,sans-serif;
 }
 
 .uservalue > input {
@@ -102,8 +102,9 @@ td.uservalue	{
 	border-width:1px;
 	background-color:khaki;
 	color:black;
-	font-family:Arial,sans-serif;
 	padding-right: 4px;
+	font-family: Arial,sans-serif;
+	font-family:Tahoma,Verdana,Segoe,sans-serif;
 }
 
 input.noborder	{
@@ -114,32 +115,31 @@ input.noborder	{
 }
 
 td.aname	{
-	padding-left:8px;
-	padding-right:8px;
+	padding-left:4px;
+	padding-right:4px;
 	background-color:transparent;
 	color:black;
-	font-family:Calibri,Arial,sans-serif;
 }
 
 td.result	{
 	width:120px;
 	color:black;
 	font-size:small;
-	font-family:Arial,sans-serif;
+	font-family:Tahoma,Verdana,Segoe,sans-serif;
 }
 
 td.oresult	{
 	width:120px;
 	color:black;
 	font-size:small;
-	font-family:Arial,sans-serif;
+	font-family:Tahoma,Verdana,Segoe,sans-serif;
 }
 
 td.nresult	{
 	width:120px;
 	color:black;
 	font-size:small;
-	font-family:Arial,sans-serif;
+	font-family:Tahoma,Verdana,Segoe,sans-serif;
 }
 
 td.dresult	{
@@ -147,7 +147,7 @@ td.dresult	{
 	color:black;
 	width:120px;
 	font-size:small;
-	font-family:Arial,sans-serif;
+	font-family:Tahoma,Verdana,Segoe,sans-serif;
 }
 
 table	{
