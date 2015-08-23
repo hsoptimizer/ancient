@@ -1,4 +1,4 @@
-// version 32
+// version 31
 
 $('#savegame').keyup(import_save);
 $('body').on('change', '#laxsolo', optimize);
@@ -486,13 +486,14 @@ function loadStats(totalSouls)	{
 	var weekLast = today;
 	var monthLast = today;
 
-	var historystring = "<u>Hero Souls (end of day)</u>";
+	var historystring = "<u>Hero Souls (end of day)</u><br><br><table class=\"history\"><tr class=\"history\"><th>Date</th><th>Total HS</th><th>Difference</th></tr>";
+	var previousHS = 0;
 	for(var entry in history)	{
 		var hist = history[entry];
 		if(hist.date > lastMonth)	{
 			var entryDate = new Date();
 			entryDate.setTime(hist.date-24*60*60*1000);
-			historystring += "<br>" + entryDate.getFullYear()+"-"+(entryDate.getMonth()+1).padZero(2)+"-"+entryDate.getDate().padZero(2) + " &mdash; " + hist.hs.numberFormat();
+			historystring += "<tr class=\"history\"><td>" + entryDate.getFullYear()+"-"+(entryDate.getMonth()+1).padZero(2)+"-"+entryDate.getDate().padZero(2) + "</td><td>" + hist.hs.numberFormat() + "</td><td>" + ((previousHS==0)?"&mdash;":((hist.hs-previousHS>0)?"+":"")+(hist.hs-previousHS).numberFormat()) + "</td></tr>";
 
 			if((hist.date <= dayLast || dayLast == today) && hist.date > yesterday)	{
 				dayLast = entry;
@@ -507,12 +508,11 @@ function loadStats(totalSouls)	{
 				monthLast = entry;
 			}
 		}
-		else	{
-			console.log(hist.date + " is before threshold");
-		}
+		previousHS = hist.hs;
 	}
+	historystring += "</table>";
 
-	$('#hshistory').attr("onmouseover", "nhpup.popup('"+historystring+"');");
+	$('#hshistory').attr("onmouseover", "nhpup.popup('"+historystring+"', {'width':'auto'});");
 
 	var hsToday = totalSouls-history[dayLast].hs;
 	var hsYesterday = history[dayLast].hs-history[ydayLast].hs;
@@ -785,7 +785,7 @@ function import_save(evt) {
 		$('#titandamage').text(data.hasOwnProperty('titanDamage') ? data.titanDamage.numberFormat() : "CH v0.20+ only");
 
 		processStats(totalSoulsSpent + data.heroSouls + data.primalSouls);
-		//permaLink();
+		// permaLink();
 		optimize();
 	}
 	else	{
