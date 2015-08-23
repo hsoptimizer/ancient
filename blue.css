@@ -204,13 +204,39 @@ img	{
 
 /* tooltips */
 #pup {
-  position:absolute;
-  z-index:200; /* aaaalways on top*/
-  padding:3px;
-  margin:8px;
-  border:3px outset;
-  border-color:gold;
-  background-color:gold;
-  text-align:center;
-  color:saddlebrown;
+	position:absolute;
+	z-index:200;
+	padding:3px;
+	margin:8px;
+	border:3px outset;
+	width:400px;
+	border-color:gold;
+	background-color:gold;
+	text-align:center;
+	color:saddlebrown;
+}
+
+table.history  {
+	width:100%;
+	padding:10px;
+}
+
+tr.history > th	{
+	background-color:inherit;
+	color:inherit;
+	text-align:center;
+	padding-left:10px;
+	padding-right:10px;
+	border:none;
+}
+
+tr.history > td {
+	color:inherit;
+	background-color:inherit;
+	text-align:right;
+	padding-left:10px;
+	padding-right:10px;
+	font-family:Tahoma,Verdana,Segoe,sans-serif;
+	font-size:small;
+	border:none;
 }
