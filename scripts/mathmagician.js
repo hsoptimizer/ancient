@@ -1,4 +1,4 @@
-// version 31
+// version 32
 
 $('#savegame').keyup(import_save);
 $('body').on('change', '#laxsolo', optimize);
@@ -74,6 +74,11 @@ Number.prototype.numberFormat = function(decimals, dec_point, thousands_sep) {
     return parts.join(dec_point);
 };
 
+Number.prototype.padZero = function(length)	{
+	var s = this.toString();
+	return('0'.repeat(length - s.length) + s);
+}
+
 String.prototype.contains = function(expression)	{
 	if(typeof expression == "string")	{
 		return(this.indexOf(expression) != -1);
@@ -82,6 +87,16 @@ String.prototype.contains = function(expression)	{
 		return(expression.test(this));
 	}
 	return(undefined);
+};
+
+String.prototype.repeat = function(count) {
+    if (count < 1) return '';
+    var result = '', pattern = this.valueOf();
+    while (count > 1) {
+        if (count & 1) result += pattern;
+        count >>= 1, pattern += pattern;
+    }
+    return result + pattern;
 };
 
 function calcMorgulis(s)	{
@@ -477,7 +492,7 @@ function loadStats(totalSouls)	{
 		if(hist.date > lastMonth)	{
 			var entryDate = new Date();
 			entryDate.setTime(hist.date-24*60*60*1000);
-			historystring += "<br>" + entryDate.getFullYear()+"-"+(entryDate.getMonth()+1)+"-"+entryDate.getDate() + " &mdash; " + hist.hs.numberFormat();
+			historystring += "<br>" + entryDate.getFullYear()+"-"+(entryDate.getMonth()+1).padZero(2)+"-"+entryDate.getDate().padZero(2) + " &mdash; " + hist.hs.numberFormat();
 
 			if((hist.date <= dayLast || dayLast == today) && hist.date > yesterday)	{
 				dayLast = entry;
