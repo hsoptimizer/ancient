@@ -477,7 +477,7 @@ function loadStats(totalSouls)	{
 		if(hist.date > lastMonth)	{
 			var entryDate = new Date();
 			entryDate.setTime(hist.date-24*60*60*1000);
-			historystring += "<br>" + entryDate.getFullYear()+"-"+entryDate.getMonth()+"-"+entryDate.getDate() + " &mdash; " + hist.hs.numberFormat();
+			historystring += "<br>" + entryDate.getFullYear()+"-"+(entryDate.getMonth()+1)+"-"+entryDate.getDate() + " &mdash; " + hist.hs.numberFormat();
 
 			if((hist.date <= dayLast || dayLast == today) && hist.date > yesterday)	{
 				dayLast = entry;
