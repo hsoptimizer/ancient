@@ -604,7 +604,7 @@ function loadStats(totalSouls)	{
 
 	var ctx = document.getElementById("hschart").getContext("2d");
 	$('#trchart').toggle(true);
-	var historyChart = new Chart(ctx).Line(chartData, {animation:true,animationSteps:30,scaleLabel: "<%=value/"+scale.toString()+"%>"+suffix[order],animationEasing:"easeOutElastic",responsive:false,pointHitDetectionRadius:5,scaleBeginAtZero:false});
+	var historyChart = new Chart(ctx).Line(chartData, {animation:true,animationSteps:30,pointDotRadius:3,scaleLabel: "<%=value/"+scale.toString()+"%>"+suffix[order],animationEasing:"easeOutElastic",responsive:false,pointHitDetectionRadius:5,scaleBeginAtZero:false});
 }
 
 function saveStats(totalSouls)	{
