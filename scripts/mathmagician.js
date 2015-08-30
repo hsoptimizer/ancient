@@ -1,4 +1,4 @@
-// version 31
+// version 32
 
 $('#savegame').keyup(import_save);
 $('body').on('change', '#laxsolo', optimize);
@@ -485,9 +485,10 @@ function loadStats(totalSouls)	{
 	var ydayLast = today;
 	var weekLast = today;
 	var monthLast = today;
-
+	
 	var historystring = "<u>Hero Souls (end of day)</u><br><br><table class=\"history\"><tr class=\"history\"><th>Date</th><th>Total HS</th><th>Difference</th></tr>";
 	var previousHS = 0;
+	var lastEntry;
 	for(var entry in history)	{
 		var hist = history[entry];
 		if(hist.date > lastMonth)	{
@@ -507,6 +508,8 @@ function loadStats(totalSouls)	{
 			if((hist.date <= monthLast || monthLast == today) && hist.date > lastMonth)	{
 				monthLast = entry;
 			}
+			
+			lastEntry = entry;
 		}
 		previousHS = hist.hs;
 	}
@@ -538,6 +541,61 @@ function loadStats(totalSouls)	{
 	$('#hsyphour').text((hsYesterday / 24).numberFormat());
 	$('#hswphour').text((hsLastWeek / ((today-history[weekLast].date)/msPerHour)).numberFormat());
 	$('#hsmphour').text((hsLastMonth / ((today-history[monthLast].date)/msPerHour)).numberFormat());
+	
+	var chartData = {
+    labels: [],
+    datasets: [
+        {
+            label: "HS",
+            fillColor: "rgba(151,187,205,0.2)",
+            strokeColor: "rgba(151,187,205,1)",
+            pointColor: "rgba(151,187,205,1)",
+            pointStrokeColor: "#fff",
+            pointHighlightFill: "#fff",
+            pointHighlightStroke: "rgba(151,187,205,1)",
+            data: []
+        },
+		{
+            label: "30-day average",
+            fillColor: "rgba(151,0,0,0)",
+            strokeColor: "rgba(151,0,0,0.5)",
+            pointColor: "rgba(151,0,0,0.0)",
+            pointStrokeColor: "#fff",
+            pointHighlightFill: "#fff",
+            pointHighlightStroke: "rgba(151,187,205,0)",
+            data: []
+		}
+    ]
+	};
+
+	previousHS = 0;
+	var first=true;
+	var monthAvg = Math.round(hsLastMonth/((today-history[monthLast].date)/msPerDay));
+	var order=Math.floor(Math.log10(monthAvg)/3);
+	var scale=Math.pow(10,order*3);
+	
+	var suffix=["","K","M","B","T","Q"];
+	
+	console.log(scale);
+	for(var entry in history)	{
+		var hist = history[entry];
+		if(hist.date > lastMonth)	{
+			var entryDate = new Date();
+			entryDate.setTime(hist.date-24*60*60*1000);
+			
+			if(previousHS != 0)	{
+				chartData.datasets[0].data.push(hist.hs-previousHS);
+				chartData.datasets[1].data.push(first || entry == lastEntry ? monthAvg : null)
+				chartData.labels.push(entryDate.getDate());
+				first = false;
+			}
+		}
+		previousHS = hist.hs;
+	}
+
+	var ctx = document.getElementById("hschart").getContext("2d");
+	$('#trchart').toggle(true);
+	var historyChart = new Chart(ctx).Line(chartData, {animation:true,animationSteps:30,scaleLabel: "<%=value/"+scale.toString()+"%>"+suffix[order],animationEasing:"easeOutElastic",responsive:false,pointHitDetectionRadius:5,scaleBeginAtZero:false});
 }
 
 function saveStats(totalSouls)	{
