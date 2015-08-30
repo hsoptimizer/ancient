@@ -542,29 +542,29 @@ function loadStats(totalSouls)	{
 	$('#hsmphour').text((hsLastMonth / ((today-history[monthLast].date)/millisecondsPerHour)).numberFormat());
 	
 	var chartData = {
-    labels: [],
-    datasets: [
-        {
-            label: "HS",
-            fillColor: "rgba(151,187,205,0.2)",
-            strokeColor: "rgba(151,187,205,1)",
-            pointColor: "rgba(151,187,205,1)",
-            pointStrokeColor: "#fff",
-            pointHighlightFill: "#fff",
-            pointHighlightStroke: "rgba(151,187,205,1)",
-            data: []
-        },
-		{
-            label: "30-day average",
-            fillColor: "rgba(151,0,0,0)",
-            strokeColor: "rgba(151,0,0,0.5)",
-            pointColor: "rgba(151,0,0,0.0)",
-            pointStrokeColor: "#fff",
-            pointHighlightFill: "#fff",
-            pointHighlightStroke: "rgba(151,187,205,0)",
-            data: []
-		}
-    ]
+		labels: [],
+		datasets: [
+			{
+				label: "HS",
+				fillColor: "rgba(151,187,205,0.2)",
+				strokeColor: "rgba(151,187,205,1)",
+				pointColor: "rgba(151,187,205,1)",
+				pointStrokeColor: "#fff",
+				pointHighlightFill: "#fff",
+				pointHighlightStroke: "rgba(151,187,205,1)",
+				data: []
+			},
+			{
+				label: "30-day average",
+				fillColor: "rgba(192,0,0,0)",
+				strokeColor: "rgba(192,0,0,0.5)",
+				pointColor: "rgba(192,0,0,0.0)",
+				pointStrokeColor: "#fff",
+				pointHighlightFill: "#fff",
+				pointHighlightStroke: "rgba(192,0,0,0.5)",
+				data: []
+			}
+		]
 	};
 
 	previousHS = 0;
