@@ -1,4 +1,4 @@
-// version 32
+// version 33
 
 $('#savegame').keyup(import_save);
 $('body').on('change', '#laxsolo', optimize);
@@ -13,6 +13,8 @@ var hasMorgulis = false;
 var laxSolomon = false;
 var irisBonus = 0;
 var irisMax = 0;
+var millisecondsPerDay = 24*60*60*1000;
+var millisecondsPerHour = 60*60*1000;
 
 $('input[type=radio][name=playstyle]').on('change', function(){ playstyle = $(this).val(); optimize(); });
 
@@ -452,18 +454,17 @@ function saveSettings()	{
 function loadStats(totalSouls)	{
 	var currentDate = new Date();
 	var today = currentDate.getTime();
-	var yesterday = today - 1*24*60*60*1000;
-	var dbyesterday = today - 2*24*60*60*1000;
-	var lastWeek = today - 7*24*60*60*1000;
-	var lastMonth = today - 30*24*60*60*1000;
+	var yesterday = today - 1*millisecondsPerDay;
+	var dbyesterday = today - 2*millisecondsPerDay;
+	var lastWeek = today - 7*millisecondsPerDay;
+	var lastMonth = today - 30*millisecondsPerDay;
 
 	var history = [];
 
 	if(supportsHtml5Storage())	{
 		for(var key in localStorage)	{
 			if(key.substring(0,4) == "hist")	{
-				var hist = { date: parseInt(key.substring(4)), hs: parseInt(localStorage[key]) };
-				history.push(hist);
+				history.push({date:parseInt(key.substring(4)),hs:parseInt(localStorage[key])});
 			}
 		}
 	}
@@ -493,7 +494,7 @@ function loadStats(totalSouls)	{
 		var hist = history[entry];
 		if(hist.date > lastMonth)	{
 			var entryDate = new Date();
-			entryDate.setTime(hist.date-24*60*60*1000);
+			entryDate.setTime(hist.date-millisecondsPerDay);
 			historystring += "<tr class=\"history\"><td>" + entryDate.getFullYear()+"-"+(entryDate.getMonth()+1).padZero(2)+"-"+entryDate.getDate().padZero(2) + "</td><td>" + hist.hs.numberFormat() + "</td><td>" + ((previousHS==0)?"&mdash;":((hist.hs-previousHS>0)?"+":"")+(hist.hs-previousHS).numberFormat()) + "</td></tr>";
 
 			if((hist.date <= dayLast || dayLast == today) && hist.date > yesterday)	{
@@ -529,18 +530,16 @@ function loadStats(totalSouls)	{
 	$('#hsmonth').text(hsLastMonth.numberFormat());
 
 	// per day
-	var msPerDay = 24*60*60*1000;
-	$('#hstpday').text((hsToday / ((today-history[dayLast].date)/msPerDay)).numberFormat());
+	$('#hstpday').text((hsToday / ((today-history[dayLast].date)/millisecondsPerDay)).numberFormat());
 	$('#hsypday').text(hsYesterday.numberFormat());
-	$('#hswpday').text((hsLastWeek / ((today-history[weekLast].date)/msPerDay)).numberFormat());
-	$('#hsmpday').text((hsLastMonth / ((today-history[monthLast].date)/msPerDay)).numberFormat());
+	$('#hswpday').text((hsLastWeek / ((today-history[weekLast].date)/millisecondsPerDay)).numberFormat());
+	$('#hsmpday').text((hsLastMonth / ((today-history[monthLast].date)/millisecondsPerDay)).numberFormat());
 
 	// per hour
-	var msPerHour = 60*60*1000;
-	$('#hstphour').text((hsToday / ((today-history[dayLast].date)/msPerHour)).numberFormat());
+	$('#hstphour').text((hsToday / ((today-history[dayLast].date)/millisecondsPerHour)).numberFormat());
 	$('#hsyphour').text((hsYesterday / 24).numberFormat());
-	$('#hswphour').text((hsLastWeek / ((today-history[weekLast].date)/msPerHour)).numberFormat());
-	$('#hsmphour').text((hsLastMonth / ((today-history[monthLast].date)/msPerHour)).numberFormat());
+	$('#hswphour').text((hsLastWeek / ((today-history[weekLast].date)/millisecondsPerHour)).numberFormat());
+	$('#hsmphour').text((hsLastMonth / ((today-history[monthLast].date)/millisecondsPerHour)).numberFormat());
 	
 	var chartData = {
     labels: [],
@@ -570,18 +569,28 @@ function loadStats(totalSouls)	{
 
 	previousHS = 0;
 	var first=true;
-	var monthAvg = Math.round(hsLastMonth/((today-history[monthLast].date)/msPerDay));
+	var monthAvg = Math.round(hsLastMonth/((today-history[monthLast].date)/millisecondsPerDay));
 	var order=Math.floor(Math.log10(monthAvg)/3);
 	var scale=Math.pow(10,order*3);
 	
 	var suffix=["","K","M","B","T","Q"];
 	
-	console.log(scale);
+	var nextDate;
 	for(var entry in history)	{
 		var hist = history[entry];
+		if(nextDate !== undefined)	{
+			for(var dt=nextDate; dt < hist.date; dt += millisecondsPerDay)	{
+				var skipDate = new Date();
+				skipDate.setTime(dt-millisecondsPerDay);
+				console.log("skipped day " + skipDate.toLocaleString());
+				chartData.datasets[0].data.push(0);
+				chartData.datasets[1].data.push(first || entry == lastEntry ? monthAvg : null)
+				chartData.labels.push(skipDate.getDate());
+			}
+		}
 		if(hist.date > lastMonth)	{
 			var entryDate = new Date();
-			entryDate.setTime(hist.date-24*60*60*1000);
+			entryDate.setTime(hist.date-millisecondsPerDay);
 			
 			if(previousHS != 0)	{
 				chartData.datasets[0].data.push(hist.hs-previousHS);
@@ -589,6 +598,7 @@ function loadStats(totalSouls)	{
 				chartData.labels.push(entryDate.getDate());
 				first = false;
 			}
+			nextDate = hist.date + millisecondsPerDay;
 		}
 		previousHS = hist.hs;
 	}
