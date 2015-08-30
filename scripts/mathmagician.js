@@ -582,7 +582,6 @@ function loadStats(totalSouls)	{
 			for(var dt=nextDate; dt < hist.date; dt += millisecondsPerDay)	{
 				var skipDate = new Date();
 				skipDate.setTime(dt-millisecondsPerDay);
-				console.log("skipped day " + skipDate.toLocaleString());
 				chartData.datasets[0].data.push(0);
 				chartData.datasets[1].data.push(first || entry == lastEntry ? monthAvg : null)
 				chartData.labels.push(skipDate.getDate());
