@@ -58,6 +58,7 @@
 					<select class="dropdown" id="theme">
 						<option value="khaki" selected>Khaki (default)</option>
 						<option value="blue">Blue (sample)</option>
+						<option value="vintage">Vintage</option>
 					</select>
 				</td>
 			</tr>
@@ -210,7 +211,7 @@
 			</tr>
 			<tr><td colspan="5" class="filler">&nbsp;</td></tr>
 			<tr>
-				<td rowspan="15">Statistics</th>
+				<td rowspan="16">Statistics</th>
 				<th colspan="4">Relic Information</th>
 			</tr>
 			<tr>
@@ -247,6 +248,12 @@
 			<tr>
 				<th colspan="4" id="hshistory">Hero Souls history</th>
 			</tr>
+			<tr id="trchart" hidden>
+				<td colspan="4" align="center">
+					<div align="left">Daily HS income (Red line = 30-day average)</div>
+					<canvas id="hschart" width="500" height="200"></canvas>
+				</td>
+			</tr>
 			<tr>
 				<td class="hsheader" colspan="2">Total</td>
 				<td class="hsheader">Rate (HS / day)</td>
@@ -280,11 +287,12 @@
 		</table>
 
 		<p class="comments">
-			Last updated August 22, 2015<br>
+			Last updated August 30, 2015<br>
 			Clicker Heroes version 0.20
 		</p>
 		<p class="comments">
 			<b>Latest changes:</b><br>
+			- Added HS history graph
 			- Option to hide the Options section (click Hide/Show options)<br>
 			- Added color schemes!<br>
 			- Minor adjustment to Gold Ancients ratio (0.93 &rarr; 0.927)<br>
@@ -306,6 +314,7 @@
 			Made possible thanks to all the math grinding done by /u/Awlcer, /u/glitchypenguin, /u/Kragnir, /u/TheRealDumbleDore, /u/wrigleys26 (and others).<br>
 			Inspired by the <a target="_blank" href='http://wieschie.github.io/'>Simple Rules of Thumb Calculator</a> by /u/wieschie.
 		</p>
+		<script src="scripts/chart.min.js"></script>
 		<script src="scripts/mathmagician.js"></script>
 	</body>
 </html>
