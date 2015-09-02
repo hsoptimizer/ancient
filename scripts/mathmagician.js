@@ -131,7 +131,7 @@ anc[0] = {
 	'bonusLevel':function(lvl){return(10*lvl);},
 	'bonusDesc':'% DPS (additive)',
 	'upgradeCost':function(lvl){return(0);},
-	'desiredLevel':function(s){return(hasMorgulis ? 0 : calcMorgulis(s));}
+	'desiredLevel':function(s){return(hasMorgulis ? 0 : calcMorgulis(s)-1);}
 }
 anc[3] = {
 	'Name':'Solomon',
