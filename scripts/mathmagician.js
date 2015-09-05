@@ -1,4 +1,4 @@
-// version 35
+// version 36
 
 $('#savegame').keyup(import_save);
 $('body').on('change', '#laxsolo', optimize);
@@ -771,6 +771,7 @@ function optimize()	{
 			}
 		}
 	}
+	permaLink();
 	saveSettings();
 }
 
@@ -859,7 +860,6 @@ function import_save(evt) {
 		$('#titandamage').text(data.hasOwnProperty('titanDamage') ? data.titanDamage.numberFormat() : "CH v0.20+ only");
 
 		processStats(totalSoulsSpent + data.heroSouls + data.primalSouls);
-		// permaLink();
 		optimize();
 	}
 	else	{
@@ -873,7 +873,7 @@ function permaLink()	{
 		var ancient=anc[key];
 		url += "?a" + key + "=" + ancient.levelOld;
 	}
-	url+="?st="+irisBonus;
+	url+="?st="+$('#irisBonus').val();
 	$('#permalink').html("<a href='"+url+"'>Permalink</a>");
 }
 
