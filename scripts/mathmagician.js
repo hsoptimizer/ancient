@@ -1,4 +1,4 @@
-// version 36
+// version 37
 
 $('#savegame').keyup(import_save);
 $('body').on('change', '#laxsolo', optimize);
@@ -871,7 +871,9 @@ function permaLink()	{
 	var url=window.location.pathname;
 	for(key in anc)	{
 		var ancient=anc[key];
-		url += "?a" + key + "=" + ancient.levelOld;
+		if(ancient.levelOld > 0)	{
+			url += "?a" + key + "=" + ancient.levelOld;
+		}
 	}
 	url+="?st="+$('#irisBonus').val();
 	$('#permalink').html("<a href='"+url+"'>Permalink</a>");
