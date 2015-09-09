@@ -570,7 +570,7 @@ function loadStats(totalSouls)	{
 	previousHS = 0;
 	var first=true;
 	var monthAvg = Math.round(hsLastMonth/((today-history[monthLast].date)/millisecondsPerDay));
-	var order=Math.floor(Math.log10(monthAvg)/3);
+	var order=monthAvg > 1 ? Math.floor(Math.log10(monthAvg)/3) : 0;
 	var scale=Math.pow(10,order*3);
 	
 	var suffix=["","K","M","B","T","Q"];
@@ -859,7 +859,7 @@ function import_save(evt) {
 		$('#hze').text(data.highestFinishedZonePersist.numberFormat());
 		$('#titandamage').text(data.hasOwnProperty('titanDamage') ? data.titanDamage.numberFormat() : "CH v0.20+ only");
 
-		processStats(totalSoulsSpent + data.heroSouls + data.primalSouls);
+		processStats(totalSoulsSpent + data.heroSouls + data.primalSouls + data.ancients.rerollSoulsSpent);
 		optimize();
 	}
 	else	{
