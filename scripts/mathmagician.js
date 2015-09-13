@@ -1,4 +1,4 @@
-// version 37
+// version 38
 
 $('#savegame').keyup(import_save);
 $('body').on('change', '#laxsolo', optimize);
@@ -15,6 +15,7 @@ var irisBonus = 0;
 var irisMax = 0;
 var millisecondsPerDay = 24*60*60*1000;
 var millisecondsPerHour = 60*60*1000;
+var totalGilds = 0;
 
 $('input[type=radio][name=playstyle]').on('change', function(){ playstyle = $(this).val(); optimize(); });
 
@@ -102,12 +103,19 @@ String.prototype.repeat = function(count) {
 };
 
 function calcMorgulis(s)	{
-	var tier = Math.min(Math.floor(s/10), 10);
-	var percent = 25-tier;
-	var correction = tier*(5*tier+4);
-	var b = (100+percent+correction)/percent;
-	var c = (correction+100)/percent - 100/11;
-	return(s*(s+b)+c);
+	if(playstyle!='active')	{
+		// based off Siya
+		var tier = Math.min(Math.floor(s/10), 10);
+		var percent = 25-tier;
+		var correction = tier*(5*tier+4);
+		var b = (100+percent+correction)/percent;
+		var c = (correction+100)/percent - 100/11;
+		return(s*(s+b)+c);
+	}
+	else	{
+		// based off Argaiv
+		return(Math.pow(s,2) + 26*s + 15.91 + (50*(s+1))/(totalGilds > 0 ? totalGilds : 1));
+	}
 }
 
 function idleBonus(s)	{
@@ -276,7 +284,7 @@ anc[16] = {
 	'bonusLevel':function(lvl){return(11*lvl);},
 	'bonusDesc':'% DPS (additive)',
 	'upgradeCost':function(lvl){return(1);},
-	'desiredLevel':function(s){return(hasMorgulis ? calcMorgulis(s) : 0);}
+	'desiredLevel':function(s){return(calcMorgulis(s));}
 };
 anc[18] = {
 	'Name':'Bubos',
@@ -324,7 +332,7 @@ anc[28] = {
 	'bonusLevel':function(lvl){return(2*lvl);},
 	'bonusDesc':'% DPS per Gild',
 	'upgradeCost':function(lvl){return(lvl);},
-	'desiredLevel':function(s){return(playstyle=='active' ? s+1 : s+9);}
+	'desiredLevel':function(s){return(playstyle=='active' ? s+1 : Math.sqrt(calcMorgulis(s))-13);}
 };
 anc[29] = {
 	'Name':'Juggernaut',
@@ -393,7 +401,7 @@ function setCookie(cname, cvalue, expDays) {
 	}
 	else	{
 		var expirationDate = new Date();
-		expirationDate.setTime(expirationDate.getTime() + (expDays*24*60*60*1000));
+		expirationDate.setTime(expirationDate.getTime() + (expDays*millisecondsPerDay));
 		document.cookie = cname.toString() + "=" + cvalue.toString() + "; expires="+expirationDate.toUTCString();
 	}
 }
@@ -479,14 +487,14 @@ function loadStats(totalSouls)	{
 			}
 		}
 	}
-	
+
 	history.sort( function(a,b) { return a.date-b.date; } );
 
 	var dayLast = today;
 	var ydayLast = today;
 	var weekLast = today;
 	var monthLast = today;
-	
+
 	var historystring = "<u>Hero Souls (end of day)</u><br><br><table class=\"history\"><tr class=\"history\"><th>Date</th><th>Total HS</th><th>Difference</th></tr>";
 	var previousHS = 0;
 	var lastEntry;
@@ -509,7 +517,7 @@ function loadStats(totalSouls)	{
 			if((hist.date <= monthLast || monthLast == today) && hist.date > lastMonth)	{
 				monthLast = entry;
 			}
-			
+
 			lastEntry = entry;
 		}
 		previousHS = hist.hs;
@@ -540,7 +548,7 @@ function loadStats(totalSouls)	{
 	$('#hsyphour').text((hsYesterday / 24).numberFormat());
 	$('#hswphour').text((hsLastWeek / ((today-history[weekLast].date)/millisecondsPerHour)).numberFormat());
 	$('#hsmphour').text((hsLastMonth / ((today-history[monthLast].date)/millisecondsPerHour)).numberFormat());
-	
+
 	var chartData = {
 		labels: [],
 		datasets: [
@@ -572,9 +580,9 @@ function loadStats(totalSouls)	{
 	var monthAvg = Math.round(hsLastMonth/((today-history[monthLast].date)/millisecondsPerDay));
 	var order=monthAvg > 1 ? Math.floor(Math.log10(monthAvg)/3) : 0;
 	var scale=Math.pow(10,order*3);
-	
+
 	var suffix=["","K","M","B","T","Q"];
-	
+
 	var nextDate;
 	for(var entry in history)	{
 		var hist = history[entry];
@@ -590,7 +598,7 @@ function loadStats(totalSouls)	{
 		if(hist.date > lastMonth)	{
 			var entryDate = new Date();
 			entryDate.setTime(hist.date-millisecondsPerDay);
-			
+
 			if(previousHS != 0)	{
 				chartData.datasets[0].data.push(hist.hs-previousHS);
 				chartData.datasets[1].data.push(first || entry == lastEntry ? monthAvg : null)
@@ -630,7 +638,7 @@ function migrateStats()	{
 					localStorage.setItem(cname, cookie[1]);
 				}
 			}
-			
+
 			localStorage.setItem("migrated", "true");
 		}
 	}
@@ -692,7 +700,7 @@ function optimize()	{
 				if(upgradeCost <= (key==5 || key==28 ? nextBank : desiredBank))	{	// always keep the desired soulbank, do not spend below this
 					// determine the ancient that is lagging behind the most (biggest relative increase from current to optimal)
 					var increase = (optimal-ancient.levelNew) / ancient.levelNew;
-					
+
 					// assign less weight to Siya/Arga to let other ancients catch up first, only upgrade when no other ancients to upgrade
 					if(playstyle == 'active' && key == 28)	{
 						increase *= 0.1;
@@ -742,7 +750,7 @@ function optimize()	{
 		var ancient = anc[key];
 		var optimalLevel = getOptimal(ancient, (key == 5 && playstyle!='active' || key == 28 && playstyle=='active') ? referenceLevel-1 : referenceLevel);
 
-		if((ancient.maxLevel != 0 && ancient.levelOld == ancient.maxLevel) || (optimalLevel == 0 && ancient.levelOld == 0) || (playstyle=='idle' && ancient.clicking))	{
+		if((ancient.maxLevel != 0 && ancient.levelOld == ancient.maxLevel) || (optimalLevel == 0 && ancient.levelOld == 0 && key != 0) || (playstyle=='idle' && ancient.clicking))	{
 			$('#anc'+key).css('display', 'none');
 		}
 		else	{
@@ -806,10 +814,11 @@ function import_save(evt) {
 			totalSoulsSpent += data.ancients.ancients[ancient].spentHeroSouls;
 		}
 
-		// count hero levels for Souls gained on ascension
+		// count hero levels for Souls gained on ascension and accumulate Gilds
 		var totalHeroLevels = 0;
 		for(hero in data.heroCollection.heroes)	{
 			totalHeroLevels += data.heroCollection.heroes[hero].level;
+			totalGilds += data.heroCollection.heroes[hero].epicLevel;
 		}
 		data.primalSouls += (Math.floor(totalHeroLevels/2000));
 
@@ -828,8 +837,6 @@ function import_save(evt) {
 				else	{
 					ancient.levelOld = 0;
 				}
-				// hide capped ancients that are already maxed but show them if they're not
-				$('#anc'+key).css('display', (ancient.maxLevel != 0 && ancient.levelOld == ancient.maxLevel) ? 'none' : 'table-row');
 			}
 			$('#old'+key).val(ancient.levelOld);
 		}
