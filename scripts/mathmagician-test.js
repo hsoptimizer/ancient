@@ -463,7 +463,7 @@ function loadStats(totalSouls)	{
 			}
 		}
 	}
-	
+
 	history.sort( function(a,b) { return a.date-b.date; } );
 
 	var dayLast = today;
@@ -548,7 +548,7 @@ function migrateStats()	{
 					localStorage.setItem(cname, cookie[1]);
 				}
 			}
-			
+
 			localStorage.setItem("migrated", "true");
 		}
 	}
@@ -610,7 +610,7 @@ function optimize()	{
 				if(upgradeCost <= (key==5 || key==28 ? nextBank : desiredBank))	{	// always keep the desired soulbank, do not spend below this
 					// determine the ancient that is lagging behind the most (biggest relative increase from current to optimal)
 					var increase = (optimal-ancient.levelNew) / ancient.levelNew;
-					
+
 					// assign less weight to Siya/Arga to let other ancients catch up first, only upgrade when no other ancients to upgrade
 					if(playstyle == 'active' && key == 28)	{
 						increase *= 0.1;
@@ -701,12 +701,12 @@ function import_save(evt) {
 		for (var i = 0; i < result[0].length; i += 2) {
 			txt += result[0][i];
 		}
-		if (CryptoJS.MD5(txt + "af0ik392jrmt0nsfdghy0") != result[1]) {
+
+		try {
+			data = $.parseJSON(atob(txt));
+		} catch (e) {
 			$('#savegame').attr('class', 'error');
 			return;
-		}
-		else	{
-			$('#savegame').removeAttr('class', '');
 		}
 
 		data = $.parseJSON(atob(txt));
@@ -847,7 +847,7 @@ function findMidasLevel()	{
 // Cid 25 + upgrades = 350+
 // Cid level cost : min(20,5+Level)*1.07^Level
 // Midas level cost: 4000000000000*1.07^Level
-// Midas upgrades: 
+// Midas upgrades:
 
 // Level = TotalCost
 
@@ -855,21 +855,21 @@ function findMidasLevel()	{
 	for(var cidlevel=1;cidlevel <= 25; cidlevel++)	{
 		cidcost += Math.min(20,5+cidlevel)*Math.pow(1.07,cidlevel);
 	}
-	
+
 	var midascost=0;
 	for(var midaslevel=0;midaslevel < 100;midaslevel++)	{
 		midascost += 4000000000000*Math.pow(1.07, midaslevel)*0.48;
 	}
-	
+
 	var upgradecost = 100+250+4e13+1e14+4e14+3.2e15+3.2e16;
-	
+
 	var totalcost = Math.ceil(cidcost + midascost + upgradecost);
-	
+
 	console.log("Cid cost: "+cidcost);
 	console.log("Midas cost: "+midascost);
 	console.log("Upgrade cost: "+upgradecost);
 	console.log("Total cost: "+totalcost);
-	
+
 	var level=1;
 	while(monsterGold(level) < totalcost)	{
 		level++;

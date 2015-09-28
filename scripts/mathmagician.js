@@ -799,15 +799,13 @@ function import_save(evt) {
 		for (var i = 0; i < result[0].length; i += 2) {
 			txt += result[0][i];
 		}
-		if (CryptoJS.MD5(txt + "af0ik392jrmt0nsfdghy0") != result[1]) {
+
+		try {
+			data = $.parseJSON(atob(txt));
+		} catch (e) {
 			$('#savegame').attr('class', 'error');
 			return;
 		}
-		else	{
-			$('#savegame').removeAttr('class', '');
-		}
-
-		data = $.parseJSON(atob(txt));
 
 		var totalSoulsSpent = 0;
 		for(ancient in data.ancients.ancients)	{
