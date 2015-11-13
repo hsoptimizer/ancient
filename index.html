@@ -2,212 +2,97 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html;charset=utf-8" >
-		<link rel="stylesheet" type="text/css" href="rulesofthumb.css" media="all">
 		<title>Clicker Heroes Ancient Calculator</title>
+
+		<!-- styles -->
+		<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"/>
+		<link rel="stylesheet" type="text/css" href="styles/main.css" media="all">
+
+		<!-- scripts -->
 		<script src="scripts/jquery-2.1.4.min.js"></script>
-		<!-- tooltips -->
-		<script type="text/javascript" src="scripts/nhpup_1.1.js"></script>
+		<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+		<script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
 		<!-- savegame checksum -->
 		<script type="text/javascript" src="scripts/md5.js"></script>
 	</head>
 
 	<body onload="loadSettings()">
-		<img src='http://i.imgur.com/rxZ8ypH.png' height="64px"><h1 style="display: inline-block;vertical-align:middle;">Clicker Heroes Ancient Calculator</h1>
-		<table>
-			<tr>
-				<td>Save game:</td>
-				<td colspan="4"><textarea id="savegame" autofocus placeholder="Paste your save game here"></textarea></td>
-			</tr>
-			<tr>
-				<td></td>
-				<td colspan="4"><input type="button" onclick="import_save()" style="text-align: center; width:100%;" value="Import/reload save game"></td>
-			</tr>
-			<tr>
-				<th rowspan="5">Options</td>
-				<td><input type="checkbox" id="primalsouls" disabled></td>
-				<td colspan="3" style="text-align:left;">Include souls gained after ascension</td>
-			</tr>
-			<tr>
-				<td><input type="checkbox" id="ignoreIris"></td>
-				<td style="text-align:left;">Ignore Iris <a onclick="void(0)" onmouseover="nhpup.popup('Enabling this will ignore Iris during the optimization.');">(<u>?</u>)</a></td>
-				<td><input type="number" class="uservalue" value="0" id="irisBonus"></td>
-				<td style="text-align:left;">Iris bonus from relics</td>
-			</tr>
-			<tr>
-				<td><input type="checkbox" id="noBossLanding"></td>
-				<td colspan="3" style="text-align:left;">Do not ascend directly to a boss zone <a onclick="void(0)" onmouseover="nhpup.popup('Enabling this will cause the highest zone unlocked by Iris to be one zone before a Boss. Disable this to ascend directly to a Boss zone.');">(<u>?</u>)</a></td>
-			</tr>
-			<tr>
-				<td><input type="checkbox" id="laxsolo"></td>
-				<td colspan="3" style="text-align:left;">Easier Solomon <a onclick="void(0)" onmouseover="nhpup.popup('Enabling this will use log10 for Solomon instead of ln (log base e). This will value Solomon significantly lower.');">(<u>?</u>)</a></td>
-			</tr>
-			<tr>
-				<td><input type="checkbox" id="clicking"></td>
-				<td colspan="3" style="text-align:left;">Include clicking ancients <a onclick="void(0)" onmouseover="nhpup.popup('Clicking ancients are ignored by default, unless you don&rsquo;t have Siyalatas. Enabling this will include Bhaal, Fragsworth, Juggernaut and Pluto in the optimization, if you have them.');">(<u>?</u>)</a></td>
-			</tr>
-			<tr>
-				<td></td>
-				<td colspan="4"><input type="button" onclick="optimize()" style="text-align: center; width:100%;" value="Do the math"></td>
-			</tr>
+	<div class="container">
+		<div class="row text-center title">
+			<div class="col-sm-12">
+				<h1><img src='http://i.imgur.com/rxZ8ypH.png' height="64px"> Clicker Heroes Ancient Calculator</h1>
+			</div>
+		</div>
+		<form>
+			<div class="form-group">
+				<label class="control-label">Save File</label>
+				<textarea class="form-control" id="savegame" autofocus placeholder="Paste your save game here"></textarea>
+			</div>
+			<div class="form-group">
+				<div class="checkbox">
+					<label>
+						<input type="checkbox" id="primalsouls" disabled />
+						Include souls gained after ascension
+					</label>
+				</div>
+				<div class="checkbox">
+					<label>
+						<input type="checkbox" id="noBossLanding" />
+						Do not ascend directly to a boss zone <span data-toggle="tooltip" data-placement="right" title="Enabling this will cause the highest zone unlocked by Iris to be one zone before a Boss. Disable this to ascend directly to a Boss zone."> <i class="glyphicon glyphicon-question-sign"></i></span>
+					</label>
+				</div>
+				<div class="checkbox">
+					<label>
+						<input type="checkbox" id="laxsolo" />
+						Easier Solomon <span data-toggle="tooltip" data-placement="right" title="Enabling this will use log10 for Solomon instead of ln (log base e). This will value Solomon significantly lower."> <i class="glyphicon glyphicon-question-sign"></i></span>
+					</label>
+				</div>
+				<div class="checkbox">
+					<label>
+						<input type="checkbox" id="clicking" />
+						Include clicking ancients <span data-toggle="tooltip" data-placement="right" title="Clicking ancients are ignored by default, unless you don&rsquo;t have Siyalatas. Enabling this will include Bhaal, Fragsworth, Juggernaut and Pluto in the optimization, if you have them."> <i class="glyphicon glyphicon-question-sign"></i></span>
+					</label>
+				</div>
+				<div class="checkbox iris-input">
+					<label>
+						<input type="checkbox" id="ignoreIris" />
+						Ignore Iris <span data-toggle="tooltip" data-placement="right" title="Enabling this will ignore Iris during the optimization."> <i class="glyphicon glyphicon-question-sign"></i></span>
+						<input type="number" class="uservalue form-control input-sm" value="0" id="irisBonus" />
+						Iris bonus from relics
+					</label>
+				</div>
+			</div>
+			<div class="form-group">
+				<button class="btn btn-success" onclick="import_save(); return false"><i class="glyphicon glyphicon-import"></i> Update Save File</button>
+				<button class="btn btn-primary" onclick="optimize(); return false"><i class="glyphicon glyphicon-play-circle"></i> Do The Math</button>
+			</div>
+		</form>
+
+		<h3 class="ancients">Optimal Ancients</h3>
+		<table id="ancients" class="table">
 			<tr>
 				<th>Ancient</th>
-				<th><a onclick="void(0)" onmouseover="nhpup.popup('The current ancient levels and banked Hero Souls found in your save game. You can manually adjust these values.');">Current</a></th>
-				<th><a onclick="void(0)" onmouseover="nhpup.popup('Optimal ancient levels according to the Rules of Thumb, based on your <i>recommended</i> level of Siyalatas (or Argaiv, if you don&rsquo;t have Siya). You may or may not be able to afford these levels yet.');">Optimal</a></th>
-				<th><a onclick="void(0)" onmouseover="nhpup.popup('Level your ancients to the value shown here. These are the levels you can afford with the amount of Hero Souls in your bank.');">Recommended</a></th>
-				<th><a onclick="void(0)" onmouseover="nhpup.popup('Affordable number of upgrades for each ancient.<br>(Recommended-Current)');">Delta</a></th>
-			</tr>
-			<tr>
-				<td>Souls in bank:</td>
-				<td><input type="number" class="uservalue" value="0" min="0" id="old0"></td>
-				<td><input type="number" class="noborder" disabled readonly id="optimal0"></td>
-				<td><input type="number" class="noborder" disabled readonly id="new0"></td>
-				<td><input type="number" class="noborder" disabled readonly id="delta0"></td>
-			</tr>
-			<tr>
-				<td>Argaiv:</td>
-				<td><input type="number" class="uservalue" value="0" min="0" id="old28"></td>
-				<td><input type="number" class="noborder" disabled readonly id="optimal28"></td>
-				<td><input type="number" class="noborder" disabled readonly id="new28"></td>
-				<td><input type="number" class="noborder" disabled readonly id="delta28"></td>
-			</tr>
-			<tr>
-				<td>Iris:</td>
-				<td><input type="number" class="uservalue" value="0" min="0" id="old30"></td>
-				<td><input type="number" class="noborder" disabled readonly id="optimal30"></td>
-				<td><input type="number" class="noborder" disabled readonly id="new30"></td>
-				<td><input type="number" class="noborder" disabled readonly id="delta30"></td>
-			</tr>
-			<tr>
-				<td>Libertas:</td>
-				<td><input type="number" class="uservalue" value="0" min="0" id="old4"></td>
-				<td><input type="number" class="noborder" disabled readonly id="optimal4"></td>
-				<td><input type="number" class="noborder" disabled readonly id="new4"></td>
-				<td><input type="number" class="noborder" disabled readonly id="delta4"></td>
-			</tr>
-			<tr>
-				<td>Mammon:</td>
-				<td><input type="number" class="uservalue" value="0" min="0" id="old8"></td>
-				<td><input type="number" class="noborder" disabled readonly id="optimal8"></td>
-				<td><input type="number" class="noborder" disabled readonly id="new8"></td>
-				<td><input type="number" class="noborder" disabled readonly id="delta8"></td>
-			</tr>
-			<tr>
-				<td>Mimzee:</td>
-				<td><input type="number" class="uservalue" value="0" min="0" id="old9"></td>
-				<td><input type="number" class="noborder" disabled readonly id="optimal9"></td>
-				<td><input type="number" class="noborder" disabled readonly id="new9"></td>
-				<td><input type="number" class="noborder" disabled readonly id="delta9"></td>
-			</tr>
-			<tr>
-				<td>Morgulis:</td>
-				<td><input type="number" class="uservalue" value="0" min="0" id="old16"></td>
-				<td><input type="number" class="noborder" disabled readonly id="optimal16"></td>
-				<td><input type="number" class="noborder" disabled readonly id="new16"></td>
-				<td><input type="number" class="noborder" disabled readonly id="delta16"></td>
-			</tr>
-			<tr>
-				<td>Siyalatas:</td>
-				<td><input type="number" class="uservalue" value="0" min="0" id="old5"></td>
-				<td><input type="number" class="noborder" disabled readonly id="optimal5"></td>
-				<td><input type="number" class="noborder" disabled readonly id="new5"></td>
-				<td><input type="number" class="noborder" disabled readonly id="delta5"></td>
-			</tr>
-			<tr>
-				<td>Solomon:</td>
-				<td><input type="number" class="uservalue" value="0" min="0" id="old3"></td>
-				<td><input type="number" class="noborder" disabled readonly id="optimal3"></td>
-				<td><input type="number" class="noborder" disabled readonly id="new3"></td>
-				<td><input type="number" class="noborder" disabled readonly id="delta3"></td>
-			</tr>
-			<tr>
-				<td>Bhaal:</td>
-				<td><input type="number" class="uservalue" value="0" min="0" id="old15"></td>
-				<td><input type="number" class="noborder" disabled readonly id="optimal15"></td>
-				<td><input type="number" class="noborder" disabled readonly id="new15"></td>
-				<td><input type="number" class="noborder" disabled readonly id="delta15"></td>
-			</tr>
-			<tr>
-				<td>Fragsworth:</td>
-				<td><input type="number" class="uservalue" value="0" min="0" id="old19"></td>
-				<td><input type="number" class="noborder" disabled readonly id="optimal19"></td>
-				<td><input type="number" class="noborder" disabled readonly id="new19"></td>
-				<td><input type="number" class="noborder" disabled readonly id="delta19"></td>
-			</tr>
-			<tr>
-				<td>Juggernaut:</td>
-				<td><input type="number" class="uservalue" value="0" min="0" id="old29"></td>
-				<td><input type="number" class="noborder" disabled readonly id="optimal29"></td>
-				<td><input type="number" class="noborder" disabled readonly id="new29"></td>
-				<td><input type="number" class="noborder" disabled readonly id="delta29"></td>
-			</tr>
-			<tr>
-				<td>Pluto:</td>
-				<td><input type="number" class="uservalue" value="0" min="0" id="old10"></td>
-				<td><input type="number" class="noborder" disabled readonly id="optimal10"></td>
-				<td><input type="number" class="noborder" disabled readonly id="new10"></td>
-				<td><input type="number" class="noborder" disabled readonly id="delta10"></td>
-			</tr>
-			<tr id="max13" hidden>
-				<td>Atman:</td>
-				<td><input type="number" class="uservalue" value="0" min="0" id="old13"></td>
-				<td><input type="number" class="noborder" disabled readonly id="optimal13"></td>
-				<td><input type="number" class="noborder" disabled readonly id="new13"></td>
-				<td><input type="number" class="noborder" disabled readonly id="delta13"></td>
-			</tr>
-			<tr id="max18" hidden>
-				<td>Bubos:</td>
-				<td><input type="number" class="uservalue" value="0" min="0" id="old18"></td>
-				<td><input type="number" class="noborder" disabled readonly id="optimal18"></td>
-				<td><input type="number" class="noborder" disabled readonly id="new18"></td>
-				<td><input type="number" class="noborder" disabled readonly id="delta18"></td>
-			</tr>
-			<tr id="max11" hidden>
-				<td>Dogcog:</td>
-				<td><input type="number" class="uservalue" value="0" min="0" id="old11"></td>
-				<td><input type="number" class="noborder" disabled readonly id="optimal11"></td>
-				<td><input type="number" class="noborder" disabled readonly id="new11"></td>
-				<td><input type="number" class="noborder" disabled readonly id="delta11"></td>
-			</tr>
-			<tr id="max14" hidden>
-				<td>Dora:</td>
-				<td><input type="number" class="uservalue" value="0" min="0" id="old14"></td>
-				<td><input type="number" class="noborder" disabled readonly id="optimal14"></td>
-				<td><input type="number" class="noborder" disabled readonly id="new14"></td>
-				<td><input type="number" class="noborder" disabled readonly id="delta14"></td>
-			</tr>
-			<tr id="max12" hidden>
-				<td>Fortuna:</td>
-				<td><input type="number" class="uservalue" value="0" min="0" id="old12"></td>
-				<td><input type="number" class="noborder" disabled readonly id="optimal12"></td>
-				<td><input type="number" class="noborder" disabled readonly id="new12"></td>
-				<td><input type="number" class="noborder" disabled readonly id="delta12"></td>
-			</tr>
-			<tr id="max21" hidden>
-				<td>Kumawakamaru:</td>
-				<td><input type="number" class="uservalue" value="0" min="0" id="old21"></td>
-				<td><input type="number" class="noborder" disabled readonly id="optimal21"></td>
-				<td><input type="number" class="noborder" disabled readonly id="new21"></td>
-				<td><input type="number" class="noborder" disabled readonly id="delta21"></td>
-			</tr>
-			<tr><td colspan="5" class="filler">&nbsp;</td></tr>
-			<tr>
-				<th rowspan="4">Statistics</th>
-				<td colspan="3">Relic found this ascension:</td>
-				<td id="relicfound"></td>
-			</tr>
-			<tr>
-				<td colspan="3">Souls spent on ancients:</td>
-				<td id="soulsspent"></td>
-			</tr>
-			<tr>
-				<td colspan="3">Highest zone ever:</td>
-				<td id="hze"></td>
-			</tr>
-			<tr>
-				<td colspan="3">Total ascensions:</td>
-				<td id="worldresets"></td>
+				<th><a href="javascript:void(0);" onclick="void(0)" data-toggle="tooltip" data-placement="top" title="The current ancient levels and banked Hero Souls found in your save game. You can manually adjust these values.">Current</a></th>
+				<th><a href="javascript:void(0);" onclick="void(0)" data-toggle="tooltip" data-placement="top" title="Optimal ancient levels according to the Rules of Thumb, based on your recommended level of Siyalatas (or Argaiv, if you don&rsquo;t have Siya). You may or may not be able to afford these levels yet.">Optimal</a></th>
+				<th><a href="javascript:void(0);" onclick="void(0)" data-toggle="tooltip" data-placement="top" title="Level your ancients to the value shown here. These are the levels you can afford with the amount of Hero Souls in your bank.">Recommended</a></th>
+				<th><a href="javascript:void(0);" onclick="void(0)" data-toggle="tooltip" data-placement="top" title="Affordable number of upgrades for each ancient. (Recommended-Current)">Delta</a></th>
 			</tr>
 		</table>
+
+		<h3>Statistics</h3>
+		<dl class="dl-horizontal stats">
+			<dt>Relic found this ascension</dt>
+			<dd id="relicfound"></dd>
+
+			<dt>Souls spent on ancients</dt>
+			<dd id="soulsspent"></dd>
+
+			<dt>Highest zone ever</dt>
+			<dd id="hze"></dd>
+
+			<dt>Total ascensions</dt>
+			<dd id="worldresets"></dd>
+		</dl>
 
 		<p class="comments">
 			Iris recommendation is experimental, following <a href='https://www.reddit.com/r/ClickerHeroes/comments/3f3djb/late_game_iris_and_other_large_numbers/'>this analysis of Iris</a>.
@@ -223,5 +108,6 @@
 			Inspired by the <a href='http://wieschie.github.io/'>Simple Rules of Thumb Calculator</a> by /u/wieschie.
 		</p>
 		<script src="scripts/mathmagician.js"></script>
+	</div>
 	</body>
 </html>

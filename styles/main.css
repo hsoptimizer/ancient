@@ -1,0 +1,36 @@
+/* line 3, ../scss/main.scss */
+.title {
+  margin-bottom: 30px;
+}
+
+/* line 7, ../scss/main.scss */
+#ignoreIris {
+  margin-top: 7px;
+}
+
+/* line 11, ../scss/main.scss */
+#irisBonus {
+  display: inline-block;
+  width: 70px;
+  margin-left: 40px;
+  margin-right: 10px;
+}
+
+/* line 18, ../scss/main.scss */
+.ancients {
+  margin-top: 50px;
+}
+
+/* line 25, ../scss/main.scss */
+.stats dt {
+  width: 280px;
+}
+/* line 29, ../scss/main.scss */
+.stats dd {
+  margin-left: 300px;
+}
+
+/* line 34, ../scss/main.scss */
+#savegame {
+  height: 108px;
+}

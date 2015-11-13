@@ -1,0 +1,36 @@
+@import "compass/css3";
+
+.title {
+    margin-bottom: 30px;
+}
+
+#ignoreIris {
+    margin-top: 7px;
+}
+
+#irisBonus {
+    display: inline-block;
+    width: 70px;
+    margin-left: 40px;
+    margin-right: 10px;
+}
+
+.ancients {
+    margin-top: 50px;
+}
+
+.stats {
+    $width: 300px;
+
+    dt {
+        width: $width - 20px;
+    }
+
+    dd {
+        margin-left: $width;
+    }
+}
+
+#savegame {
+    height: 108px;
+}

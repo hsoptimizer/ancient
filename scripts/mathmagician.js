@@ -1,5 +1,7 @@
 // version 0.5
 
+$('[data-toggle="tooltip"]').tooltip();
+
 $('#savegame').keyup(import_save);
 $('#souls').keyup(optimize);
 $('body').on('change', '#laxsolo', optimize);
@@ -33,7 +35,7 @@ Number.prototype.numberFormat = function(decimals, dec_point, thousands_sep) {
 
 var anc = {};
 anc[0] = {
-	'Name':'Soul bank',
+	'Name':'Souls in bank',
 	'levelOld':0,
 	'levelNew':0,
 	'totalCost':0,
@@ -41,7 +43,7 @@ anc[0] = {
 	'maxLevel':0,
 	'upgradeCost':function(lvl){return(0);},
 	'desiredLevel':function(s){return(hasMorgulis ? 0 : s < 100 ? Math.ceil(1.1*Math.pow(s+1,2)) : Math.ceil(1.1*Math.pow(s,2) + 43.67*s + 33.58));}
-}
+};
 anc[3] = {
 	'Name':'Solomon',
 	'levelOld':0,
@@ -223,7 +225,22 @@ anc[30] = {
 	'desiredLevel':function(s){var t=Math.ceil((371*Math.log(s)-2080)/5)*5-1-irisBonus;return(t<(104-irisBonus)?0:t);}
 };
 
-function primalSouls(optimize)	{
+var ancientsTable = $('#ancients');
+_.each(anc, function(value, key) {
+	var element = '';
+
+	element += '<tr' + (value.maxLevel > 0 ? 'id="max' + value.maxLevel + '" hidden' : '') + '>';
+	element += '<td>' + value.Name + '</td>';
+	element += '<td><input type="number" class="uservalue" value="0" min="0" id="old' + key + '"></td>';
+	element += '<td><span id="optimal' + key + '"></span></td>';
+	element += '<td><span id="new' + key + '"></span></td>';
+	element += '<td><span id="delta' + key + '"></span></td>';
+	element += '</tr>';
+
+	ancientsTable.append(element);
+});
+
+function primalSouls()	{
 	if(data.primalSouls)	{
 		var bank = parseInt($('#old0').val());
 		bank = $('#primalsouls').is(':checked') ? bank + data.primalSouls : bank - data.primalSouls;
@@ -357,14 +374,22 @@ function optimize()	{
 	for(key in anc)	{
 		var ancient = anc[key];
 
-		$('#new'+key).prop('value', ancient.levelNew);
-		$('#optimal'+key).prop('value', getOptimal(ancient, useArgaiv ? Argaiv.levelNew-10 : Siya.levelNew-1)); // subtract one, correcting because optimal siya is always Siya+1
+		$('#new'+key).text(ancient.levelNew);
+		$('#optimal'+key).text(getOptimal(ancient, useArgaiv ? Argaiv.levelNew-10 : Siya.levelNew-1)); // subtract one, correcting because optimal siya is always Siya+1
 
 		if(ancient.levelNew != ancient.levelOld)	{
-			$('#delta'+key).prop('value', ancient.levelNew - ancient.levelOld);
+			var delta = ancient.levelNew - ancient.levelOld;
+			var deltaElement = $('#delta'+key);
+			deltaElement.text(delta);
+
+			if(delta !== 0) {
+				deltaElement.removeClass('text-success');
+				deltaElement.removeClass('text-danger');
+				deltaElement.addClass('text-' + (delta > 0 ? 'success' : 'danger'))
+			}
 		}
 		else	{
-			$('#delta'+key).prop('value', '');
+			$('#delta'+key).text('');
 		}
 	}
 
