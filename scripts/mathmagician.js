@@ -372,6 +372,96 @@ function optimize()	{
 	saveSettings();
 }
 
+function apply_optimize() {
+	var Siya = anc[5];
+	var Argaiv = anc[28];
+	var Bank = anc[0];
+	clicking = $('#clicking').is(':checked');
+	laxSolomon = $('#laxsolo').is(':checked');
+	ignoreIris = $('#ignoreIris').is(':checked');
+	irisBonus = parseInt($('#irisBonus').val());
+	if($('#noBossLanding').is(':checked'))	{
+		irisBonus++;
+	}
+
+	// reset cost and get the user input values to work with
+	for(key in anc)	{
+		var ancient = anc[key];
+
+		ancient.totalCost = 0;
+		ancient.levelOld = parseInt($('#old'+key).val());
+		ancient.levelNew = ancient.levelOld;
+	}
+
+	if(Siya.levelOld === 0)	{
+		useArgaiv = true;
+	}
+	else	{
+		useArgaiv = false;
+	}
+	hasMorgulis = anc[16].levelOld > 0;
+
+	var upgradeNext;
+	while(upgradeNext != 0)	{
+		// optimize loop ends when the best investment is the HS bank
+		upgradeNext = 0;
+		var highestIncrease = 0;
+		var nextCost = 0;
+		var nextBestIncrease = 0;
+
+		for(key in anc)	{
+			var ancient = anc[key];
+			if(ancient.levelOld > 0 && (clicking == true || ancient.clicking == false) && (ignoreIris == false || key != 30))	{
+				// do not process clicking ancients when clicking checkbox is off
+				var upgradeCost = ancient.upgradeCost(ancient.levelNew+1);
+
+				if(upgradeCost <= Bank.levelNew)	{
+					var increase = useArgaiv ? (100*(ancient.desiredLevel(Argaiv.levelNew-9)-ancient.levelNew)) / ancient.levelNew : (100*(ancient.desiredLevel(Siya.levelNew)-ancient.levelNew)) / ancient.levelNew;
+
+					if(increase >= highestIncrease)	{
+						upgradeNext = key;
+						nextBestIncrease = highestIncrease;
+						highestIncrease = increase;
+						nextCost = upgradeCost;
+					}
+				}
+			}
+		}
+
+		if(upgradeNext != 0)	{
+			var ancient = anc[upgradeNext];
+			if(upgradeNext == 16)	{
+				// Morg batch upgrade!
+				var morgPlus = Math.ceil(((highestIncrease - nextBestIncrease)*ancient.levelNew)/100);
+				if(morgPlus >= Bank.levelNew)	{
+					morgPlus = Bank.levelNew;
+					upgradeNext = 0;
+				}
+				ancient.totalCost += morgPlus;
+				ancient.levelNew += morgPlus;
+				Bank.levelNew -= morgPlus;
+			}
+			else	{
+				ancient.totalCost += nextCost;
+				ancient.levelNew++;
+				Bank.levelNew -= nextCost;
+			}
+		}
+	}
+
+	// update HTML
+	for(key in anc)	{
+		var ancient = anc[key];
+		$('#old'+key).prop('value', ancient.levelNew);
+//		$('#new'+key).prop('value', ancient.levelNew);
+//		$('#optimal'+key).prop('value', getOptimal(ancient, useArgaiv ? Argaiv.levelNew-10 : Siya.levelNew-1)); // subtract one, correcting because optimal siya is always Siya+1
+		$('#delta'+key).prop('value', '');
+	}
+
+	console.log('optimize finished');
+	saveSettings();
+}
+
 const ANTI_CHEAT_CODE = "Fe12NAfA3R6z4k0z";
 const SALT = "af0ik392jrmt0nsfdghy0";
 function import_save() {
