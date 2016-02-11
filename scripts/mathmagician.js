@@ -888,9 +888,10 @@ function apply_optimize()	{
 		}
 		else	{
 			$('#anc'+key).css('display', 'table-row');
-			$('#anc'+key).text(ancient.levelNew);
 			$('#new'+key).text(ancient.levelNew);
 			$('#optimal'+key).text(optimalLevel);
+
+			$('#old'+key).val(ancient.levelNew)
 
 			if(ancient.levelNew != ancient.levelOld)	{
 				$('#delta'+key).text(ancient.levelNew - ancient.levelOld);
