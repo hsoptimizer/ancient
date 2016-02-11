@@ -893,23 +893,14 @@ function apply_optimize()	{
 
 			$('#old'+key).val(ancient.levelNew)
 
-			if(ancient.levelNew != ancient.levelOld)	{
-				$('#delta'+key).text(ancient.levelNew - ancient.levelOld);
-				if(key != 0)	{
-					$('#delta'+key).attr("onmouseover", "nhpup.popup('"+ancient.Name+" upgrade cost:<br>"+ancient.totalCost.numberFormat()+" soul"+plural(ancient.totalCost)+"');");
-				}
-				$('#name'+key).attr("onmouseover", "nhpup.popup('<u>Current level:</u><br>"+ancient.getBonus(ancient.levelOld)+"<br><br><u>Target level:</u><br>"+ancient.getBonus(ancient.levelNew)+"');");
+			$('#delta'+key).text('');
+			$('#delta'+key).removeAttr("onmouseover");
+
+			if(ancient.levelOld > 0)	{
+				$('#name'+key).attr("onmouseover", "nhpup.popup('<u>Current level:</u><br>"+ancient.getBonus(ancient.levelOld)+"');");
 			}
 			else	{
-				$('#delta'+key).text('');
-				$('#delta'+key).removeAttr("onmouseover");
-
-				if(ancient.levelOld > 0)	{
-					$('#name'+key).attr("onmouseover", "nhpup.popup('<u>Current level:</u><br>"+ancient.getBonus(ancient.levelOld)+"');");
-				}
-				else	{
-					$('#name'+key).attr("onmouseover", "nhpup.popup('<u>"+ancient.Name+"</u><br>First level: "+ancient.getBonus(1)+"');");
-				}
+				$('#name'+key).attr("onmouseover", "nhpup.popup('<u>"+ancient.Name+"</u><br>First level: "+ancient.getBonus(1)+"');");
 			}
 		}
 	}
