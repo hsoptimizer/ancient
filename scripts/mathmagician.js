@@ -887,14 +887,17 @@ function apply_optimize()	{
 			$('#anc'+key).css('display', 'none');
 		}
 		else	{
+		else	{
 			$('#anc'+key).css('display', 'table-row');
 			$('#new'+key).text(ancient.levelNew);
 			$('#optimal'+key).text(optimalLevel);
 
 			$('#old'+key).val(ancient.levelNew)
+			ancient.levelOld = ancient.levelNew
 
 			$('#delta'+key).text('');
-			$('#delta'+key).removeAttr("onmouseover");
+			if (key != 0)
+				$('#delta'+key).removeAttr("onmouseover");
 
 			if(ancient.levelOld > 0)	{
 				$('#name'+key).attr("onmouseover", "nhpup.popup('<u>Current level:</u><br>"+ancient.getBonus(ancient.levelOld)+"');");
