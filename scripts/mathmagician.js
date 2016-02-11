@@ -887,7 +887,6 @@ function apply_optimize()	{
 			$('#anc'+key).css('display', 'none');
 		}
 		else	{
-		else	{
 			$('#anc'+key).css('display', 'table-row');
 			$('#new'+key).text(ancient.levelNew);
 			$('#optimal'+key).text(optimalLevel);
