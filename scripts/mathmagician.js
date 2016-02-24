@@ -783,125 +783,39 @@ function optimize()	{
 	saveSettings();
 }
 
-function apply_optimize()	{
-	var Bank = anc[0];
-	var Siya = anc[5];
-	var Argaiv = anc[28];
-	var Iris = anc[30];
-
-	playstyle = $('input[type=radio][name=playstyle]:checked').val();
-	var clicking = playstyle != 'idle';
-	var ignoreIris = $('#ignoreIris').is(':checked');
-	laxSolomon = $('#laxsolo').is(':checked');
-	irisBonus = parseInt($('#irisBonus').val());
-	if($('#noBossLanding').is(':checked'))	{
-		irisBonus++;
-	}
-
-	// reset cost and get the user input values to work with
-	for(key in anc)	{
-		var ancient = anc[key];
-
-		ancient.totalCost = 0;
-		ancient.levelOld = parseInt($('#old'+key).val());
-		ancient.levelNew = ancient.levelOld;
-	}
-
-	hasMorgulis = anc[16].levelOld > 0;
-
-	var upgradeNext, referenceLevel;
-	while(upgradeNext != 0)	{
-		// optimize loop ends when the best investment is the HS bank
-		upgradeNext = 0;
-		var highestIncrease = 0;
-		var nextCost = 0;
-		var nextBestIncrease = 0;
-		referenceLevel = Math.max(playstyle=='active' ? Argaiv.levelNew : Siya.levelNew, 1);
-		var desiredBank = Math.ceil(Bank.levelNew-Bank.desiredLevel(referenceLevel));
-		var nextBank = Math.ceil(Bank.levelNew-Bank.desiredLevel(referenceLevel+1));
-
-		for(key in anc)	{
-			var ancient = anc[key];
-			var optimal = getOptimal(ancient, referenceLevel);
-			if(ancient.levelNew > 0 && optimal > ancient.levelNew && (clicking == true || ancient.clicking == false) && (ignoreIris == false || key != 30))	{
-				// Do not process ancients the user doesn't have.
-				// Do not process clicking ancients when clicking checkbox is off.
-				// Do not process Iris if disabled.
-
-				var upgradeCost = ancient.upgradeCost(ancient.levelNew+1);
-
-				if(upgradeCost <= (key==5 || key==28 ? nextBank : desiredBank))	{	// always keep the desired soulbank, do not spend below this
-					// determine the ancient that is lagging behind the most (biggest relative increase from current to optimal)
-					var increase = (optimal-ancient.levelNew) / ancient.levelNew;
-
-					// assign less weight to Siya/Arga to let other ancients catch up first, only upgrade when no other ancients to upgrade
-					if(playstyle == 'active' && key == 28)	{
-						increase *= 0.1;
-					}
-					else if(playstyle != 'active' && key == 5)	{
-						increase *= 0.1;
-					}
-
-					if(increase > highestIncrease)	{
-						upgradeNext = key;
-						nextBestIncrease = highestIncrease;
-						highestIncrease = increase;
-						nextCost = upgradeCost;
-					}
-				}
-			}
-		}
-		if(upgradeNext != 0)	{
-			var ancient = anc[upgradeNext];
-			if(upgradeNext == 16)	{
-				// Morg batch upgrade!
-				var morgPlus = Math.min(Math.ceil((highestIncrease - nextBestIncrease)*ancient.levelNew), Bank.levelNew);
-				ancient.totalCost += morgPlus;
-				ancient.levelNew += morgPlus;
-				Bank.levelNew -= morgPlus;
-			}
-			else	{
-				ancient.totalCost += nextCost;
-				ancient.levelNew++;
-				Bank.levelNew -= nextCost;
-			}
-		}
-	}
-
-	// correct for Iris not landing on the desired zone
-	if(Iris.levelNew > Iris.levelOld && Iris.levelNew != Iris.desiredLevel(referenceLevel))	{
-		irisMax = Math.floor((Iris.levelNew)/5)*5-1-irisBonus;
-		optimize();
-		return;
-	}
-	else	{
-		irisMax = 0;
-	}
+function apply_optimize()
+{
+	optimize();
 
 	// update HTML
-	for(key in anc)	{
+	for(key in anc)	
+	{
 		var ancient = anc[key];
-		var optimalLevel = getOptimal(ancient, (key == 5 && playstyle!='active' || key == 28 && playstyle=='active') ? referenceLevel-1 : referenceLevel);
 
-		if((ancient.maxLevel != 0 && ancient.levelOld == ancient.maxLevel) || (optimalLevel == 0 && ancient.levelOld == 0 && key != 0) || (playstyle=='idle' && ancient.clicking))	{
+		if((ancient.maxLevel != 0 && ancient.levelOld == ancient.maxLevel) || (ancient.levelOld == 0 && key != 0) || (playstyle=='idle' && ancient.clicking))	
+		{
 			$('#anc'+key).css('display', 'none');
 		}
-		else	{
+		else	
+		{
+			console.log('poop');
+// Show the Ancient.
 			$('#anc'+key).css('display', 'table-row');
-			$('#new'+key).text(ancient.levelNew);
-			$('#optimal'+key).text(optimalLevel);
-
 			$('#old'+key).val(ancient.levelNew)
 			ancient.levelOld = ancient.levelNew
-
+			console.log('poop');
+// Clear the Delta
 			$('#delta'+key).text('');
+// Remove previous mouse over except for "Souls in bank:"
 			if (key != 0)
 				$('#delta'+key).removeAttr("onmouseover");
 
-			if(ancient.levelOld > 0)	{
+			if(ancient.levelOld > 0)	
+			{
 				$('#name'+key).attr("onmouseover", "nhpup.popup('<u>Current level:</u><br>"+ancient.getBonus(ancient.levelOld)+"');");
 			}
-			else	{
+			else	
+			{
 				$('#name'+key).attr("onmouseover", "nhpup.popup('<u>"+ancient.Name+"</u><br>First level: "+ancient.getBonus(1)+"');");
 			}
 		}
