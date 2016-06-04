@@ -1,4 +1,4 @@
-// version 38
+// version 39
 
 $('#savegame').keyup(import_save);
 $('body').on('change', '#laxsolo', optimize);
@@ -113,7 +113,7 @@ function calcMorgulis(s)	{
 		return(s*(s+b)+c);
 	}
 	else	{
-		// based off Argaiv
+		// based off Fragsworth
 		return(Math.pow(s,2) + 26*s + 15.91 + (50*(s+1))/(totalGilds > 0 ? totalGilds : 1));
 	}
 }
@@ -151,8 +151,18 @@ anc[3] = {
 	'bonusLevel':function(lvl){return(solomonBonus(lvl));},
 	'bonusDesc':'% Primal Hero Souls',
 	'upgradeCost':function(lvl){return(Math.round(Math.pow(lvl, 1.5)));},
-
-	'desiredLevel':function(s){return(laxSolomon ? s < 234 ? 0.75*s : 1.15*Math.pow(Math.log10(3.25*Math.pow(s,2)),0.4)*Math.pow(s,0.8) : s < 328 ? s : 1.15*Math.pow(Math.log(3.25*Math.pow(s,2)),0.4)*Math.pow(s,0.8));}
+	// follows the general formula: a*(lg^0.4*(baseAncientLevel^0.8))
+	// Idle  : a=1.15, b=3.25, baseAncient=Siya
+	// Hybrid: a=1.32, b=4.65, baseAncient=Argaiv(28)
+	// Active: a=1.21, b=3.73, baseAncient=Fragsworth
+	// lg = log10(b*baseAncientLevel^2) (if laxSolomon) or ln(b*baseAncientLevel^2) (normal)
+	'desiredLevel':function(s){
+		var baseAncientLevel=(playstyle=='hybrid'?anc[28].levelNew:s);
+		var a=(playstyle=='idle' ? 1.15 : playstyle=='hybrid' ? 1.32 : 1.21);
+		var b=(playstyle=='idle' ? 3.25 : playstyle=='hybrid' ? 4.65 : 3.73);
+		var lg=(laxSolomon ? Math.log10(b*Math.pow(baseAncientLevel,2)) : Math.log(b*Math.pow(baseAncientLevel,2)));
+		return(Math.min(baseAncientLevel, a*(Math.pow(lg,0.4) * Math.pow(baseAncientLevel, 0.8))));
+	}
 };
 anc[4] = {
 	'Name':'Libertas',
@@ -212,7 +222,7 @@ anc[10] = {
 	'bonusLevel':function(lvl){return(30*lvl);},
 	'bonusDesc':'% Golden Clicks Gold',
 	'upgradeCost':function(lvl){return(lvl);},
-	'desiredLevel':function(s){return(playstyle=='idle' ? 0 : 0.5*s);}
+	'desiredLevel':function(s){return(playstyle=='idle' ? 0 : playstyle=='active' ? 0.927*s : 0.5*s);}
 };
 anc[11] = {
 	'Name':'Dogcog',
@@ -272,7 +282,7 @@ anc[15] = {
 	'bonusLevel':function(lvl){return(15*lvl);},
 	'bonusDesc':'% Critical Damage',
 	'upgradeCost':function(lvl){return(lvl);},
-	'desiredLevel':function(s){return(playstyle=='idle' ? 0 : playstyle=='active' ? s-90 : 0.5*s);}
+	'desiredLevel':function(s){return(playstyle=='idle' ? 0 : playstyle=='active' ? Math.max(s*0.91,s-90) : 0.5*s);}
 };
 anc[16] = {
 	'Name':'Morgulis',
@@ -308,7 +318,7 @@ anc[19] = {
 	'bonusLevel':function(lvl){return(20*lvl);},
 	'bonusDesc':'% Click Damage',
 	'upgradeCost':function(lvl){return(lvl);},
-	'desiredLevel':function(s){return(playstyle=='idle' ? 0 : playstyle=='active' ? s : 0.5*s);}
+	'desiredLevel':function(s){return(playstyle=='idle' ? 0 : playstyle=='active' ? s+1 : 0.5*s);}
 };
 anc[21] = {
 	'Name':'Kumawakamaru',
@@ -332,7 +342,7 @@ anc[28] = {
 	'bonusLevel':function(lvl){return(2*lvl);},
 	'bonusDesc':'% DPS per Gild',
 	'upgradeCost':function(lvl){return(lvl);},
-	'desiredLevel':function(s){return(playstyle=='active' ? s+1 : Math.sqrt(calcMorgulis(s))-13);}
+	'desiredLevel':function(s){return(playstyle=='active' ? s : Math.sqrt(calcMorgulis(s))-13);}
 };
 anc[29] = {
 	'Name':'Juggernaut',
@@ -344,6 +354,7 @@ anc[29] = {
 	'bonusLevel':function(lvl){return(0.01*lvl);},
 	'bonusDesc':'% Click Damage/DPS<br>(each Combo)',
 	'upgradeCost':function(lvl){return(Math.round(Math.pow(lvl, 1.5)));},
+	// based off Fragsworth (Siya/2) for Hybrid
 	'desiredLevel':function(s){return(playstyle=='idle' ? 0 : playstyle=='active' ? Math.pow(s,0.8) : Math.pow(0.5*s, 0.8));}
 };
 anc[30] = {
@@ -653,6 +664,7 @@ function processStats(totalSouls)	{
 function optimize()	{
 	var Bank = anc[0];
 	var Siya = anc[5];
+	var Fragsworth = anc[19];
 	var Argaiv = anc[28];
 	var Iris = anc[30];
 
@@ -683,7 +695,7 @@ function optimize()	{
 		var highestIncrease = 0;
 		var nextCost = 0;
 		var nextBestIncrease = 0;
-		referenceLevel = Math.max(playstyle=='active' ? Argaiv.levelNew : Siya.levelNew, 1);
+		referenceLevel = Math.max(playstyle=='active' ? Fragsworth.levelNew : Siya.levelNew, 1);
 		var desiredBank = Math.ceil(Bank.levelNew-Bank.desiredLevel(referenceLevel));
 		var nextBank = Math.ceil(Bank.levelNew-Bank.desiredLevel(referenceLevel+1));
 
