@@ -1,4 +1,4 @@
-// version 39
+// version 40
 
 $('#savegame').keyup(import_save);
 $('body').on('change', '#laxsolo', optimize);
@@ -682,7 +682,7 @@ function optimize()	{
 		var ancient = anc[key];
 
 		ancient.totalCost = 0;
-		ancient.levelOld = parseInt($('#old'+key).val());
+		ancient.levelOld = Math.floor($('#old'+key).val());
 		ancient.levelNew = ancient.levelOld;
 	}
 
@@ -823,7 +823,7 @@ function import_save(evt) {
 
 		var totalSoulsSpent = 0;
 		for(ancient in data.ancients.ancients)	{
-			totalSoulsSpent += data.ancients.ancients[ancient].spentHeroSouls;
+			totalSoulsSpent += Math.floor(data.ancients.ancients[ancient].spentHeroSouls);
 		}
 
 		// count hero levels for Souls gained on ascension and accumulate Gilds
@@ -840,11 +840,11 @@ function import_save(evt) {
 			if(key == 0)	{
 				var IncludeSoulsAfterAscension = (data.heroSouls==0 || window.location.href.contains('?primalsouls=1'));
 				$('#primalsouls').prop('checked', IncludeSoulsAfterAscension);
-				ancient.levelOld = (IncludeSoulsAfterAscension ? data.heroSouls+data.primalSouls : data.heroSouls);
+				ancient.levelOld = Math.floor(IncludeSoulsAfterAscension ? data.heroSouls+data.primalSouls : data.heroSouls);
 			}
 			else	{
 				if(data.ancients.ancients.hasOwnProperty(key))	{
-					ancient.levelOld = data.ancients.ancients[key].level;
+					ancient.levelOld = Math.floor(data.ancients.ancients[key].level);
 				}
 				else	{
 					ancient.levelOld = 0;
@@ -876,9 +876,10 @@ function import_save(evt) {
 		$('#soulsspent').text(totalSoulsSpent.numberFormat());
 		$('#worldresets').text(data.numWorldResets.numberFormat());
 		$('#hze').text(data.highestFinishedZonePersist.numberFormat());
-		$('#titandamage').text(data.hasOwnProperty('titanDamage') ? data.titanDamage.numberFormat() : "CH v0.20+ only");
+		$('#titandamage').text(data.hasOwnProperty('titanDamage') ? Math.floor(data.titanDamage).numberFormat() : "CH v0.20+ only");
 
-		processStats(totalSoulsSpent + data.heroSouls + data.primalSouls + data.ancients.rerollSoulsSpent);
+		//processStats(totalSoulsSpent + data.heroSouls + data.primalSouls + data.ancients.rerollSoulsSpent);
+		processStats(totalSoulsSpent + data.heroSouls + data.ancients.rerollSoulsSpent);
 		optimize();
 	}
 	else	{
