@@ -795,6 +795,47 @@ function optimize()	{
 	saveSettings();
 }
 
+function apply_optimize()
+{
+	optimize();
+
+	// update HTML
+	for(key in anc)	
+	{
+		var ancient = anc[key];
+
+		if((ancient.maxLevel != 0 && ancient.levelOld == ancient.maxLevel) || (ancient.levelOld == 0 && key != 0) || (playstyle=='idle' && ancient.clicking))	
+		{
+			$('#anc'+key).css('display', 'none');
+		}
+		else	
+		{
+			console.log('poop');
+// Show the Ancient.
+			$('#anc'+key).css('display', 'table-row');
+			$('#old'+key).val(ancient.levelNew)
+			ancient.levelOld = ancient.levelNew
+			console.log('poop');
+// Clear the Delta
+			$('#delta'+key).text('');
+// Remove previous mouse over except for "Souls in bank:"
+			if (key != 0)
+				$('#delta'+key).removeAttr("onmouseover");
+
+			if(ancient.levelOld > 0)	
+			{
+				$('#name'+key).attr("onmouseover", "nhpup.popup('<u>Current level:</u><br>"+ancient.getBonus(ancient.levelOld)+"');");
+			}
+			else	
+			{
+				$('#name'+key).attr("onmouseover", "nhpup.popup('<u>"+ancient.Name+"</u><br>First level: "+ancient.getBonus(1)+"');");
+			}
+		}
+	}
+	permaLink();
+	saveSettings();
+}
+
 function import_save(evt) {
 
 	if(evt && evt.keyCode == 17)	{
