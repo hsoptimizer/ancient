@@ -627,15 +627,25 @@ function loadStats(totalSouls)	{
 }
 
 function saveStats(totalSouls)	{
-	var tomorrow = new Date();
+	var tomorrow = new Date(data.unixTimestamp);
+	var keyYest, key, parsedVal;
 
 	tomorrow.setHours(0,0,0,0);
-	if(getSetting("hist"+tomorrow.getTime()) == "")	{
-		saveSetting("hist"+tomorrow.getTime(), totalSouls);
+
+	keyYest = "hist"+tomorrow.getTime();
+
+	if(getSetting(keyYest) == "") {
+		saveSetting(keyYest, totalSouls);
 	}
 
 	tomorrow.setHours(24,0,0,0);
-	saveSetting("hist"+tomorrow.getTime(), totalSouls);
+	key = "hist"+tomorrow.getTime();
+	parsedVal = parseInt(getSetting(key));
+
+	if(isNaN(parsedVal) || parsedVal < totalSouls)	{
+		saveSetting(key, totalSouls);
+	}
+
 }
 
 function migrateStats()	{
